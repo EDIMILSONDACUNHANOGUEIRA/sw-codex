@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Playfair+Display:ital,wght@1,400;1,500;1,600&amp;display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#06060b;color:#e8e9ee;font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  ::selection{background:#6c63ff;color:#fff}
+  a{color:inherit;text-decoration:none}
+  ::-webkit-scrollbar{width:8px}
+  ::-webkit-scrollbar-track{background:#06060b}
+  ::-webkit-scrollbar-thumb{background:#222230;border-radius:4px}
+  ::-webkit-scrollbar-thumb:hover{background:#6c63ff}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+  @keyframes glowPulse{0%,100%{box-shadow:0 0 22px rgba(108,99,255,.3),0 0 60px rgba(108,99,255,.1)}50%{box-shadow:0 0 32px rgba(108,99,255,.45),0 0 90px rgba(108,99,255,.18)}}
+  @keyframes gradientMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  @keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @keyframes scrollB{0%,100%{transform:translateY(0);opacity:1}50%{transform:translateY(7px);opacity:.5}}
+  @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+  @keyframes dotGlow{0%,100%{filter:drop-shadow(0 0 3px rgba(255,101,132,.7))}50%{filter:drop-shadow(0 0 7px rgba(255,101,132,1))}}
+  @keyframes lithReveal{0%{opacity:0;transform:translateY(18px);filter:blur(10px)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}
+  @keyframes lithZoom{0%{transform:scale(1.12)}100%{transform:scale(1)}}
+  @keyframes vidUp{0%{opacity:0;transform:translateY(16px)}100%{opacity:1;transform:translateY(0)}}
+  @keyframes axionFlow{0%{transform:translate(-8%,-6%) scale(1.1)}33%{transform:translate(10%,8%) scale(1.25)}66%{transform:translate(-6%,12%) scale(1.15)}100%{transform:translate(-8%,-6%) scale(1.1)}}
+  @keyframes axionHue{0%,100%{opacity:.55}50%{opacity:.85}}
+</style>
+<link href="https://db.onlinewebfonts.com/c/bb5de19d87c09a95216dc6ccd96e37c6?family=Nimbus+Sans+TW01" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;display=swap" rel="stylesheet">
+<link href="https://db.onlinewebfonts.com/c/440b53b1a1c65037f944ff19259d8014?family=Nokia+Cellphone+FC+Small" rel="stylesheet">
+</helmet>
+
+<div ref="{{ rootRef }}" style="position:relative;min-height:100vh;width:100%;overflow-x:hidden;background:#06060b;">
+
+  <!-- ===== background fx ===== -->
+  <canvas ref="{{ canvasRef }}" style="position: fixed; inset: 0; z-index: 0; pointer-events: none; background-color: #020005fb; width: 100%; height: 100%"></canvas>
+  <div style="position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(108,99,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(108,99,255,.035) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000,transparent 75%);"></div>
+
+  <!-- ===== NAV ===== -->
+  <header style="position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(16px);background:rgba(6,6,11,.72);border-bottom:1px solid rgba(255,255,255,.06);">
+    <nav style="max-width:1200px;margin:0 auto;padding:15px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px;">
+      <a href="#top" style="display:flex;align-items:center;gap:9px;">
+        <span style="font-family:'JetBrains Mono',monospace;font-weight:600;font-size:18px;letter-spacing:-.01em;">SOFTWARE</span>
+        <svg width="34" height="34" viewBox="0 0 64 64" fill="none" aria-label="CODEX" style="flex:none;">
+          <defs><linearGradient id="codexLogoGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6c63ff"></stop><stop offset=".5" stop-color="#5b8cff"></stop><stop offset="1" stop-color="#00d4ff"></stop></linearGradient></defs>
+          <path d="M27 16 L13 32 L27 48" stroke="url(#codexLogoGrad)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path d="M37 16 L51 32 L37 48" stroke="url(#codexLogoGrad)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+          <circle cx="32" cy="32" r="5" fill="#ff6584" style="animation:dotGlow 2.6s ease-in-out infinite;"></circle>
+        </svg><span style="font-family:'JetBrains Mono',monospace;font-weight:600;font-size:18px;letter-spacing:-.01em;">CODEX</span>
+        
+      </a>
+      <div style="display:flex;align-items:center;gap:34px;">
+        <div style="display:flex;align-items:center;gap:34px;" data-desk="">
+          <a href="#servicos" style="font-size:14px;color:#94a0b8;" style-hover="color:#fff">Serviços</a>
+          <a href="#portfolio" style="font-size:14px;color:#94a0b8;" style-hover="color:#fff">Portfólio</a>
+          <a href="#precos" style="font-size:14px;color:#94a0b8;" style-hover="color:#fff">Preços</a>
+          <a href="#depoimentos" style="font-size:14px;color:#94a0b8;" style-hover="color:#fff">Depoimentos</a>
+        </div>
+        <a href="{{ waMore }}" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#6c63ff,#00d4ff);color:#fff;font-weight:600;font-size:14px;padding:9px 18px;border-radius:999px;white-space:nowrap;" style-hover="transform:translateY(-1px);box-shadow:0 8px 24px -6px rgba(108,99,255,.6)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2m0 18.15c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.25-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.23-8.24 8.23m4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.42-.14-.01-.31-.01-.48-.01s-.43.06-.66.31c-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28"></path></svg>
+          Fale Conosco
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  
+<main id="top" style="position:relative;z-index:1;">
+
+    <!-- ===== HERO ===== -->
+    <section id="hero" style="position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;overflow:hidden;">
+      <div style="position:absolute;width:520px;height:520px;border-radius:50%;filter:blur(120px);background:rgba(108,99,255,.12);top:12%;left:-140px;pointer-events:none;"></div>
+      <div style="position:absolute;width:420px;height:420px;border-radius:50%;filter:blur(120px);background:rgba(0,212,255,.09);bottom:14%;right:-110px;pointer-events:none;"></div>
+      <div style="position:absolute;width:300px;height:300px;border-radius:50%;filter:blur(120px);background:rgba(255,101,132,.06);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;"></div>
+
+      <div style="position:relative;z-index:2;max-width:920px;margin:0 auto;">
+        <div style="display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#a78bff;border:1px solid rgba(108,99,255,.3);background:rgba(108,99,255,.07);padding:6px 14px;border-radius:999px;margin-bottom:30px;">
+          <span style="width:6px;height:6px;border-radius:50%;background:#6c63ff;box-shadow:0 0 10px #6c63ff;"></span>
+          software house · sites · chatbots · automação
+        </div>
+        <h1 style="font-weight:800;font-size:clamp(40px,7vw,80px);line-height:1.06;letter-spacing:-.03em;margin:0 0 24px;">
+          Transformamos ideias em<br>
+          <span style="background:linear-gradient(135deg,#6c63ff 0%,#00d4ff 50%,#ff6584 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;">experiências digitais</span><br>
+          <span style="color:#94a0b8;">que convertem.</span>
+        </h1>
+        <div style="font-size:clamp(18px,2.5vw,22px);color:#94a0b8;margin:0 0 14px;min-height:1.4em;">
+          Construímos <span style="color:#fff;font-weight:500;">{{ tw }}</span><span style="display:inline-block;width:3px;height:1em;background:#6c63ff;margin-left:4px;vertical-align:-2px;animation:blink 1s step-end infinite;"></span>
+        </div>
+        <p style="font-size:15px;line-height:1.6;color:#6b7488;max-width:520px;margin:0 auto 40px;">
+          Sites de alto desempenho, chatbots inteligentes e automações que eliminam trabalho repetitivo. Tudo feito sob medida para o seu negócio.
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:center;">
+          <a href="{{ waBudget }}" target="_blank" style="display:inline-flex;align-items:center;gap:9px;background:linear-gradient(135deg,#6c63ff,#00d4ff);color:#fff;font-weight:600;font-size:15px;padding:15px 28px;border-radius:999px;animation:glowPulse 3.5s ease-in-out infinite;" style-hover="transform:translateY(-2px)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2m0 18.15c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.25-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.23-8.24 8.23m4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.42-.14-.01-.31-.01-.48-.01s-.43.06-.66.31c-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28"></path></svg>
+            Solicitar Orçamento
+          </a>
+          <a href="#servicos" style="display:inline-flex;align-items:center;gap:9px;color:#94a0b8;font-weight:500;font-size:15px;padding:15px 26px;border-radius:999px;border:1px solid rgba(255,255,255,.14);" style-hover="color:#fff;border-color:rgba(255,255,255,.35)">
+            Ver Serviços
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"></path></svg>
+          </a>
+        </div>
+      </div>
+      <div style="position:absolute;bottom:30px;left:50%;transform:translateX(-50%);animation:scrollB 1.8s ease-in-out infinite;">
+        <div style="width:22px;height:34px;border-radius:12px;border:2px solid rgba(255,255,255,.2);display:flex;justify-content:center;padding-top:6px;">
+          <div style="width:4px;height:8px;border-radius:3px;background:#6c63ff;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== MARQUEE ===== -->
+    <div style="position:relative;z-index:1;padding:18px 0;border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05);overflow:hidden;background:rgba(6,6,11,.6);">
+      <div style="display:flex;width:max-content;align-items:center;gap:32px;animation:marq 28s linear infinite;font-family:'JetBrains Mono',monospace;font-size:13px;text-transform:uppercase;letter-spacing:.18em;color:rgba(255,255,255,.6);">
+        <span>Sites</span><span style="color:rgba(108,99,255,.9)">✦</span><span>Chatbots</span><span style="color:rgba(0,212,255,.9)">✦</span><span>Automação</span><span style="color:rgba(255,101,132,.9)">✦</span><span>E-commerce</span><span style="color:rgba(108,99,255,.9)">✦</span><span>WhatsApp</span><span style="color:rgba(0,212,255,.9)">✦</span><span>API</span><span style="color:rgba(255,101,132,.9)">✦</span><span>SaaS</span><span style="color:rgba(0,212,255,.9)">✦</span><span>Sistemas Web</span><span style="color:rgba(108,99,255,.9)">✦</span>
+        <span>Sites</span><span style="color:rgba(108,99,255,.9)">✦</span><span>Chatbots</span><span style="color:rgba(0,212,255,.9)">✦</span><span>Automação</span><span style="color:rgba(255,101,132,.9)">✦</span><span>E-commerce</span><span style="color:rgba(108,99,255,.9)">✦</span><span>WhatsApp</span><span style="color:rgba(0,212,255,.9)">✦</span><span>API</span><span style="color:rgba(255,101,132,.9)">✦</span><span>SaaS</span><span style="color:rgba(0,212,255,.9)">✦</span><span>Sistemas Web</span><span style="color:rgba(108,99,255,.9)">✦</span>
+      </div>
+    </div>
+
+    <!-- ===== SERVIÇOS ===== -->
+    <section id="servicos" style="position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:120px 24px;">
+      <div data-reveal="" style="opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;margin-bottom:64px;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;color:#6c63ff;">01 — SERVIÇOS</span>
+        <h2 style="font-weight:800;font-size:clamp(30px,4.4vw,52px);letter-spacing:-.02em;line-height:1.12;margin:14px 0 0;">Soluções que<br><span style="background:linear-gradient(135deg,#00d4ff,#6c63ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;">impulsionam resultados</span></h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;">
+        <sc-for list="{{ services }}" as="s" hint-placeholder-count="4">
+          <div data-reveal="" style="opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;background:rgba(255,255,255,.025);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:28px;" style-hover="border-color:rgba(108,99,255,.45);transform:translateY(-5px)">
+            <div style="width:48px;height:48px;border-radius:13px;background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.25);display:flex;align-items:center;justify-content:center;color:#a78bff;margin-bottom:20px;">{{ s.icon }}</div>
+            <h3 style="font-weight:600;font-size:19px;margin:0 0 10px;">{{ s.title }}</h3>
+            <p style="font-size:13.5px;line-height:1.6;color:#94a0b8;margin:0 0 18px;">{{ s.desc }}</p>
+            <div style="display:flex;flex-wrap:wrap;gap:7px;">
+              <sc-for list="{{ s.tags }}" as="t" hint-placeholder-count="3">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.05);color:#94a0b8;">{{ t }}</span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- ===== STATS ===== -->
+    <section style="position:relative;z-index:1;padding:72px 0;border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05);background:linear-gradient(90deg,rgba(108,99,255,.04),transparent 50%,rgba(0,212,255,.04));">
+      <div style="max-width:1100px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center;">
+        <sc-for list="{{ stats }}" as="st" hint-placeholder-count="4">
+          <div data-reveal="" style="opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;">
+            <div style="font-weight:800;font-size:clamp(32px,4.5vw,52px);line-height:1;background:linear-gradient(135deg,#fff,#a0a8c0);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;margin-bottom:8px;">{{ st.value }}</div>
+            <div style="font-size:13.5px;color:#6b7488;">{{ st.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- ===== PORTFÓLIO ===== -->
+    <section id="portfolio" style="position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:120px 24px;">
+      <div data-reveal="" style="opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;margin-bottom:56px;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;color:#6c63ff;">02 — PORTFÓLIO</span>
+        <h2 style="font-weight:800;font-size:clamp(30px,4.4vw,52px);letter-spacing:-.02em;line-height:1.12;margin:14px 0 0;">Cases reais,<br><span style="background:linear-gradient(135deg,#6c63ff,#00d4ff 50%,#ff6584);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;">resultados reais</span></h2>
+      </div>
+
+      <!-- featured case -->
+      <div data-reveal="" style="opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;display:grid;grid-template-columns:1.1fr .9fr;gap:0;border:1px solid rgba(255,255,255,.08);border-radius:24px;overflow:hidden;background:rgba(255,255,255,.02);margin-bottom:24px;">
+        <div style="padding:48px;display:flex;flex-direction:column;justify-content:center;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;color:#6c63ff;margin-bottom:14px;">O QUE ENTREGAMOS</span>
+          <h3 style="font-weight:800;font-size:clamp(28px,3.4vw,40px);margin:0 0 18px;letter-spacing:-.02em;line-height:1.08;">Projetos que<br><span style="background:linear-gradient(135deg,#6c63ff,#00d4ff 50%,#ff6584);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;">falam por si</span></h3>
+          <p style="font-size:14.5px;line-height:1.65;color:#94a0b8;margin:0 0 28px;">Sites profissionais, chatbots de WhatsApp e automação de processos — desenvolvidos sob medida para PMEs que querem crescer no digital. Da primeira linha de código ao cliente atendido, cuidamos de tudo.</p>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:14px;">
+            <li style="display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.5;color:#cdd3e0;"><span style="color:#6c63ff;flex:none;margin-top:1px;">●</span><span><strong style="color:#fff;font-weight:600;">Sites &amp; Landing Pages</strong> — design mobile-first, performance e foco em conversão</span></li>
+            <li style="display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.5;color:#cdd3e0;"><span style="color:#00d4ff;flex:none;margin-top:1px;">●</span><span><strong style="color:#fff;font-weight:600;">Chatbots de WhatsApp</strong> — atendimento automático 24/7, sem perder lead</span></li>
+            <li style="display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.5;color:#cdd3e0;"><span style="color:#ff6584;flex:none;margin-top:1px;">●</span><span><strong style="color:#fff;font-weight:600;">Automação Fiscal</strong> — certidões e processos no piloto automático</span></li>
+            <li style="display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.5;color:#cdd3e0;"><span style="color:#6c63ff;flex:none;margin-top:1px;">●</span><span><strong style="color:#fff;font-weight:600;">Prospecção Digital</strong> — mais clientes chegando até você</span></li>
+          </ul>
+        </div><div ref="{{ lithRef }}" onMouseMove="{{ lithMove }}" onMouseLeave="{{ lithLeave }}" style="position:relative;min-height:340px;overflow:hidden;border-left:1px solid rgba(255,255,255,.06);background:#06060b;cursor:crosshair;">
+          <div style="position:absolute;inset:0;background-image:url('https://images.higgs.ai/?default=1&amp;output=webp&amp;url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260609_195923_b0ba8ace-1d1d-4f2c-9a28-1ab84b330680.png&amp;w=1280&amp;q=85');background-size:cover;background-position:center;animation:lithZoom 1.8s cubic-bezier(.16,1,.3,1) forwards;"></div>
+          <div ref="{{ lithReveal }}" style="position:absolute;inset:0;background-image:url('https://images.higgs.ai/?default=1&amp;output=webp&amp;url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260609_201152_bba90a12-bf12-459f-91f0-51f237dbaf3b.png&amp;w=1280&amp;q=85');background-size:cover;background-position:center;"></div>
+          <canvas ref="{{ lithCanvas }}" style="display:none;"></canvas>
+          <div style="position:absolute;top:9%;left:0;right:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 16px;pointer-events:none;color:#fff;line-height:.95;text-shadow:0 2px 18px rgba(0,0,0,.5);">
+            <span style="font-family:'Playfair Display',serif;font-style:italic;font-weight:400;font-size:clamp(28px,4.4vw,46px);letter-spacing:-.05em;animation:lithReveal 1.1s cubic-bezier(.16,1,.3,1) both;animation-delay:.25s;">Camadas guardam</span>
+            <span style="font-family:'Inter',sans-serif;font-weight:400;font-size:clamp(28px,4.4vw,46px);letter-spacing:-.08em;margin-top:-2px;animation:lithReveal 1.1s cubic-bezier(.16,1,.3,1) both;animation-delay:.42s;">histórias do tempo</span>
+          </div>
+          <a href="{{ waMore }}" target="_blank" style="position:absolute;bottom:20px;right:20px;background:#e8702a;color:#fff;font-size:13px;font-weight:500;padding:10px 22px;border-radius:999px;transition:all .25s ease;z-index:5;" style-hover="background:#d2611f;transform:scale(1.03);box-shadow:0 10px 24px -6px rgba(232,112,42,.5)">Explorar agora</a>
+        </div>
+        
+      </div>
+
+      <!-- grid of smaller cases -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;">
+
+        <!-- Questly SaaS hero card -->
+        <div data-reveal="" style="opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;position:relative;border:1px solid rgba(255,255,255,.07);border-radius:18px;overflow:hidden;min-height:360px;display:flex;flex-direction:column;font-family:'Nimbus Sans TW01','Helvetica Neue',Helvetica,Arial,sans-serif;background-image:url('https://images.higgs.ai/?default=1&amp;output=webp&amp;url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260611_133301_d5f2a94a-b22e-4e4a-a6b6-eacdddf1f5b0.png&amp;w=1280&amp;q=85');background-size:cover;background-position:center;" style-hover="transform:translateY(-5px);border-color:rgba(255,255,255,.18)">
+          <!-- navbar -->
+          <div style="position:relative;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;animation:vidUp .7s cubic-bezier(.22,1,.36,1) both;">
+            <svg width="18" height="18" viewBox="0 0 256 256" fill="#111827" aria-label="Questly" style="flex:none;"><path d="M 144 256 L 27.598 256 L 144 139.598 Z M 256 207.5 L 200 256 L 200 56 L 0 56 L 48 0 L 256 0 Z M 0 204.402 L 0 112 L 92.402 112 Z"/></svg>
+            <div style="display:flex;align-items:center;gap:14px;">
+              <span style="font-size:11px;color:#374151;display:none;" data-q-links>Recursos</span>
+              <a href="{{ waMore }}" target="_blank" style="font-size:11px;font-weight:500;color:#fff;background:#111827;padding:6px 13px;border-radius:999px;" style-hover="background:#1f2937">Teste Grátis</a>
+            </div>
+          </div>
+          <!-- hero content -->
+          <div style="position:relative;z-index:20;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6px 18px 18px;">
+            <h3 style="margin:0;color:#111827;font-weight:400;line-height:1.05;letter-spacing:-.02em;font-size:clamp(28px,4.4vw,38px);">
+              <span style="display:block;animation:vidUp .9s cubic-bezier(.22,1,.36,1) both;">Seja citado.</span>
+              <span style="display:block;animation:vidUp .9s cubic-bezier(.22,1,.36,1) both;animation-delay:.1s;">Sem esforço.</span>
+            </h3>
+            <div style="margin-top:16px;width:100%;max-width:300px;display:flex;align-items:center;gap:8px;border-radius:999px;background:rgba(255,255,255,.6);backdrop-filter:blur(8px);box-shadow:inset 0 0 0 1px #e5e7eb;padding:5px 6px 5px 16px;animation:vidUp .9s cubic-bezier(.22,1,.36,1) both;animation-delay:.22s;">
+              <span style="flex:1;text-align:left;font-size:12px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">O que faz um conteúdo ranquear na busca por IA?</span>
+              <span style="flex:none;width:30px;height:30px;border-radius:50%;background:#111827;display:flex;align-items:center;justify-content:center;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              </span>
+            </div>
+            <p style="margin:14px 0 0;color:#4b5563;font-size:12.5px;line-height:1.55;max-width:280px;animation:vidUp .9s cubic-bezier(.22,1,.36,1) both;animation-delay:.34s;">Publique artigos que respondem perguntas reais dos clientes — e apareça no
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#111827" style="display:inline;vertical-align:-2px;margin:0 1px;"><path d="M12 2l1.6 5.4L19 9l-5.4 1.6L12 16l-1.6-5.4L5 9l5.4-1.6z"/></svg> ChatGPT</p>
+            <div style="margin-top:16px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;animation:vidUp .9s cubic-bezier(.22,1,.36,1) both;animation-delay:.46s;">
+              <a href="{{ waMore }}" target="_blank" style="font-size:12.5px;font-weight:500;color:#fff;background:#111827;padding:9px 20px;border-radius:999px;transition:all .25s ease;" style-hover="background:#1f2937;box-shadow:0 8px 20px -6px rgba(0,0,0,.4)">Teste Grátis</a>
+              <a href="{{ waMore }}" target="_blank" style="font-size:12.5px;font-weight:500;color:#374151;padding:9px 20px;border-radius:999px;box-shadow:inset 0 0 0 1px #d1d5db;transition:all .2s ease;" style-hover="background:#f3f4f6">Falar com vendas</a>
+            </div>
+          </div>
+          <!-- dashboard mockup peek -->
+          <div style="position:relative;z-index:0;width:84%;margin:0 auto -14px;border-radius:14px 14px 0 0;overflow:hidden;background:#1a1a1c;box-shadow:0 -20px 60px rgba(0,0,0,.35);box-shadow:0 -16px 50px rgba(0,0,0,.3),inset 0 0 0 1px rgba(255,255,255,.08);animation:vidUp 1.1s cubic-bezier(.22,1,.36,1) both;animation-delay:.62s;">
+            <div style="display:flex;align-items:center;gap:6px;background:#242427;border-bottom:1px solid rgba(255,255,255,.05);padding:7px 10px;">
+              <span style="width:7px;height:7px;border-radius:50%;background:#ff5f57;"></span>
+              <span style="width:7px;height:7px;border-radius:50%;background:#febc2e;"></span>
+              <span style="width:7px;height:7px;border-radius:50%;background:#28c840;"></span>
+              <span style="margin:0 auto;background:#1a1a1c;border-radius:5px;padding:2px 16px;font-size:9px;color:rgba(255,255,255,.6);">questly.ai</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.05);padding:1px;">
+              <div style="background:#1a1a1c;padding:10px 8px;"><div style="font-size:7px;letter-spacing:.08em;color:rgba(255,255,255,.35);">PUBLICADOS</div><div style="font-size:15px;color:#fff;margin-top:2px;">62</div></div>
+              <div style="background:#1a1a1c;padding:10px 8px;"><div style="font-size:7px;letter-spacing:.08em;color:rgba(255,255,255,.35);">AMPLITUDE</div><div style="font-size:15px;color:#fff;margin-top:2px;">12</div></div>
+              <div style="background:#1a1a1c;padding:10px 8px;"><div style="font-size:7px;letter-spacing:.08em;color:rgba(255,255,255,.35);">RESTANTES</div><div style="font-size:15px;color:#fff;margin-top:2px;">412</div></div>
+              <div style="background:#1a1a1c;padding:10px 8px;"><div style="font-size:7px;letter-spacing:.08em;color:rgba(255,255,255,.35);">ALCANCE MÁX</div><div style="font-size:15px;color:#fff;margin-top:2px;">3.1M</div></div>
+            </div>
+          </div>
+          <!-- grass overlay -->
+          <img src="https://res.cloudinary.com/dy5er7kv5/image/upload/q_auto/f_auto/v1781191264/grass_eam204.png" alt="" style="pointer-events:none;position:absolute;bottom:0;left:0;z-index:10;width:100%;user-select:none;" draggable="false">
+        </div>
+
+        <!-- dot. messaging hero card -->
+        <div data-reveal="" style="opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;position:relative;border:1px solid rgba(255,255,255,.07);border-radius:18px;overflow:hidden;min-height:360px;display:flex;flex-direction:column;align-items:center;background:#F3F4ED;font-family:'Inter',sans-serif;" style-hover="transform:translateY(-5px);border-color:rgba(255,255,255,.18)">
+          <video ref="{{ vidRef }}" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260427_054418_a6d194f0-ac86-4df9-abe5-ded73e596d7c.mp4" muted="" loop="" playsinline="" autoplay="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;"></video>
+          <div style="position:absolute;inset:0;z-index:1;background:rgba(255,255,255,.05);"></div>
+          <!-- typing messages on phone screen -->
+          <div style="position:absolute;left:50.5%;transform:translateX(-50%);bottom:33%;z-index:30;display:flex;align-items:center;justify-content:center;text-align:center;white-space:nowrap;">
+            <span style="font-family:'Nokia Cellphone FC Small',monospace;color:#2A3616;font-size:9px;line-height:1.2;white-space:nowrap;">{{ dotMsg }}<span style="display:inline-block;width:4px;height:8px;background:#2A3616;margin-left:2px;vertical-align:middle;animation:blink .8s step-end infinite;"></span></span>
+          </div>
+          <!-- navbar pill -->
+          <div style="position:relative;z-index:20;margin:12px;width:calc(100% - 24px);background:rgba(255,255,255,.55);backdrop-filter:blur(10px);border:1px solid rgba(0,0,0,.1);border-radius:999px;padding:7px 8px 7px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px;animation:vidUp .7s cubic-bezier(.16,1,.3,1) both;">
+            <span style="font-family:'Instrument Serif',serif;font-size:22px;letter-spacing:-.02em;color:#1a1a1a;line-height:1;">dot.</span>
+            <div style="display:flex;align-items:center;gap:14px;">
+              <span style="font-size:11.5px;color:#1a1a1a;">Filosofia</span>
+              <a href="{{ waMore }}" target="_blank" style="position:relative;font-size:11px;font-weight:500;color:#fff;background:#0871E7;border-radius:999px;padding:6px 14px;box-shadow:inset 0 -4px 4px rgba(255,255,255,.39);outline:1px solid #0871E7;outline-offset:-1px;overflow:hidden;" style-hover="background:#0a7ff5"><span style="position:absolute;width:80%;height:14px;left:10%;top:1px;background:linear-gradient(to bottom,#DEF0FC,transparent);border-radius:12px;"></span><span style="position:relative;">Conectar</span></a>
+            </div>
+          </div>
+          <!-- hero text -->
+          <div style="position:relative;z-index:20;pointer-events:none;text-align:center;padding:2px 18px 0;">
+            <div style="font-family:'Instrument Serif',serif;font-size:clamp(24px,3.4vw,32px);line-height:.9;letter-spacing:-.02em;color:#1a1a1a;margin-bottom:8px;animation:vidUp 1s cubic-bezier(.16,1,.3,1) both;">Notas curtas.<br>Calma diária.</div>
+            <p style="font-family:'Inter',sans-serif;font-size:11px;color:rgba(26,26,26,.7);line-height:1.4;max-width:230px;margin:0 auto;animation:vidUp 1s cubic-bezier(.16,1,.3,1) both;animation-delay:.3s;">Conectado a um único contato anônimo. Uma mensagem por dia. Um ritmo tranquilo em meio ao ruído digital.</p>
+          </div>
+        </div>
+
+        <!-- Axion Studio hero card -->
+        <div data-reveal="" style="opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;position:relative;border:1px solid rgba(255,255,255,.07);border-radius:18px;overflow:hidden;min-height:360px;display:flex;flex-direction:column;background:#EFEFEF;font-family:-apple-system,'Helvetica Neue',Helvetica,Arial,sans-serif;" style-hover="transform:translateY(-5px);border-color:rgba(255,255,255,.18)">
+          <!-- shader overlay -->
+          <div style="position:absolute;inset:0;z-index:10;pointer-events:none;overflow:hidden;">
+            <div style="position:absolute;top:-20%;left:-10%;width:80%;height:80%;border-radius:50%;filter:blur(48px);background:radial-gradient(circle,rgba(242,101,34,.55),transparent 65%);animation:axionFlow 14s ease-in-out infinite,axionHue 7s ease-in-out infinite;"></div>
+            <div style="position:absolute;bottom:-15%;right:-12%;width:70%;height:70%;border-radius:50%;filter:blur(52px);background:radial-gradient(circle,rgba(255,95,3,.45),transparent 65%);animation:axionFlow 18s ease-in-out infinite reverse;"></div>
+            <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(31deg,rgba(255,255,255,.10) 0 1px,transparent 1px 9px);mix-blend-mode:overlay;"></div>
+            <div style="position:absolute;inset:0;opacity:.05;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%222%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>');"></div>
+          </div>
+          <!-- navbar pill -->
+          <div style="position:relative;z-index:20;margin:12px;background:#fff;border-radius:999px;padding:6px;display:flex;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 1px 4px rgba(0,0,0,.06);animation:vidUp .7s cubic-bezier(.25,.1,.25,1) both;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="width:30px;height:30px;border-radius:50%;background:#111827;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;letter-spacing:-.02em;">AX</span>
+              <span style="font-size:11.5px;color:#111827;">Projetos</span>
+              <span style="font-size:11.5px;color:#9ca3af;">Estúdio</span>
+            </div>
+            <a href="{{ waMore }}" target="_blank" style="display:flex;align-items:center;gap:7px;background:#111827;color:#fff;font-size:11px;font-weight:500;border-radius:999px;padding:5px 6px 5px 13px;" style-hover="background:#1f2937">Agendar conversa<span style="width:20px;height:20px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span></a>
+          </div>
+          <!-- hero content bottom -->
+          <div style="position:relative;z-index:20;margin-top:auto;padding:18px 20px 22px;">
+            <div style="font-size:11px;color:#111827;letter-spacing:.04em;margin-bottom:12px;animation:vidUp .9s cubic-bezier(.25,.1,.25,1) both;animation-delay:.15s;">Axion Studio</div>
+            <h3 style="margin:0 0 18px;color:#111827;font-weight:500;line-height:1.08;letter-spacing:-.03em;font-size:clamp(20px,2.4vw,26px);max-width:320px;animation:vidUp .9s cubic-bezier(.25,.1,.25,1) both;animation-delay:.28s;">Criamos experiências digitais para marcas prontas para dominar sua categoria.</h3>
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;animation:vidUp .9s cubic-bezier(.25,.1,.25,1) both;animation-delay:.42s;">
+              <a href="{{ waMore }}" target="_blank" style="display:flex;align-items:center;gap:8px;background:#F26522;color:#fff;font-size:12px;font-weight:500;border-radius:999px;padding:6px 7px 6px 16px;" style-hover="background:#e05a1a">Iniciar projeto<span style="width:26px;height:26px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#F26522" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span></a>
+              <div style="display:flex;align-items:center;gap:7px;background:#fff;border-radius:4px;padding:6px 9px;box-shadow:0 2px 8px rgba(0,0,0,.08);">
+                <svg width="18" height="18" viewBox="0 0 100 100" fill="#E8704E" style="flex:none;"><path d="m19.6 66.5 19.7-11 .3-1-.3-.5h-1l-3.3-.2-11.2-.3L14 53l-9.5-.5-2.4-.5L0 49l.2-1.5 2-1.3 2.9.2 6.3.5 9.5.6 6.9.4L38 49.1h1.6l.2-.7-.5-.4-.4-.4L29 41l-10.6-7-5.6-4.1-3-2-1.5-2-.6-4.2 2.7-3 3.7.3.9.2 3.7 2.9 8 6.1L37 36l1.5 1.2.6-.4.1-.3-.7-1.1L33 25l-6-10.4-2.7-4.3-.7-2.6c-.3-1-.4-2-.4-3l3-4.2L28 0l4.2.6L33.8 2l2.6 6 4.1 9.3L47 29.9l2 3.8 1 3.4.3 1h.7v-.5l.5-7.2 1-8.7 1-11.2.3-3.2 1.6-3.8 3-2L61 2.6l2 2.9-.3 1.8-1.1 7.7L59 27.1l-1.5 8.2h.9l1-1.1 4.1-5.4 6.9-8.6 3-3.5L77 13l2.3-1.8h4.3l3.1 4.7-1.4 4.9-4.4 5.6-3.7 4.7-5.3 7.1-3.2 5.7.3.4h.7l12-2.6 6.4-1.1 7.6-1.3 3.5 1.6.4 1.6-1.4 3.4-8.2 2-9.6 2-14.3 3.3-.2.1.2.3 6.4.6 2.8.2h6.8l12.6 1 3.3 2 1.9 2.7-.3 2-5.1 2.6-6.8-1.6-16-3.8-5.4-1.3h-.8v.4l4.6 4.5 8.3 7.5L89 80.1l.5 2.4-1.3 2-1.4-.2-9.2-7-3.6-3-8-6.8h-.5v.7l1.8 2.7 9.8 14.7.5 4.5-.7 1.4-2.6 1-2.7-.6-5.8-8-6-9-4.7-8.2-.5.4-2.9 30.2-1.3 1.5-3 1.2-2.5-2-1.4-3 1.4-6.2 1.6-8 1.3-6.4 1.2-7.9.7-2.6v-.2H49L43 72l-9 12.3-7.2 7.6-1.7.7-3-1.5.3-2.8L24 86l10-12.8 6-7.9 4-4.6-.1-.5h-.3L17.2 77.4l-4.7.6-2-2 .2-3 1-1 8-5.5Z"/></svg>
+                <span style="font-size:11.5px;font-weight:500;color:#111827;">Parceiro Certificado</span>
+                <span style="font-size:9px;background:#111827;color:#fff;padding:1px 6px;border-radius:3px;">Destaque</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== PREÇOS ===== -->
+    <sc-if value="{{ showPricing }}" hint-placeholder-val="{{ true }}">
+    <section id="precos" style="position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:120px 24px;">
+      <div data-reveal="" style="opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;text-align:center;margin-bottom:64px;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;color:#6c63ff;">03 — PREÇOS</span>
+        <h2 style="font-weight:800;font-size:clamp(30px,4.4vw,52px);letter-spacing:-.02em;line-height:1.12;margin:14px 0 0;">Investimento claro,<br><span style="background:linear-gradient(135deg,#00d4ff,#6c63ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;">resultado garantido</span></h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start;">
+        <!-- Starter -->
+        <div data-reveal="" style="opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;background:rgba(255,255,255,.025);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.06);border-radius:22px;padding:34px;display:flex;flex-direction:column;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:#6b7488;">Starter</span>
+          <div style="margin:18px 0 22px;"><span style="font-weight:800;font-size:36px;">R$ 699,00</span><span style="font-size:13px;color:#6b7488;margin-left:6px;">/ único</span></div>
+          <p style="font-size:13.5px;color:#94a0b8;margin:0 0 26px;line-height:1.55;">Para quem está começando no digital e precisa de uma presença online profissional.</p>
+          <ul style="list-style:none;padding:0;margin:0 0 30px;display:flex;flex-direction:column;gap:12px;font-size:13.5px;color:#cdd3e0;flex:1;">
+            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#6c63ff;flex:none;">●</span>Site institucional de até 5 páginas</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#6c63ff;flex:none;">●</span>Design responsivo</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#6c63ff;flex:none;">●</span>SEO básico</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#6c63ff;flex:none;">●</span>Botão WhatsApp flutuante</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#6c63ff;flex:none;">●</span>Entrega em 7 dias úteis</li>
+          </ul>
+          <a href="{{ waStarter }}" target="_blank" style="text-align:center;padding:13px;border-radius:999px;border:1px solid rgba(255,255,255,.15);font-weight:500;font-size:14px;" style-hover="background:rgba(255,255,255,.05);border-color:rgba(108,99,255,.5)">Começar Agora</a>
+        </div>
+        <!-- Pro -->
+        <div data-reveal="" style="opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;position:relative;border-radius:22px;padding:34px;display:flex;flex-direction:column;background:rgba(18,18,26,.85);border:1.5px solid transparent;background-clip:padding-box;box-shadow:0 0 60px rgba(108,99,255,.14),0 0 120px rgba(108,99,255,.05);margin-top:-12px;">
+          <div style="position:absolute;inset:-1.5px;border-radius:22px;background:linear-gradient(135deg,#6c63ff,#00d4ff);z-index:-1;"></div>
+          <span style="position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:linear-gradient(270deg,#6c63ff,#00d4ff,#ff6584,#6c63ff);background-size:600% 600%;animation:gradientMove 8s ease infinite;color:#fff;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;padding:5px 16px;border-radius:999px;">MAIS POPULAR</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:#00d4ff;">Pro</span>
+          <div style="margin:18px 0 22px;"><span style="font-weight:800;font-size:36px;">R$ 1.299,00</span><span style="font-size:13px;color:#6b7488;margin-left:6px;">/ único</span></div>
+          <p style="font-size:13.5px;color:#94a0b8;margin:0 0 26px;line-height:1.55;">A solução completa para empresas que querem crescer e automatizar processos.</p>
+          <ul style="list-style:none;padding:0;margin:0 0 30px;display:flex;flex-direction:column;gap:12px;font-size:13.5px;color:#cdd3e0;flex:1;">
+            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#00d4ff;flex:none;">●</span>Tudo do plano Starter</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#00d4ff;flex:none;">●</span>Atendente Virtual no WhatsApp</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#00d4ff;flex:none;">●</span>Até 15 páginas com animações</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#00d4ff;flex:none;">●</span>Painel administrativo</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#00d4ff;flex:none;">●</span>SEO avançado + Google Analytics</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#00d4ff;flex:none;">●</span>30 dias de suporte pós-entrega</li>
+          </ul>
+          <a href="{{ waPro }}" target="_blank" style="text-align:center;padding:13px;border-radius:999px;background:linear-gradient(135deg,#6c63ff,#00d4ff);color:#fff;font-weight:600;font-size:14px;" style-hover="transform:translateY(-2px);box-shadow:0 10px 28px -6px rgba(108,99,255,.6)">Escolher o Pro</a>
+        </div>
+        <!-- Enterprise -->
+        <div data-reveal="" style="opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;background:rgba(255,255,255,.025);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.06);border-radius:22px;padding:34px;display:flex;flex-direction:column;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:#6b7488;">Enterprise</span>
+          <div style="margin:18px 0 22px;"><span style="font-weight:800;font-size:36px;">Sob consulta</span></div>
+          <p style="font-size:13.5px;color:#94a0b8;margin:0 0 26px;line-height:1.55;">Para projetos complexos que exigem soluções sob medida e integrações avançadas.</p>
+          <ul style="list-style:none;padding:0;margin:0 0 30px;display:flex;flex-direction:column;gap:12px;font-size:13.5px;color:#cdd3e0;flex:1;">
+            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#ff6584;flex:none;">●</span>Tudo do plano Pro</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#ff6584;flex:none;">●</span>E-commerce completo</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#ff6584;flex:none;">●</span>Automação de sistemas</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#ff6584;flex:none;">●</span>Integrações com APIs externas</li>
+            <li style="display:flex;gap:10px;align-items:flex-start;"><span style="color:#ff6584;flex:none;">●</span>Suporte prioritário 90 dias</li>
+          </ul>
+          <a href="{{ waEnter }}" target="_blank" style="text-align:center;padding:13px;border-radius:999px;border:1px solid rgba(255,255,255,.15);font-weight:500;font-size:14px;" style-hover="background:rgba(255,255,255,.05);border-color:rgba(255,101,132,.5)">Falar com a Equipe</a>
+        </div>
+      </div>
+    </section>
+    </sc-if>
+
+    <!-- ===== DEPOIMENTOS ===== -->
+    <sc-if value="{{ showTestimonials }}" hint-placeholder-val="{{ true }}">
+    <section id="depoimentos" style="position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:120px 24px;">
+      <div data-reveal="" style="opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;text-align:center;margin-bottom:64px;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;color:#6c63ff;">04 — DEPOIMENTOS</span>
+        <h2 style="font-weight:800;font-size:clamp(30px,4.4vw,52px);letter-spacing:-.02em;line-height:1.12;margin:14px 0 0;">O que nossos clientes<br><span style="background:linear-gradient(135deg,#6c63ff,#00d4ff 50%,#ff6584);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;">dizem sobre nós</span></h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;">
+        <sc-for list="{{ testimonials }}" as="t" hint-placeholder-count="3">
+          <div data-reveal="" style="opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;background:rgba(255,255,255,.025);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:30px;">
+            <div style="color:#ffb13c;font-size:15px;letter-spacing:2px;margin-bottom:16px;">★★★★★</div>
+            <p style="font-size:15px;line-height:1.6;margin:0 0 24px;color:#e8e9ee;">{{ t.quote }}</p>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <span style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#6c63ff,#00d4ff);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:#fff;">{{ t.initial }}</span>
+              <div><div style="font-weight:600;font-size:14px;">{{ t.name }}</div><div style="font-size:12.5px;color:#6b7488;">{{ t.role }}</div></div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+    </sc-if>
+
+    <!-- ===== CTA FINAL ===== -->
+    <section style="position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:40px 24px 120px;">
+      <div data-reveal="" style="opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;position:relative;border-radius:30px;overflow:hidden;border:1px solid rgba(108,99,255,.3);background:radial-gradient(700px 360px at 50% 0%,rgba(108,99,255,.16),transparent 70%),rgba(255,255,255,.02);padding:72px 32px;text-align:center;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a78bff;">$ codex init --seu-projeto</span>
+        <h2 style="font-weight:800;font-size:clamp(30px,4.6vw,54px);letter-spacing:-.02em;line-height:1.06;margin:18px auto;max-width:680px;">Pronto para colocar sua empresa<br>no <span style="background:linear-gradient(135deg,#6c63ff,#00d4ff 50%,#ff6584);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;">próximo nível</span>?</h2>
+        <p style="font-size:16px;color:#94a0b8;max-width:500px;margin:0 auto 34px;">Conte sua ideia e receba uma proposta sem compromisso. Resposta rápida no WhatsApp.</p>
+        <a href="{{ waBudget }}" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#6c63ff,#00d4ff);color:#fff;font-weight:600;font-size:16px;padding:16px 32px;border-radius:999px;animation:glowPulse 3.5s ease-in-out infinite;" style-hover="transform:translateY(-2px)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2m0 18.15c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.25-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.23-8.24 8.23m4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.42-.14-.01-.31-.01-.48-.01s-.43.06-.66.31c-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28"></path></svg>
+          Falar com a CODEX
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer style="position:relative;z-index:1;border-top:1px solid rgba(255,255,255,.06);">
+      <div style="max-width:1200px;margin:0 auto;padding:44px 24px;display:flex;flex-wrap:wrap;gap:28px;justify-content:space-between;align-items:center;">
+        <div style="display:flex;align-items:center;gap:9px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:600;font-size:16px;">SOFTWARE</span>
+          <svg width="30" height="30" viewBox="0 0 64 64" fill="none" aria-label="CODEX" style="flex:none;">
+            <defs><linearGradient id="codexLogoGradF" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6c63ff"></stop><stop offset=".5" stop-color="#5b8cff"></stop><stop offset="1" stop-color="#00d4ff"></stop></linearGradient></defs>
+            <path d="M27 16 L13 32 L27 48" stroke="url(#codexLogoGradF)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M37 16 L51 32 L37 48" stroke="url(#codexLogoGradF)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+            <circle cx="32" cy="32" r="5" fill="#ff6584"></circle>
+          </svg><span style="font-family:'JetBrains Mono',monospace;font-weight:600;font-size:16px;">CODEX</span>
+          
+        </div>
+        <div style="display:flex;gap:26px;font-size:14px;color:#94a0b8;flex-wrap:wrap;">
+          <a href="#servicos" style-hover="color:#fff">Serviços</a>
+          <a href="#portfolio" style-hover="color:#fff">Portfólio</a>
+          <a href="#precos" style-hover="color:#fff">Preços</a>
+          <a href="{{ waMore }}" target="_blank" style-hover="color:#fff">WhatsApp</a>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5a6175;">© 2026 CODEX SOFTWARE</div>
+      </div>
+    </footer>
+
+  </main></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:900},&quot;whatsapp&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;5567999985949&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;showPricing&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;showTestimonials&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { tw: 'sites que vendem', dotMsg: '' };
+  rootRef = React.createRef();
+  canvasRef = React.createRef();
+  lithRef = React.createRef();
+  lithReveal = React.createRef();
+  lithCanvas = React.createRef();
+  vidRef = React.createRef();
+
+  componentDidMount() {
+    this.startParticles();
+    this.startTypewriter();
+    this.startReveal();
+    this.startLithos();
+    this.startVideo();
+    this.startDotTyping();
+  }
+  componentWillUnmount() {
+    cancelAnimationFrame(this._raf);
+    cancelAnimationFrame(this._lithRaf);
+    if (this._hls) this._hls.destroy();
+    clearTimeout(this._twT);
+    clearTimeout(this._dotT);
+    window.removeEventListener('resize', this._resize);
+    window.removeEventListener('resize', this._lithResize);
+    if (this._io) this._io.disconnect();
+  }
+
+  startParticles() {
+    const c = this.canvasRef.current; if (!c) return;
+    const ctx = c.getContext('2d');
+    let w, h, pts;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const build = () => {
+      w = c.clientWidth; h = c.clientHeight;
+      c.width = w * dpr; c.height = h * dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+      const N = Math.max(28, Math.min(80, Math.floor(w * h / 20000)));
+      pts = Array.from({ length: N }, () => ({
+        x: Math.random()*w, y: Math.random()*h,
+        vx: (Math.random()-.5)*.28, vy: (Math.random()-.5)*.28,
+        col: Math.random() < .5 ? '108,99,255' : '0,212,255'
+      }));
+    };
+    build();
+    this._resize = build;
+    window.addEventListener('resize', this._resize);
+    const tick = () => {
+      ctx.clearRect(0,0,w,h);
+      for (const p of pts) {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+        ctx.beginPath(); ctx.arc(p.x, p.y, 1.4, 0, 6.3);
+        ctx.fillStyle = 'rgba(' + p.col + ',.75)'; ctx.fill();
+      }
+      for (let i = 0; i < pts.length; i++) for (let j = i+1; j < pts.length; j++) {
+        const a = pts[i], b = pts[j], dx = a.x-b.x, dy = a.y-b.y, d = dx*dx+dy*dy;
+        if (d < 15000) {
+          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle = 'rgba(108,99,255,' + (0.13*(1-d/15000)).toFixed(3) + ')';
+          ctx.lineWidth = 1; ctx.stroke();
+        }
+      }
+      this._raf = requestAnimationFrame(tick);
+    };
+    tick();
+  }
+
+  startTypewriter() {
+    const words = ['sites que vendem', 'e-commerces que faturam', 'chatbots que atendem 24/7', 'automações que economizam tempo'];
+    let wi = 0, ci = words[0].length, deleting = false;
+    const step = () => {
+      const word = words[wi];
+      if (!deleting) {
+        ci++;
+        if (ci > word.length) { deleting = true; this._twT = setTimeout(step, 1500); return; }
+        this.setState({ tw: word.slice(0, ci) }); this._twT = setTimeout(step, 65);
+      } else {
+        ci--;
+        if (ci < 0) { deleting = false; wi = (wi+1) % words.length; ci = 0; this._twT = setTimeout(step, 280); return; }
+        this.setState({ tw: word.slice(0, ci) }); this._twT = setTimeout(step, 32);
+      }
+    };
+    this._twT = setTimeout(step, 1800);
+  }
+
+  startVideo() {
+    const v = this.vidRef.current; if (!v) return;
+    v.muted = true; v.volume = 0; v.defaultMuted = true;
+    const play = () => { v.muted = true; v.volume = 0; v.play && v.play().catch(() => {}); };
+    if (v.readyState >= 2) play(); else v.addEventListener('loadeddata', play, { once: true });
+  }
+
+  startDotTyping() {
+    const msgs = ['OLÁ'];
+    let mi = 0, ci = 0, deleting = false;
+    const step = () => {
+      const m = msgs[mi];
+      if (!deleting) {
+        ci++;
+        this.setState({ dotMsg: m.slice(0, ci) });
+        if (ci >= m.length) { deleting = true; this._dotT = setTimeout(step, 2000); return; }
+        this._dotT = setTimeout(step, 100);
+      } else {
+        ci--;
+        this.setState({ dotMsg: m.slice(0, ci) });
+        if (ci <= 0) { deleting = false; mi = (mi + 1) % msgs.length; this._dotT = setTimeout(step, 400); return; }
+        this._dotT = setTimeout(step, 50);
+      }
+    };
+    this._dotT = setTimeout(step, 600);
+  }
+
+  startLithos() {
+    const box = this.lithRef.current, canvas = this.lithCanvas.current, reveal = this.lithReveal.current;
+    if (!box || !canvas || !reveal) return;
+    const R = 200;
+    const mouse = { x: -999, y: -999 };
+    const smooth = { x: -999, y: -999 };
+    let active = false;
+    const ctx = canvas.getContext('2d');
+    const sizeCanvas = () => { canvas.width = box.clientWidth; canvas.height = box.clientHeight; };
+    sizeCanvas();
+    this._lithResize = sizeCanvas;
+    window.addEventListener('resize', this._lithResize);
+    this._lithMove = (e) => {
+      const r = box.getBoundingClientRect();
+      mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+      if (!active) { active = true; smooth.x = mouse.x; smooth.y = mouse.y; }
+    };
+    this._lithLeave = () => { active = false; mouse.x = -999; mouse.y = -999; };
+    const draw = () => {
+      smooth.x += (mouse.x - smooth.x) * 0.12;
+      smooth.y += (mouse.y - smooth.y) * 0.12;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const g = ctx.createRadialGradient(smooth.x, smooth.y, 0, smooth.x, smooth.y, R);
+      g.addColorStop(0, 'rgba(255,255,255,1)');
+      g.addColorStop(0.4, 'rgba(255,255,255,1)');
+      g.addColorStop(0.6, 'rgba(255,255,255,0.75)');
+      g.addColorStop(0.75, 'rgba(255,255,255,0.4)');
+      g.addColorStop(0.88, 'rgba(255,255,255,0.12)');
+      g.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(smooth.x, smooth.y, R, 0, 6.2832);
+      ctx.fill();
+      const url = canvas.toDataURL();
+      reveal.style.webkitMaskImage = 'url(' + url + ')';
+      reveal.style.maskImage = 'url(' + url + ')';
+      reveal.style.webkitMaskSize = '100% 100%';
+      reveal.style.maskSize = '100% 100%';
+      reveal.style.webkitMaskRepeat = 'no-repeat';
+      reveal.style.maskRepeat = 'no-repeat';
+      reveal.style.opacity = '1';
+      this._lithRaf = requestAnimationFrame(draw);
+    };
+    reveal.style.opacity = '0';
+    draw();
+  }
+
+  startReveal() {
+    const root = this.rootRef.current; if (!root) return;
+    const els = root.querySelectorAll('[data-reveal]');
+    this._io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'none';
+          this._io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    els.forEach((el) => this._io.observe(el));
+  }
+
+  renderVals() {
+    const num = (this.props.whatsapp ?? '5567999985949').replace(/\D/g, '');
+    const wa = (t) => 'https://wa.me/' + num + '?text=' + encodeURIComponent(t);
+    const services = [
+      { icon: '◧', title: 'Desenvolvimento de Sites', desc: 'Sites institucionais, landing pages e portfólios que transmitem credibilidade e convertem visitantes em clientes.', tags: ['Next.js', 'React', 'SEO'] },
+      { icon: '◆', title: 'Atendente Virtual no WhatsApp', desc: 'Atendimento automatizado 24/7 que qualifica leads, responde dúvidas frequentes e direciona para o fechamento.', tags: ['WhatsApp', 'IA', 'Leads'] },
+      { icon: '⚙', title: 'Automação de Sistemas', desc: 'Elimine processos manuais e repetitivos. Automatizamos notas, integrações, relatórios e fluxos de trabalho.', tags: ['APIs', 'Integrações', 'Fluxos'] },
+      { icon: '▤', title: 'Lojas Virtuais (E-commerce)', desc: 'E-commerces completos com catálogo, carrinho, pagamentos integrados e painel administrativo. Prontos para vender.', tags: ['Loja', 'Pagamentos', 'Painel'] },
+    ];
+    const stats = [
+      { value: '150+', label: 'Projetos Entregues' },
+      { value: '98%', label: 'Satisfação dos Clientes' },
+      { value: '50+', label: 'Clientes Ativos' },
+      { value: '5', label: 'Anos de Experiência' },
+    ];
+    const cases = [
+      { shot: '[ print • mercado ]', tag: 'SITE INSTITUCIONAL', title: 'Mercado Aurora', desc: 'Nova vitrine digital trouxe 40% mais pedidos pelo WhatsApp em 2 meses.' },
+    ];
+    const testimonials = [
+      { initial: 'R', name: 'Ricardo M.', role: 'Marquinhos Motos Parts', quote: 'O e-commerce e o chatbot mudaram nosso negócio. Vendemos peças o dia inteiro, mesmo de madrugada, sem ninguém respondendo manualmente.' },
+      { initial: 'A', name: 'Aline F.', role: 'Mercado Aurora', quote: 'Site lindo, rápido e que aparece no Google. Em dois meses o movimento de pedidos pelo site dobrou. Recomendo de olhos fechados.' },
+      { initial: 'C', name: 'Carla S.', role: 'Clínica Sorrir', quote: 'O bot agenda as consultas sozinho e nunca mais perdemos uma ligação. O atendimento ficou muito mais profissional.' },
+    ];
+    return {
+      rootRef: this.rootRef,
+      canvasRef: this.canvasRef,
+      lithRef: this.lithRef,
+      lithReveal: this.lithReveal,
+      lithCanvas: this.lithCanvas,
+      vidRef: this.vidRef,
+      lithMove: (e) => this._lithMove && this._lithMove(e),
+      lithLeave: () => this._lithLeave && this._lithLeave(),
+      tw: this.state.tw,
+      dotMsg: this.state.dotMsg,
+      services, stats, cases, testimonials,
+      showPricing: this.props.showPricing ?? true,
+      showTestimonials: this.props.showTestimonials ?? true,
+      waMore: wa('Olá! Vim pelo site da CODEX e gostaria de saber mais.'),
+      waBudget: wa('Olá! Vim pelo site da CODEX e gostaria de um orçamento.'),
+      waStarter: wa('Olá! Quero saber mais sobre o plano Starter.'),
+      waPro: wa('Olá! Quero saber mais sobre o plano Pro.'),
+      waEnter: wa('Olá! Quero um orçamento para um projeto Enterprise.'),
+    };
+  }
+}
+</script>
+</body>
+</html>
