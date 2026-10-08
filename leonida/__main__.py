@@ -11,6 +11,7 @@
 from __future__ import annotations
 
 import argparse
+from pathlib import Path
 import datetime as dt
 import os
 import sys
@@ -190,16 +191,28 @@ def cmd_publicacao(a):
 
 
 def cmd_musica(a):
+    import re
+    import shutil
     from . import music
+    from .config import ROOT
+    if a.listar:
+        files = music.themes()
+        print("🎵 músicas tema:" if files else "🎵 nenhuma música tema em assets/music/")
+        for f in files:
+            print(f"   {f.relative_to(ROOT)}")
+        return
     if a.arquivo:
-        import shutil
-        from .config import ROOT
         dst = ROOT / (config.brand().get("music") or {}).get("file", "assets/music/tema.mp3")
+        src = Path(a.arquivo)
+        if a.nome:
+            dst = dst.with_name(re.sub(r"[^a-z0-9-]+", "-", a.nome.lower()).strip("-") + src.suffix.lower())
         dst.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy(a.arquivo, dst)
+        shutil.copy(src, dst)
         print(f"🎵 música tema copiada para {dst}")
         return
-    print(f"🎵 {music.download(a.url, a.inicio, a.duracao)}")
+    if not a.url:
+        raise SystemExit("informe a URL do vídeo, --arquivo ou --listar")
+    print(f"🎵 {music.download(a.url, a.inicio, a.duracao, name=a.nome)}")
 
 
 def cmd_galeria(a):
@@ -319,6 +332,8 @@ def main(argv=None):
     r.add_argument("--inicio", default="0", help="ponto de início, ex.: 0:12")
     r.add_argument("--duracao", type=float, default=120)
     r.add_argument("--arquivo", help="usar um mp3/m4a que você já tem")
+    r.add_argument("--nome", help="nome da faixa (ex.: trailer-2); permite ter várias músicas tema")
+    r.add_argument("--listar", action="store_true", help="lista as músicas tema disponíveis")
     r.set_defaults(fn=cmd_musica)
 
     r = sp.add_parser("galeria", help="gera prontos/index.html")

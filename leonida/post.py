@@ -178,12 +178,20 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
             log(f"  [{lang}] vídeo…")
             engine = vid.render_video(r, folder / names["video"])
             from . import music
-            if music.apply(folder / names["video"], under_original=False):
+            if music.apply(folder / names["video"], under_original=False, seed=post["id"]):
                 manifest["music"] = True
             files.append(names["video"])
             manifest.setdefault("video_engine", engine)
         from . import publish
         publish.export_jpegs(folder)          # cópias JPEG para publicar no TikTok
+        if publish.cfg()["formato"] == "video":
+            # publicação em vídeo: é o único jeito de a música tema sempre tocar no TikTok
+            from . import postvideo
+            intro = folder / names["video"] if (folder / names["video"]).exists() else None
+            try:
+                postvideo.build(folder, seed=post["id"], intro=intro, log=log)
+            except postvideo.MusicMissing as exc:
+                log(f"  ⚠️  {exc}")
         manifest["files"][LANG_FOLDER[lang]] = files
     (out / "post.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     _write_readme(post, out, manifest)

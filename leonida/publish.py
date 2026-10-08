@@ -17,6 +17,7 @@ import json
 import subprocess
 from pathlib import Path
 
+from . import music
 from .config import LANG_FOLDER, LANGS, OUT_DIR, ROOT, STATE_DIR, brand
 
 PUBLISHED = STATE_DIR / "publicados.json"
@@ -45,7 +46,8 @@ VID_NAMES = ("video.mp4", "edicao.mp4", "edit.mp4", "corte.mp4", "clip.mp4")
 
 def cfg() -> dict:
     c = {"repo_raw": "", "revisao_manual": ["vazamento", "rumor"], "formato": "auto",
-         "metricool": {"br": "", "us": ""}, "limite_mensal": 20, "limite_diario": 1}
+         "metricool": {"br": "", "us": ""}, "limite_mensal": 20, "limite_diario": 1,
+         "fuso": "America/Cuiaba"}
     c.update(brand().get("publicar") or {})
     return c
 
@@ -93,26 +95,54 @@ def package(post_id: str) -> dict:
         d = folder / sub
         if not d.exists():
             continue
-        # o TikTok só aceita JPEG/WebP em post de fotos: publica a cópia em tiktok/*.jpg
-        jpg_dir = d / TIKTOK_DIR
-        imgs = sorted(f"{TIKTOK_DIR}/{p.name}" for p in jpg_dir.glob("*.jpg")) if jpg_dir.exists() else []
-        vids = [n for n in VID_NAMES if (d / n).exists()]
         fmt = c["formato"]
-        kind = "video" if (fmt == "video" and vids) or (fmt == "auto" and vids and not imgs) else "carrossel"
-        if kind == "carrossel" and not imgs:
-            continue
-        files = [vids[0]] if kind == "video" else imgs
         cap_file = d / ("legenda.txt" if lang == "pt" else "caption.txt")
         caption = cap_file.read_text(encoding="utf-8").strip() if cap_file.exists() else ""
         title = _headline(post_id, lang) or (caption.splitlines()[0] if caption else "")
+        # vídeo de publicação (com a música tema embutida): tiktok/post.mp4, ou a edição/corte de vídeo
+        # (a capa animada video.mp4 sozinha nunca é publicada: o vídeo do post é tiktok/post.mp4)
+        own = ("edicao.mp4", "edit.mp4", "corte.mp4", "clip.mp4") if meta.get("type") in ("edit", "clip") else ()
+        vids = [n for n in (f"{TIKTOK_DIR}/post.mp4", *own) if (d / n).exists()]
+        if own and vids and not music.themes():
+            vids = []                         # edição/corte sem música tema: não publica
+        # o TikTok só aceita JPEG/WebP em post de fotos: usa a cópia em tiktok/*.jpg
+        jpg_dir = d / TIKTOK_DIR
+        imgs = sorted(f"{TIKTOK_DIR}/{p.name}" for p in jpg_dir.glob("*.jpg")) if jpg_dir.exists() else []
+        if fmt == "video" or (fmt == "auto" and vids):
+            kind, files = "video", vids[:1]
+        else:
+            kind, files = "carrossel", imgs
+        ready, reason = bool(files), ""
+        if not files:
+            reason = ("vídeo com música tema não gerado: falta a música em assets/music/ "
+                      "(python -m leonida musica \"URL do trailer\" --inicio 0:12) — rode o build de novo"
+                      if kind == "video" else "sem artes em tiktok/*.jpg — rode o build de novo")
+        media = [f"{base}/{sha}/{rel}/{sub}/{n}" for n in files]
+        tiktok_data = {"disableComment": False, "disableDuet": False, "disableStitch": False,
+                       "privacyOption": "PUBLIC_TO_EVERYONE", "commercialContentThirdParty": False,
+                       "commercialContentOwnBrand": False,
+                       # NUNCA música automática: o TikTok sorteia qualquer faixa. A música tema vai
+                       # embutida no vídeo.
+                       "autoAddMusic": False, "isAigc": False}
+        if kind == "carrossel":
+            tiktok_data.update({"title": title[:90], "photoCoverIndex": 0})
         out["profiles"][sub] = {
             "handle": brand()["handle"][lang],
             "blog_id": str((c.get("metricool") or {}).get(sub) or ""),
             "kind": kind,
-            "media": [f"{base}/{sha}/{rel}/{sub}/{n}" for n in files],
+            "ready": ready,
+            "reason": reason,
+            "media": media,
             "caption": caption,
             "title": title[:90],
             "already_published": done.get(sub),
+            # pronto para o Metricool (createScheduledPost → info); falta só publicationDate
+            "metricool_info": {
+                "autoPublish": True, "draft": out["manual_review"], "descendants": [], "firstCommentText": "",
+                "hasNotReadNotes": False, "media": media, "mediaAltText": [], "providers": [{"network": "tiktok"}],
+                "publicationDate": {"dateTime": "AAAA-MM-DDTHH:MM:00", "timezone": c.get("fuso", "America/Cuiaba")},
+                "shortener": False, "smartLinkData": {"ids": []}, "text": caption, "tiktokData": tiktok_data,
+            },
         }
     return out
 

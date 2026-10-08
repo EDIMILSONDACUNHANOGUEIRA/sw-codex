@@ -78,29 +78,36 @@ python -m leonida build <post-id> --sem-video   # rápido, só imagens
 python -m leonida contagem               # post "faltam X dias" com screenshot oficial
 python -m leonida corte URL 0:42 1:05 --pt "Manchete *destaque*" --en "Headline *highlight*" --credito "Rockstar Games"
 python -m leonida editar URL --pt "Manchete *BR*" --en "Headline *US*"   # edição 9:16 estilo Higgsfield
-python -m leonida musica URL --inicio 0:12   # define a música tema dos vídeos
+python -m leonida musica URL --inicio 0:12 --nome trailer-1   # música tema (obrigatória)
 python -m leonida auto                   # radar → redação (Claude) → render → envio
 python -m leonida galeria                # atualiza prontos/index.html
 python -m leonida serve                  # app web
 ```
 
-## 🎵 Música tema em todos os vídeos
+## 🎵 Música tema em todas as publicações (obrigatório)
 
-Rode uma vez no seu PC (ex.: com o link do trailer oficial no YouTube e o segundo onde a música começa):
+Todo post sai com a **música tema de GTA VI**, nunca com música aleatória. Como a API do TikTok não
+deixa escolher a música de um post de fotos, o carrossel é publicado como **vídeo**
+(`prontos/<data>/<post>/br/tiktok/post.mp4`): a capa e os slides em sequência, com a música tema
+embutida. A "música automática" do TikTok fica sempre desligada.
+
+Baixe as músicas uma vez no seu PC (link do trailer oficial no YouTube e o segundo em que a música começa).
+Pode ter mais de uma; o app alterna entre elas, uma por post:
 
 ```bash
-python -m leonida musica "https://www.youtube.com/watch?v=..." --inicio 0:12
-# ou, se já tiver o arquivo:  python -m leonida musica --arquivo tema.mp3
+python -m leonida musica "https://www.youtube.com/watch?v=..." --inicio 0:12 --nome trailer-1
+python -m leonida musica "https://www.youtube.com/watch?v=..." --inicio 0:05 --nome trailer-2
+python -m leonida musica --arquivo tema.mp3 --nome minha-faixa   # se já tiver o arquivo
+python -m leonida musica --listar
 ```
 
-A partir daí **todo vídeo gerado no seu PC sai com a música** e **todo corte ganha a música por baixo** do
-áudio original (volumes em `config/brand.yaml → music`). O arquivo fica só no seu PC (não vai pro GitHub),
-então os vídeos gerados pelo GitHub Actions saem sem música — nesses, use o som do TikTok ao postar.
-Também dá para fazer pelo app: aba **Cortes → Música tema dos vídeos**.
+Os arquivos ficam só no seu PC (`assets/music/`, fora do GitHub). **Sem nenhuma música tema, o vídeo do
+post não é gerado e nada é publicado automaticamente.** Os cortes e edições de vídeo também recebem a
+música por baixo do áudio original (volumes em `config/brand.yaml → music`).
 
-> ⚠️ A música dos trailers é protegida por direitos autorais. Se o TikTok silenciar algum vídeo, poste
-> sem a música embutida (`enabled: false`) e escolha a **mesma música na biblioteca de sons do TikTok** —
-> é licenciado e ainda coloca o vídeo na página do som.
+> ⚠️ A música dos trailers é protegida por direitos autorais e o TikTok pode silenciar um vídeo. Se
+> acontecer, poste o mesmo vídeo à mão e escolha o **som oficial do trailer de GTA VI na biblioteca do
+> TikTok**, nunca um som aleatório.
 
 ## ⬇️ Vídeos do YouTube (yt-dlp)
 

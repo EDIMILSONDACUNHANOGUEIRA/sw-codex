@@ -13,3 +13,6 @@ Thumbs.db
 assets/music/*.mp3
 assets/music/*.m4a
 assets/music/*.wav
+
+# temporários do vídeo de publicação
+prontos/**/tiktok/.work/

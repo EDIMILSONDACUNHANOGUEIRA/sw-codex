@@ -50,7 +50,9 @@ publicar:
   metricool:               # blogId da marca no Metricool com cada TikTok conectado
     br: "7317240"          # marca com o @leonidawirebrz (conectada)
     us: ""                 # perfil US desativado
-  formato: auto            # auto (carrossel; vídeo só se não houver imagens) | carrossel | video
+  # video = o carrossel vira vídeo com a MÚSICA TEMA embutida (tiktok/post.mp4). É o padrão porque,
+  # pela API, post de fotos não deixa escolher a música (só "automática", que sorteia qualquer faixa).
+  formato: video           # video | carrossel (fotos sem música)
   revisao_manual: [vazamento, rumor]   # essas tags não publicam sozinhas: vão como rascunho
   limite_mensal: 20        # plano grátis do Metricool: 20 publicações/mês (rascunhos não contam)
   limite_diario: 2         # um post em cada horário abaixo, até acabar a cota do mês
@@ -66,10 +68,12 @@ acabamento:
   sombra_personagem: true  # o personagem projeta sombra na palavra gigante
   light_wrap: true         # a luz do fundo invade a borda do recorte (integra o personagem)
 
-# Trilha dos vídeos (música tema de GTA VI). O arquivo fica só no seu PC, fora do git.
-# Baixe com:  python -m leonida musica "URL do YouTube do trailer" --inicio 0:12
-# Dica: no TikTok, escolher a MESMA música na biblioteca de sons do app é o jeito licenciado
-# (o vídeo não é silenciado e entra na página do som). Para isso, use enabled: false.
+# Trilha dos vídeos: SEMPRE a música tema de GTA VI (nunca música aleatória). Os arquivos ficam só
+# no PC, em assets/music/ (fora do git — direitos autorais). Pode ter várias faixas tema; o app
+# alterna entre elas, uma por post. Baixe com:
+#   python -m leonida musica "URL do trailer no YouTube" --inicio 0:12 --nome trailer-1
+#   python -m leonida musica --listar
+# Sem nenhuma música tema, o vídeo do post não é gerado e nada é publicado automaticamente.
 music:
   enabled: true
   file: assets/music/tema.mp3

@@ -27,8 +27,12 @@ Por enquanto o vídeo está desligado: use sempre `--sem-video`.
 6. Commit + push (a galeria e os arquivos ficam visíveis no GitHub).
 
 Post diário de contagem regressiva: `python -m leonida contagem`.
-Música tema: `python -m leonida musica <url-youtube> --inicio 0:12` (todos os vídeos e cortes usam
-automaticamente; arquivo em `assets/music/`, fora do git). Downloads de vídeo: sempre via **yt-dlp**.
+**Música: SEMPRE a música tema de GTA VI, em toda publicação.** Nunca música aleatória e nunca a
+"música automática" do TikTok (`autoAddMusic: false`). Por isso o post é publicado como VÍDEO
+(`br/tiktok/post.mp4`, gerado no build com a música tema embutida), não como post de fotos. As faixas
+ficam em `assets/music/`, fora do git: `python -m leonida musica <url-do-trailer> --inicio 0:12 --nome
+trailer-2` e `python -m leonida musica --listar`. Sem música tema, não publique: avise e peça a música.
+Downloads de vídeo: sempre via **yt-dlp**.
 Perfil ativo: BR **@leonidawirebrz** (Metricool, marca 7317240). Publicação: passo 10 de
 `docs/PROMPT-DIARIO.md` e `python -m leonida publicacao <id>`.
 Cortes de vídeo: `python -m leonida corte <url|arquivo> 0:10 0:25 --pt "..." --en "..." --credito "..."`.
