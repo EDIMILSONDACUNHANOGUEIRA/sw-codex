@@ -26,7 +26,7 @@ VID_NAMES = ("video.mp4", "edicao.mp4", "edit.mp4", "corte.mp4", "clip.mp4")
 
 def cfg() -> dict:
     c = {"repo_raw": "", "revisao_manual": ["vazamento", "rumor"], "formato": "auto",
-         "metricool": {"br": "", "us": ""}}
+         "metricool": {"br": "", "us": ""}, "limite_mensal": 20, "limite_diario": 1}
     c.update(brand().get("publicar") or {})
     return c
 
@@ -67,7 +67,8 @@ def package(post_id: str) -> dict:
     meta = json.loads((folder / "post.json").read_text(encoding="utf-8")) if (folder / "post.json").exists() else {}
     tag = (meta.get("tag") or "").lower()
     done = load_published().get(post_id, {})
-    out = {"id": post_id, "tag": tag, "manual_review": tag in c["revisao_manual"], "profiles": {}}
+    out = {"id": post_id, "tag": tag, "manual_review": tag in c["revisao_manual"], "quota": quota(),
+           "profiles": {}}
     for lang in LANGS:
         sub = LANG_FOLDER[lang]
         d = folder / sub
@@ -96,6 +97,26 @@ def package(post_id: str) -> dict:
     return out
 
 
+def quota(sub: str = "br", today: dt.date | None = None) -> dict:
+    """Quantas publicações automáticas ainda cabem no plano do Metricool (mês e dia)."""
+    c = cfg()
+    today = today or dt.date.today()
+    month = day = 0
+    for entry in load_published().values():
+        e = entry.get(sub)
+        if not e or e.get("ref", "").startswith("manual"):
+            continue
+        d = dt.date.fromisoformat(str(e.get("for") or e["at"])[:10])
+        if (d.year, d.month) == (today.year, today.month):
+            month += 1
+            if d == today:
+                day += 1
+    m_left = max(0, int(c["limite_mensal"]) - month)
+    d_left = max(0, int(c["limite_diario"]) - day)
+    return {"mes_usadas": month, "mes_restantes": m_left, "hoje_usadas": day, "hoje_restantes": d_left,
+            "pode_agendar": min(m_left, d_left)}
+
+
 def _headline(post_id: str, lang: str) -> str:
     try:
         from . import post
@@ -106,7 +127,9 @@ def _headline(post_id: str, lang: str) -> str:
 
 
 def mark(post_id: str, sub: str, ref: str, when: str | None = None) -> None:
+    """ref = id do Metricool, ou 'manual' quando eu postei pelo app (não conta na cota)."""
     data = load_published()
-    data.setdefault(post_id, {})[sub] = {"ref": ref, "at": when or dt.datetime.now(dt.timezone.utc).isoformat()}
+    data.setdefault(post_id, {})[sub] = {"ref": ref, "at": dt.datetime.now(dt.timezone.utc).isoformat(),
+                                         "for": when or dt.date.today().isoformat()}
     STATE_DIR.mkdir(parents=True, exist_ok=True)
     PUBLISHED.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")

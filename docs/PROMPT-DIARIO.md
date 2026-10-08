@@ -40,6 +40,10 @@ PASSOS
     - Perfil sem `blog_id` (config/brand.yaml → publicar.metricool) ou Metricool sem TikTok
       conectado: não publique; avise em uma linha no relatório.
     - `already_published` preenchido: pule (nunca publique duas vezes).
+    - COTA (plano grátis: 20/mês): veja `quota.pode_agendar` (ou `python -m leonida publicacao cota`).
+      Se for 0, não agende: entregue o post para eu postar à mão. Se houver vários posts e pouca
+      cota, agende só o de maior impacto (oficial > viral > análise; contagem só em marcos: 40, 30,
+      21, 14, 10, 7, 5, 3, 2, 1 dias e no lançamento). Rascunhos (vazamento/rumor) não gastam cota.
     - Agende com a ferramenta do Metricool `createScheduledPost` no blog_id do BR (7317240), com
       `media` = links do pacote, `text` = legenda, `providers` = tiktok,
       `publicationDate.timezone` = America/Cuiaba (fuso da marca) e
@@ -49,7 +53,7 @@ PASSOS
       contagem regressiva sai de manhã.
     - `manual_review: true` (vazamento, rumor): agende com `draft: true`. Fica no Metricool para
       eu aprovar, não publica sozinho.
-    - Depois de agendar: `python -m leonida publicacao <id> --marcar br:<id-metricool>`,
+    - Depois de agendar: `python -m leonida publicacao <id> --marcar br:<id-metricool> --data <dia agendado>`,
       e commit + push do state/publicados.json.
 11. Se não houver nada novo e relevante, não crie post: diga só "Nada novo" e o próximo assunto a vigiar.
 
@@ -77,6 +81,8 @@ DEIXEI DE FORA
 AGENDADO NO TIKTOK (Metricool)
 - @leonidawirebrz: {post} às {hh:mm} · {post} às {hh:mm}
 - Rascunho para aprovar: {post vazamento/rumor} → {link do Metricool}
+- Para você postar à mão (sem cota): {post} — arquivos e legenda abaixo
+- Cota do mês: {usadas}/20
 
 ARQUIVOS
 prontos/{data}/<post>/br/

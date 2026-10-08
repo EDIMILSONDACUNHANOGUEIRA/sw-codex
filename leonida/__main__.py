@@ -177,10 +177,13 @@ def cmd_editar(a):
 def cmd_publicacao(a):
     import json as _json
     from . import publish
+    if a.post_id == "cota":
+        print(_json.dumps(publish.quota(), ensure_ascii=False, indent=1))
+        return
     if a.marcar:
         for item in a.marcar:
             sub, _, ref = item.partition(":")
-            publish.mark(a.post_id, sub, ref)
+            publish.mark(a.post_id, sub, ref, a.data)
         print(f"✅ registrado em {publish.PUBLISHED}")
         return
     print(_json.dumps(publish.package(a.post_id), ensure_ascii=False, indent=1))
@@ -304,7 +307,7 @@ def main(argv=None):
     r.add_argument("--motor", default=None, choices=["auto", "hyperframes", "ffmpeg"])
     r.set_defaults(fn=cmd_editar)
 
-    r = sp.add_parser("publicacao", help="pacote para publicar no TikTok via Metricool (links + legenda)")
+    r = sp.add_parser("publicacao", help="pacote para publicar no TikTok via Metricool; 'publicacao cota' mostra o limite")
     r.add_argument("post_id")
     r.add_argument("--marcar", nargs="+", metavar="PERFIL:REF",
                    help="registra como publicado, ex.: br:123 us:456")
