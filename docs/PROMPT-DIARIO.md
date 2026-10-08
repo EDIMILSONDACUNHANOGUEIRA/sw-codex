@@ -40,17 +40,17 @@ PASSOS
     - Perfil sem `blog_id` (config/brand.yaml → publicar.metricool) ou Metricool sem TikTok
       conectado: não publique; avise em uma linha no relatório.
     - `already_published` preenchido: pule (nunca publique duas vezes).
-    - COTA (plano grátis: 20/mês): veja `quota.pode_agendar` (ou `python -m leonida publicacao cota`).
-      Se for 0, não agende: entregue o post para eu postar à mão. Se houver vários posts e pouca
-      cota, agende só o de maior impacto (oficial > viral > análise; contagem só em marcos: 40, 30,
+    - COTA (plano grátis: 20/mês, 2 por dia): veja `quota.pode_agendar` (ou `python -m leonida
+      publicacao cota`). Se for 0, não agende: entregue o post para eu postar à mão. Entre vários
+      posts, agende o de maior impacto (oficial > viral > análise; contagem só em marcos: 40, 30,
       21, 14, 10, 7, 5, 3, 2, 1 dias e no lançamento). Rascunhos (vazamento/rumor) não gastam cota.
     - Agende com a ferramenta do Metricool `createScheduledPost` no blog_id do BR (7317240), com
       `media` = links do pacote, `text` = legenda, `providers` = tiktok,
       `publicationDate.timezone` = America/Cuiaba (fuso da marca) e
       `tiktokData` = {privacyOption: PUBLIC_TO_EVERYONE, title: <title>, photoCoverIndex: 0}.
-    - Horário: o melhor horário do TikTok nas próximas 12 h (`getBestTimeToPostByNetwork`), no
-      mínimo 15 min a partir de agora e com 90 min entre um post e outro. A
-      contagem regressiva sai de manhã.
+    - Horário: os horários fixos de config/brand.yaml → publicar.horarios (11:00 e 17:00,
+      fuso America/Cuiaba). Cada rodada agenda UM post, no próximo horário livre (sem post já
+      agendado no Metricool). Se o horário já passou ou falta menos de 20 min, use o seguinte.
     - `manual_review: true` (vazamento, rumor): agende com `draft: true`. Fica no Metricool para
       eu aprovar, não publica sozinho.
     - Depois de agendar: `python -m leonida publicacao <id> --marcar br:<id-metricool> --data <dia agendado>`,

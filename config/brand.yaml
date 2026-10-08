@@ -53,7 +53,9 @@ publicar:
   formato: auto            # auto (carrossel; vídeo só se não houver imagens) | carrossel | video
   revisao_manual: [vazamento, rumor]   # essas tags não publicam sozinhas: vão como rascunho
   limite_mensal: 20        # plano grátis do Metricool: 20 publicações/mês (rascunhos não contam)
-  limite_diario: 1         # 20/mês ≈ 1 por dia útil; o resto vai para você postar à mão
+  limite_diario: 2         # um post em cada horário abaixo, até acabar a cota do mês
+  horarios: ["11:00", "17:00"]   # horários de postagem (fuso da marca no Metricool)
+  fuso: America/Cuiaba
 
 # Acabamento das artes — visual fotográfico (sem cara de IA)
 acabamento:
