@@ -1,0 +1,53 @@
+# Identidade visual dos posts. Troque nome/@ pelos dos seus perfis.
+name: "LEONIDA WIRE"          # marca que aparece no topo das artes
+tagline:
+  pt: "NOTÍCIAS DE GTA VI"
+  en: "GTA VI NEWS"
+handle:
+  pt: "@leonidawirebrz"        # perfil brasileiro (TikTok)
+  en: "@leonidawireusa"        # perfil americano (TikTok)
+
+# Data oficial de lançamento (usada no contador "faltam X dias")
+release_date: "2026-11-19"
+
+# Paleta "Vice" — pôr do sol de Leonida
+palette:
+  night: "#0B0614"
+  pink: "#FF2E88"
+  orange: "#FF8A3D"
+  gold: "#FFC857"
+  purple: "#7B2FF7"
+  cyan: "#22D3EE"
+  white: "#FFFFFF"
+  mist: "#E9E3F5"
+
+# Cores dos selos (tag) por tipo de notícia
+tags:
+  oficial:   { pt: "OFICIAL",    en: "OFFICIAL",  color: "#22D3EE" }
+  urgente:   { pt: "URGENTE",    en: "BREAKING",  color: "#FF2E88" }
+  vazamento: { pt: "VAZAMENTO",  en: "LEAK",      color: "#FF3B3B" }
+  rumor:     { pt: "RUMOR",      en: "RUMOR",     color: "#FF8A3D" }
+  viral:     { pt: "VIRALIZOU",  en: "VIRAL",     color: "#FFC857" }
+  contagem:  { pt: "CONTAGEM",   en: "COUNTDOWN", color: "#7B2FF7" }
+  analise:   { pt: "ANÁLISE",    en: "ANALYSIS",  color: "#A78BFA" }
+
+# Hashtags base (o post adiciona as específicas da notícia)
+hashtags:
+  pt: ["#gta6", "#gtavi", "#gta6brasil", "#rockstargames", "#noticiasgamer"]
+  en: ["#gta6", "#gtavi", "#rockstargames", "#gamingnews", "#gaming"]
+
+# Formato TikTok
+canvas: { width: 1080, height: 1920 }
+# Áreas que a interface do TikTok cobre (em px) — nada importante é desenhado aqui
+safe_area: { top: 150, bottom: 380, right: 150, left: 64 }
+
+# Trilha dos vídeos (música tema de GTA VI). O arquivo fica só no seu PC, fora do git.
+# Baixe com:  python -m leonida musica "URL do YouTube do trailer" --inicio 0:12
+# Dica: no TikTok, escolher a MESMA música na biblioteca de sons do app é o jeito licenciado
+# (o vídeo não é silenciado e entra na página do som). Para isso, use enabled: false.
+music:
+  enabled: true
+  file: assets/music/tema.mp3
+  volume: 1.0          # vídeos de notícia (sem áudio próprio)
+  under_clip: 0.30     # cortes: música por baixo do áudio original
+  start: 0             # segundo do arquivo onde começar

@@ -1,0 +1,26 @@
+{
+  "id": "2026-10-08-gta6-vazamento-25-minutos",
+  "date": "2026-10-08",
+  "tag": "vazamento",
+  "source": {
+    "name": "Push Square",
+    "url": "https://www.pushsquare.com/news/2026/10/gta-6-gameplay-leaks-are-back-with-potentially-big-spoilers"
+  },
+  "files": {
+    "br": [
+      "01_capa.png",
+      "02_o-que-o-vazamento-mostra.png",
+      "03_siga.png",
+      "legenda.txt",
+      "video.mp4"
+    ],
+    "us": [
+      "01_cover.png",
+      "02_what-the-leak-shows.png",
+      "03_follow.png",
+      "caption.txt",
+      "video.mp4"
+    ]
+  },
+  "video_engine": "hyperframes"
+}

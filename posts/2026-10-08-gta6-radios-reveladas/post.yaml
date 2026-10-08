@@ -1,0 +1,75 @@
+id: 2026-10-08-gta6-radios-reveladas
+date: "2026-10-08"
+tag: oficial
+image: "https://www.rockstargames.com/VI/_next/static/media/Lucia_Caminos_06.0fxbjfk0jakb3.jpg"
+source:
+  name: Rockstar Games
+  url: "https://www.rockstargames.com/VI/music"
+pt:
+  kicker: RÁDIOS
+  headline: "GTA VI revela suas primeiras *6 rádios* com *Bad Bunny* e *Lana Del Rey*"
+  summary: "Slayer, Burna Boy, Robyn e Morgan Wallen também viram locutores em Leonida."
+  caption: |
+    🎧 A Rockstar revelou as primeiras 6 rádios de GTA VI — e o line-up tá INSANO.
+
+    📻 Cocoteo FM (latino) — Bad Bunny e RaiNao
+    📻 Flash FM (pop) — Robyn e Alex Consani
+    📻 Back Country Radio (country) — Lana Del Rey e Morgan Wallen
+    📻 The Chamber 106.6 (metal) — Kerry King e Tom Araya, do Slayer
+    📻 AfroBank FM (música africana) — Burna Boy e Palms Trax
+    📻 Dirty South Classics (rap) — Trick Daddy e Trina
+
+    As prévias já estão no site oficial da Rockstar. Qual vai ser a sua rádio fixa em Leonida? 👇
+  hashtags: ["#gta6radio", "#badbunny", "#lanadelrey", "#vicecity"]
+  slides:
+    - type: grid
+      title: "As 6 *rádios* de Leonida"
+      note: "Prévias no site oficial da Rockstar. Ainda vêm mais estações."
+      items:
+        - { image: "https://www.rockstargames.com/VI/_next/static/media/UI_ICON_COCOTEO_FM_RADIO_STATION.16fsxcpp600s7.jpg", label: "Cocoteo FM", sub: "Bad Bunny & RaiNao" }
+        - { image: "https://www.rockstargames.com/VI/_next/static/media/UI_ICON_FLASH_FM_RADIO_STATION_MEDIA.0ga1yom4~0.d-.jpg", label: "Flash FM", sub: "Robyn & Alex Consani" }
+        - { image: "https://www.rockstargames.com/VI/_next/static/media/UI_ICON_BACK_COUNTRY_RADIO_RADIO_STATION.11bdcia2f4s-l.jpg", label: "Back Country Radio", sub: "Lana Del Rey & Morgan Wallen" }
+        - { image: "https://www.rockstargames.com/VI/_next/static/media/UI_ICON_THE_CHAMBER_106_RADIO_STATION.0sf.i4t38_g9_.jpg", label: "The Chamber 106.6", sub: "Kerry King & Tom Araya" }
+        - { image: "https://www.rockstargames.com/VI/_next/static/media/UI_ICON_AFROBANK_FM_RADIO_STATION.0isx5p0~loag1.jpg", label: "AfroBank FM", sub: "Burna Boy & Palms Trax" }
+        - { image: "https://www.rockstargames.com/VI/_next/static/media/UI_ICON_DIRTY_SOUTH_CLASSICS_RADIO_STATION.0efe1owq0efe5.jpg", label: "Dirty South Classics", sub: "Trick Daddy & Trina" }
+    - type: list
+      title: "O que *sabemos*"
+      items:
+        - "É a maior e mais variada seleção de rádios da série, segundo a Rockstar."
+        - "Vai ter rock clássico, hip-hop, pop, metal, dance, latino, anos 80, eletrônica e talk radio."
+        - "Pela 1ª vez em GTA, Jason e Lucia têm podcasts sob demanda."
+        - "Dá pra ouvir rádio e podcast a pé, com fones conectados ao celular."
+en:
+  kicker: RADIO
+  headline: "GTA VI reveals its first *6 radio stations* — hosted by *Bad Bunny* and *Lana Del Rey*"
+  summary: "Slayer, Burna Boy, Robyn and Morgan Wallen are also on the airwaves in Leonida."
+  caption: |
+    🎧 Rockstar just revealed GTA VI's first 6 radio stations and the lineup is unreal.
+
+    📻 Cocoteo FM (Latin) — Bad Bunny & RaiNao
+    📻 Flash FM (pop) — Robyn & Alex Consani
+    📻 Back Country Radio (country) — Lana Del Rey & Morgan Wallen
+    📻 The Chamber 106.6 (metal) — Slayer's Kerry King & Tom Araya
+    📻 AfroBank FM (African music) — Burna Boy & Palms Trax
+    📻 Dirty South Classics (rap) — Trick Daddy & Trina
+
+    Previews are live on Rockstar's site. Which station are you locking in first? 👇
+  hashtags: ["#gta6radio", "#badbunny", "#lanadelrey", "#vicecity"]
+  slides:
+    - type: grid
+      title: "Leonida's first *6 stations*"
+      note: "Previews are live on Rockstar's official site. More stations still to come."
+      items:
+        - { image: "https://www.rockstargames.com/VI/_next/static/media/UI_ICON_COCOTEO_FM_RADIO_STATION.16fsxcpp600s7.jpg", label: "Cocoteo FM", sub: "Bad Bunny & RaiNao" }
+        - { image: "https://www.rockstargames.com/VI/_next/static/media/UI_ICON_FLASH_FM_RADIO_STATION_MEDIA.0ga1yom4~0.d-.jpg", label: "Flash FM", sub: "Robyn & Alex Consani" }
+        - { image: "https://www.rockstargames.com/VI/_next/static/media/UI_ICON_BACK_COUNTRY_RADIO_RADIO_STATION.11bdcia2f4s-l.jpg", label: "Back Country Radio", sub: "Lana Del Rey & Morgan Wallen" }
+        - { image: "https://www.rockstargames.com/VI/_next/static/media/UI_ICON_THE_CHAMBER_106_RADIO_STATION.0sf.i4t38_g9_.jpg", label: "The Chamber 106.6", sub: "Kerry King & Tom Araya" }
+        - { image: "https://www.rockstargames.com/VI/_next/static/media/UI_ICON_AFROBANK_FM_RADIO_STATION.0isx5p0~loag1.jpg", label: "AfroBank FM", sub: "Burna Boy & Palms Trax" }
+        - { image: "https://www.rockstargames.com/VI/_next/static/media/UI_ICON_DIRTY_SOUTH_CLASSICS_RADIO_STATION.0efe1owq0efe5.jpg", label: "Dirty South Classics", sub: "Trick Daddy & Trina" }
+    - type: list
+      title: "What we *know*"
+      items:
+        - "Rockstar calls it the biggest, widest-ranging radio selection in the series."
+        - "Classic rock, hip-hop, pop, metal, dance, Latin, '80s, electronic and talk radio."
+        - "For the first time in GTA, Jason and Lucia get on-demand podcasts."
+        - "You can listen on foot with headphones connected to your phone."

@@ -1,0 +1,22 @@
+{
+  "id": "2026-10-08-contagem-42-dias",
+  "date": "2026-10-08",
+  "tag": "contagem",
+  "source": {
+    "name": "Rockstar Games",
+    "url": "https://www.rockstargames.com/VI"
+  },
+  "files": {
+    "br": [
+      "01_capa.png",
+      "legenda.txt",
+      "video.mp4"
+    ],
+    "us": [
+      "01_cover.png",
+      "caption.txt",
+      "video.mp4"
+    ]
+  },
+  "video_engine": "hyperframes"
+}

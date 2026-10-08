@@ -1,0 +1,25 @@
+{
+  "id": "2026-10-08-gta6-radios-reveladas",
+  "date": "2026-10-08",
+  "tag": "oficial",
+  "source": {
+    "name": "Rockstar Games",
+    "url": "https://www.rockstargames.com/VI/music"
+  },
+  "files": {
+    "br": [
+      "01_capa.png",
+      "02_as-6-radios-de-leonida.png",
+      "03_o-que-sabemos.png",
+      "04_siga.png",
+      "legenda.txt"
+    ],
+    "us": [
+      "01_cover.png",
+      "02_leonida-s-first-6-statio.png",
+      "03_what-we-know.png",
+      "04_follow.png",
+      "caption.txt"
+    ]
+  }
+}

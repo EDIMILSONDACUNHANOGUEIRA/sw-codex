@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.cache/
+.venv/
+venv/
+.env
+node_modules/
+*.part
+.DS_Store
+Thumbs.db
+
+# música baixada (direitos autorais — fica só no PC)
+assets/music/*.mp3
+assets/music/*.m4a
+assets/music/*.wav

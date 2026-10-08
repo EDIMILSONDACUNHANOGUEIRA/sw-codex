@@ -1,0 +1,26 @@
+{
+  "id": "2026-10-08-australia-folga-gta6",
+  "date": "2026-10-08",
+  "tag": "viral",
+  "source": {
+    "name": "IGN",
+    "url": "https://www.ign.com/articles/australian-government-time-off-gta-6"
+  },
+  "files": {
+    "br": [
+      "01_capa.png",
+      "02_como-pedir-folga-segundo.png",
+      "03_siga.png",
+      "legenda.txt",
+      "video.mp4"
+    ],
+    "us": [
+      "01_cover.png",
+      "02_how-to-get-the-day-off.png",
+      "03_follow.png",
+      "caption.txt",
+      "video.mp4"
+    ]
+  },
+  "video_engine": "hyperframes"
+}

@@ -1,0 +1,140 @@
+# Fontes monitoradas pelo radar.
+# weight = confiança/peso da fonte (1.0 = normal). official = notícia vinda da própria Rockstar/Take-Two.
+# lang = idioma da fonte (pt ou en). Fontes PT ajudam a montar o post BR, EN o post US.
+
+keywords:
+  # Pelo menos um destes termos precisa aparecer no título/resumo para entrar no radar.
+  must_match:
+    - "gta 6"
+    - "gta vi"
+    - "gta6"
+    - "grand theft auto 6"
+    - "grand theft auto vi"
+    - "leonida"
+    - "jason duval"
+    - "lucia caminos"
+  # Termos que aumentam a prioridade (viralizam mais no TikTok).
+  boost:
+    trailer: 30
+    "trailer 3": 40
+    gameplay: 20
+    screenshot: 15
+    screenshots: 15
+    "release date": 30
+    "data de lançamento": 30
+    delay: 40
+    adiad: 40
+    "pre-order": 20
+    "pré-venda": 20
+    price: 20
+    preço: 20
+    leak: 18
+    vaza: 18
+    radio: 15
+    rádio: 15
+    online: 10
+    pc: 12
+    map: 15
+    mapa: 15
+    rockstar: 8
+    official: 15
+    oficial: 15
+  # Termos que derrubam a prioridade (listicles, guias genéricos, ofertas).
+  penalty:
+    deal: -25
+    "best games": -20
+    "games like": -25
+    quiz: -30
+    review: -10
+
+sources:
+  # ---- Oficiais ----
+  - name: Rockstar Newswire (via Google News)
+    url: "https://news.google.com/rss/search?q=site:rockstargames.com+%22Grand+Theft+Auto+VI%22&hl=en-US&gl=US&ceid=US:en"
+    lang: en
+    weight: 1.6
+    official: true
+
+  # ---- Portais BR ----
+  - name: Flow Games
+    url: "https://flowgames.gg/feed/"
+    lang: pt
+    weight: 1.3
+  - name: IGN Brasil
+    url: "https://br.ign.com/feed.xml"
+    lang: pt
+    weight: 1.3
+  - name: TecMundo / Voxel
+    url: "https://rss.tecmundo.com.br/feed"
+    lang: pt
+    weight: 1.1
+  - name: Google Notícias BR
+    url: "https://news.google.com/rss/search?q=%22GTA+6%22+OR+%22GTA+VI%22+when:2d&hl=pt-BR&gl=BR&ceid=BR:pt-419"
+    lang: pt
+    weight: 1.0
+    aggregator: true
+
+  # ---- Portais US / internacionais ----
+  - name: IGN
+    url: "https://feeds.feedburner.com/ign/all"
+    lang: en
+    weight: 1.4
+  - name: GameSpot
+    url: "https://www.gamespot.com/feeds/news/"
+    lang: en
+    weight: 1.3
+  - name: Game Informer
+    url: "https://gameinformer.com/rss.xml"
+    lang: en
+    weight: 1.3
+  - name: Kotaku
+    url: "https://kotaku.com/feed"
+    lang: en
+    weight: 1.2
+  - name: Eurogamer
+    url: "https://www.eurogamer.net/feed"
+    lang: en
+    weight: 1.2
+  - name: PC Gamer
+    url: "https://www.pcgamer.com/rss/"
+    lang: en
+    weight: 1.1
+  - name: Push Square
+    url: "https://www.pushsquare.com/feeds/latest"
+    lang: en
+    weight: 1.1
+  - name: Insider Gaming
+    url: "https://insider-gaming.com/feed/"
+    lang: en
+    weight: 1.2
+  - name: Polygon
+    url: "https://www.polygon.com/feed/"
+    lang: en
+    weight: 1.1
+  - name: TheGamer
+    url: "https://www.thegamer.com/feed/"
+    lang: en
+    weight: 0.9
+  - name: Google News US
+    url: "https://news.google.com/rss/search?q=%22GTA+6%22+OR+%22GTA+VI%22+when:2d&hl=en-US&gl=US&ceid=US:en"
+    lang: en
+    weight: 1.0
+    aggregator: true
+
+  # ---- Comunidade / vídeos virais (bom para cortes) ----
+  - name: Reddit r/GTA6 (hot)
+    url: "https://www.reddit.com/r/GTA6/hot/.rss"
+    lang: en
+    weight: 0.8
+    community: true
+  - name: Reddit r/GTA6 (top do dia)
+    url: "https://www.reddit.com/r/GTA6/top/.rss?t=day"
+    lang: en
+    weight: 0.9
+    community: true
+  - name: YouTube Rockstar Games
+    url: "https://www.youtube.com/feeds/videos.xml?user=RockstarGames"
+    lang: en
+    weight: 1.6
+    official: true
+    video: true

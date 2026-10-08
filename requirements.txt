@@ -1,0 +1,17 @@
+# Núcleo
+pillow>=10.0
+numpy>=1.26
+pyyaml>=6.0
+requests>=2.31
+feedparser>=6.0
+# App web
+fastapi>=0.110
+uvicorn>=0.29
+python-multipart>=0.0.9
+# Cortes de vídeo (download de YouTube/X/Reddit/TikTok)
+yt-dlp[default]>=2025.11.12   # inclui o yt-dlp-ejs (necessário para o YouTube)
+# Recorte do personagem (efeito "manchete atrás do personagem") — baixa ~170 MB de modelo na 1ª vez
+rembg[cpu]>=2.0.50
+# Redator automático com Claude (opcional — só usado se ANTHROPIC_API_KEY estiver definido)
+anthropic>=1.12
+# Opcional (legenda automática nos cortes): pip install faster-whisper

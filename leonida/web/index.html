@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leonida Studio</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<aside id="side">
+  <div class="logo"><span class="mark">LW</span><div><b>LEONIDA</b><small>STUDIO</small></div></div>
+  <nav>
+    <button data-tab="radar" class="on">📡 Radar</button>
+    <button data-tab="editor">✍️ Editor</button>
+    <button data-tab="prontos">✅ Prontos</button>
+    <button data-tab="cortes">✂️ Cortes</button>
+  </nav>
+  <div id="countdown" class="count"></div>
+  <div id="sys" class="sys"></div>
+</aside>
+
+<main>
+  <!-- RADAR -->
+  <section id="tab-radar" class="tab on">
+    <header class="bar">
+      <h1>Radar <span class="grad">GTA VI</span></h1>
+      <div class="actions">
+        <select id="radar-hours"><option value="24">24h</option><option value="48">48h</option><option value="72" selected>72h</option></select>
+        <button id="btn-scan" class="primary">Atualizar radar</button>
+        <button id="btn-count">+ Post de contagem</button>
+      </div>
+    </header>
+    <p class="hint">IGN, IGN Brasil, Flow Games, GameSpot, Game Informer, Kotaku, Eurogamer, PC Gamer, Insider Gaming, Push Square, Polygon, Google Notícias (BR/US), Reddit r/GTA6 e YouTube da Rockstar. Mesma notícia de vários portais = 1 card.</p>
+    <div id="radar-list" class="cards"></div>
+  </section>
+
+  <!-- EDITOR -->
+  <section id="tab-editor" class="tab">
+    <header class="bar">
+      <h1>Editor de post</h1>
+      <div class="actions">
+        <select id="post-select"></select>
+        <button id="btn-new">+ Novo</button>
+      </div>
+    </header>
+    <div id="editor" class="editor hidden">
+      <form id="post-form" class="form">
+        <div class="row">
+          <label>Selo
+            <select name="tag">
+              <option value="oficial">OFICIAL</option><option value="urgente">URGENTE</option>
+              <option value="vazamento">VAZAMENTO</option><option value="rumor">RUMOR</option>
+              <option value="viral">VIRAL</option><option value="contagem">CONTAGEM</option><option value="analise">ANÁLISE</option>
+            </select></label>
+          <label>Data <input name="date" type="date"></label>
+          <label>Layout
+            <select name="layout"><option value="cover">Capa (recorte do personagem)</option><option value="card">Card (imagem emoldurada)</option></select></label>
+        </div>
+        <label>Imagem principal (URL ou arquivo)
+          <div class="inline"><input name="image" placeholder="https://..."><button type="button" id="btn-lib">Biblioteca oficial</button>
+          <label class="file">Enviar<input type="file" id="upload" accept="image/*"></label></div></label>
+        <div class="row">
+          <label>Recuo (zoom) <input name="zoom" type="number" step="0.02" min="0.6" max="1" placeholder="auto"></label>
+          <label class="check"><input name="cutout" type="checkbox" checked> Recortar personagem</label>
+          <label class="check"><input name="cta" type="checkbox" checked> Slide final "siga"</label>
+        </div>
+        <div class="row">
+          <label>Fonte <input name="source_name" placeholder="IGN, Rockstar Games..."></label>
+          <label>Link da fonte <input name="source_url" placeholder="https://..."></label>
+        </div>
+        <div class="langs">
+          <fieldset data-lang="pt"><legend>🇧🇷 Perfil BR</legend>
+            <label>Palavra gigante <input name="pt.kicker" maxlength="12"></label>
+            <label>Manchete <small>(*palavra* = destaque)</small><input name="pt.headline"></label>
+            <label>Resumo <input name="pt.summary"></label>
+            <label>Legenda TikTok <textarea name="pt.caption" rows="6"></textarea></label>
+            <label>Hashtags <input name="pt.hashtags" placeholder="#gta6 #vicecity"></label>
+            <label>Slides extras (JSON) <textarea name="pt.slides" rows="3" class="mono"></textarea></label>
+          </fieldset>
+          <fieldset data-lang="en"><legend>🇺🇸 Perfil US</legend>
+            <label>Big word <input name="en.kicker" maxlength="12"></label>
+            <label>Headline <small>(*word* = highlight)</small><input name="en.headline"></label>
+            <label>Summary <input name="en.summary"></label>
+            <label>TikTok caption <textarea name="en.caption" rows="6"></textarea></label>
+            <label>Hashtags <input name="en.hashtags" placeholder="#gta6 #vicecity"></label>
+            <label>Extra slides (JSON) <textarea name="en.slides" rows="3" class="mono"></textarea></label>
+          </fieldset>
+        </div>
+        <div class="actions sticky">
+          <button type="button" id="btn-save">Salvar</button>
+          <button type="button" id="btn-prev-pt">Prévia BR</button>
+          <button type="button" id="btn-prev-en">Prévia US</button>
+          <label class="check"><input type="checkbox" id="with-video" checked> com vídeo</label>
+          <button type="button" id="btn-build" class="primary">Gerar post pronto</button>
+          <button type="button" id="btn-send">Enviar p/ celular</button>
+        </div>
+        <pre id="job-log" class="log hidden"></pre>
+      </form>
+      <div class="preview"><img id="preview-img" alt=""><p class="hint">A prévia mostra a capa. "Gerar" cria carrossel + vídeo + legendas em <code>prontos/</code>.</p></div>
+    </div>
+  </section>
+
+  <!-- PRONTOS -->
+  <section id="tab-prontos" class="tab">
+    <header class="bar"><h1>Prontos para postar</h1><div class="actions"><a class="btn" href="/prontos/" target="_blank">Abrir em nova aba</a></div></header>
+    <iframe id="gallery" src="about:blank"></iframe>
+  </section>
+
+  <!-- CORTES -->
+  <section id="tab-cortes" class="tab">
+    <header class="bar"><h1>Cortes de vídeo 9:16</h1></header>
+    <form id="clip-form" class="form narrow">
+      <label>Vídeo (URL do YouTube/X/Reddit/TikTok ou caminho de arquivo) <input name="src" required></label>
+      <div class="row"><label>Início <input name="start" placeholder="0:42" required></label><label>Fim <input name="end" placeholder="1:05" required></label>
+        <label>Selo <select name="tag"><option value="viral">VIRAL</option><option value="oficial">OFICIAL</option><option value="vazamento">VAZAMENTO</option><option value="rumor">RUMOR</option></select></label></div>
+      <label>Manchete BR <input name="pt" required placeholder="Jason dirige em *primeira pessoa*"></label>
+      <label>Headline US <input name="en" required placeholder="Jason drives in *first-person*"></label>
+      <label>Crédito <input name="credit" placeholder="Rockstar Games / @usuario"></label>
+      <label class="check"><input type="checkbox" name="subtitles"> Legenda automática (faster-whisper)</label>
+      <label class="check"><input type="checkbox" name="music" checked> Música tema por baixo do áudio</label>
+      <div class="actions"><button class="primary">Gerar corte</button></div>
+      <pre id="clip-log" class="log hidden"></pre>
+      <p class="hint">Download via <b>yt-dlp</b> (YouTube, X, Reddit, TikTok). Use trechos curtos, com crédito e comentário próprio. Se o YouTube pedir login, defina <code>LEONIDA_YTDLP_BROWSER=chrome</code>.</p>
+    </form>
+    <form id="music-form" class="form narrow">
+      <h2>🎵 Música tema dos vídeos</h2>
+      <p class="hint" id="music-state"></p>
+      <div class="row"><label>URL do YouTube (ex.: trailer oficial) <input name="url" required></label>
+        <label>Começar em <input name="start" placeholder="0:12"></label></div>
+      <div class="actions"><button class="primary">Baixar e usar como tema</button></div>
+      <pre id="music-log" class="log hidden"></pre>
+      <p class="hint">Todo vídeo de notícia passa a sair com essa música e os cortes ganham ela por baixo do áudio original. Alternativa 100% licenciada: escolher a mesma música na biblioteca de sons do TikTok na hora de postar.</p>
+    </form>
+  </section>
+</main>
+
+<div id="lib-modal" class="modal hidden"><div class="modal-box"><header class="bar"><h2>Screenshots oficiais (Rockstar)</h2><button id="lib-close">Fechar</button></header>
+  <input id="lib-filter" placeholder="Filtrar: Lucia, Jason, Vice_City, Leonida_Keys..."><div id="lib-grid" class="grid"></div></div></div>
+<div id="toast"></div>
+<script src="/static/app.js"></script>
+</body>
+</html>

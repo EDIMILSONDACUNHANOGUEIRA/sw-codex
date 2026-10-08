@@ -1,0 +1,52 @@
+id: 2026-10-08-gta6-tres-imagens-ineditas
+date: "2026-10-08"
+tag: oficial
+image: "https://www.rockstargames.com/VI/_next/static/media/radio-background-desktop.0hl~wc1-j9tqg.jpg"
+layout: card
+source:
+  name: Rockstar Games
+  url: "https://www.rockstargames.com/VI/music"
+pt:
+  kicker: INÉDITAS
+  headline: "Rockstar solta *3 imagens inéditas* de Vice City"
+  summary: "Encontro de carros tunados, o Ocean View Hotel à noite e uma ponte movimentada."
+  caption: |
+    👀 Junto com as rádios, a Rockstar escondeu 3 imagens INÉDITAS de GTA VI no site oficial.
+
+    1️⃣ Um encontro noturno de carros tunados (racha e customização vindo aí?)
+    2️⃣ A fachada do Ocean View Hotel com reflexos absurdos — e patinetes elétricos na rua
+    3️⃣ Uma ponte de Vice City de dia, lotada de carros
+
+    Arrasta pro lado pra ver todas. Qual ficou mais insana? 👇
+  hashtags: ["#gta6screenshots", "#vicecity", "#oceanview"]
+  slides:
+    - type: grid
+      title: "As *3 imagens* novas"
+      cols: 1
+      tile_ratio: 0.5625
+      items:
+        - { image: "https://www.rockstargames.com/VI/_next/static/media/radio-background-desktop.0hl~wc1-j9tqg.jpg", label: "Encontro de carros", sub: "Customização e rachas noturnos" }
+        - { image: "https://www.rockstargames.com/VI/_next/static/media/album-background-desktop.0sxn7hogv.8xn.jpg", label: "Ocean View Hotel", sub: "Neon, reflexos e patinetes elétricos" }
+        - { image: "https://www.rockstargames.com/VI/_next/static/media/hero-background-desktop.05jwq4z-sjai_.jpg", label: "Ponte de Vice City", sub: "Trânsito pesado em plena luz do dia" }
+en:
+  kicker: NEW SHOTS
+  headline: "Rockstar drops *3 brand-new* Vice City screenshots"
+  summary: "A late-night car meet, the Ocean View Hotel lit up in neon, and a packed bridge."
+  caption: |
+    👀 Rockstar quietly dropped 3 NEW GTA VI screenshots alongside the radio reveal.
+
+    1️⃣ A late-night car meet (street racing + customization?)
+    2️⃣ The Ocean View Hotel with insane reflections — and e-scooters on the street
+    3️⃣ A busy Vice City bridge in broad daylight
+
+    Swipe to see them all. Which one goes hardest? 👇
+  hashtags: ["#gta6screenshots", "#vicecity", "#oceanview"]
+  slides:
+    - type: grid
+      title: "The *3 new* shots"
+      cols: 1
+      tile_ratio: 0.5625
+      items:
+        - { image: "https://www.rockstargames.com/VI/_next/static/media/radio-background-desktop.0hl~wc1-j9tqg.jpg", label: "Car meet", sub: "Customization and late-night racing" }
+        - { image: "https://www.rockstargames.com/VI/_next/static/media/album-background-desktop.0sxn7hogv.8xn.jpg", label: "Ocean View Hotel", sub: "Neon, reflections and e-scooters" }
+        - { image: "https://www.rockstargames.com/VI/_next/static/media/hero-background-desktop.05jwq4z-sjai_.jpg", label: "Vice City bridge", sub: "Rush-hour traffic in broad daylight" }
