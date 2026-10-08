@@ -310,7 +310,8 @@ def main(argv=None):
     r = sp.add_parser("publicacao", help="pacote para publicar no TikTok via Metricool; 'publicacao cota' mostra o limite")
     r.add_argument("post_id")
     r.add_argument("--marcar", nargs="+", metavar="PERFIL:REF",
-                   help="registra como publicado, ex.: br:123 us:456")
+                   help="registra como publicado, ex.: br:391559202 (ou br:manual)")
+    r.add_argument("--data", default=None, help="dia agendado (AAAA-MM-DD) ao marcar; padrão hoje")
     r.set_defaults(fn=cmd_publicacao)
 
     r = sp.add_parser("musica", help="baixa/define a música tema usada nos vídeos")
