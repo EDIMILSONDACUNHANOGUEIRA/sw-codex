@@ -52,10 +52,15 @@ def ensure_min(im: Image.Image, min_w: int, min_h: int) -> Image.Image:
     if big is not None:
         return big
     nw, nh = int(im.width * factor + 0.5), int(im.height * factor + 0.5)
-    up = im.resize((nw, nh), Image.LANCZOS)
-    return up.filter(ImageFilter.UnsharpMask(radius=2.0, percent=70, threshold=2))
+    return im.resize((nw, nh), Image.LANCZOS)
 
 
 def sharpen(im: Image.Image, amount: int = 60) -> Image.Image:
-    """Nitidez leve depois do redimensionamento (deixa a foto 'crocante' no celular)."""
-    return im.filter(ImageFilter.UnsharpMask(radius=1.4, percent=amount, threshold=2))
+    """Nitidez fina só na luminância, depois do redimensionamento.
+
+    Raio pequeno e limiar alto: realça textura real (pele, tecido, asfalto) sem criar o contorno
+    claro em volta das bordas nem realçar ruído — os dois sinais clássicos de foto "processada"."""
+    ycc = im.convert("YCbCr")
+    y, cb, cr = ycc.split()
+    y = y.filter(ImageFilter.UnsharpMask(radius=0.9, percent=int(amount * 0.8), threshold=4))
+    return Image.merge("YCbCr", (y, cb, cr)).convert("RGB")

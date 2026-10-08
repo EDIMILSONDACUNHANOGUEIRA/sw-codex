@@ -164,6 +164,16 @@ def cmd_corte(a):
     gallery.build()
 
 
+def cmd_editar(a):
+    from . import edit, gallery
+    head = {k: v for k, v in (("pt", a.pt), ("en", a.en)) if v}
+    out = edit.make_edit(a.fonte_video, start=a.inicio, end=a.fim, duration=a.duracao, style=a.estilo,
+                         layout=a.formato, headline=head, tag=a.tag, source=a.credito, subtitles=a.legendas,
+                         audio=not a.sem_audio, music_on=not a.sem_musica, engine=a.motor)
+    print(f"✅ {out}")
+    gallery.build()
+
+
 def cmd_musica(a):
     from . import music
     if a.arquivo:
@@ -262,6 +272,25 @@ def main(argv=None):
     r.add_argument("--legendas", action="store_true", help="legenda automática (faster-whisper)")
     r.add_argument("--sem-musica", action="store_true", help="não colocar a música tema por baixo")
     r.set_defaults(fn=cmd_corte)
+
+    r = sp.add_parser("editar", aliases=["edit"],
+                      help="edição 9:16 de um vídeo: movimentos de câmera, transições, grade e marca")
+    r.add_argument("fonte_video", help="URL (YouTube, X, Reddit, TikTok...) ou arquivo local")
+    r.add_argument("--inicio", default="0", help="usar o vídeo a partir daqui (ex.: 0:30)")
+    r.add_argument("--fim", default=None, help="usar o vídeo até aqui (ex.: 2:10)")
+    r.add_argument("--duracao", type=float, default=20, help="duração da edição em segundos (padrão 20)")
+    r.add_argument("--estilo", default="hype", choices=["hype", "cinema", "noticia"])
+    r.add_argument("--formato", default="cheio", choices=["cheio", "janela"],
+                   help="cheio = tela toda reenquadrada no personagem; janela = 16:9 com fundo desfocado")
+    r.add_argument("--pt", default="", help="manchete BR (*destaque*)")
+    r.add_argument("--en", default="", help="manchete US (*highlight*)")
+    r.add_argument("--tag", default="viral")
+    r.add_argument("--credito", default="", help="crédito do vídeo (padrão: canal do YouTube)")
+    r.add_argument("--legendas", action="store_true", help="legenda automática (faster-whisper)")
+    r.add_argument("--sem-audio", action="store_true", help="descarta o áudio original")
+    r.add_argument("--sem-musica", action="store_true", help="não colocar a música tema")
+    r.add_argument("--motor", default=None, choices=["auto", "hyperframes", "ffmpeg"])
+    r.set_defaults(fn=cmd_editar)
 
     r = sp.add_parser("musica", help="baixa/define a música tema usada nos vídeos")
     r.add_argument("url", nargs="?", help="URL do YouTube (ex.: trailer oficial)")

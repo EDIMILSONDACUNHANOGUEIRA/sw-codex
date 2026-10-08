@@ -31,6 +31,28 @@ automaticamente; arquivo em `assets/music/`, fora do git). Downloads de vídeo: 
 Perfis: BR **@leonidawirebrz**, US **@leonidawireusa** (em `config/brand.yaml`).
 Cortes de vídeo: `python -m leonida corte <url|arquivo> 0:10 0:25 --pt "..." --en "..." --credito "..."`.
 
+## Quando chegar um link de vídeo ("edita esse vídeo")
+
+1. Descubra do que se trata (título/canal do vídeo, matéria relacionada) e **confirme os fatos** como
+   num post normal. Escreva a manchete BR e US (≤ 70 caracteres, `*destaque*`) e escolha a tag.
+2. Rode a edição:
+   ```bash
+   python -m leonida editar "URL" --pt "Manchete *BR*" --en "Headline *US*" --tag oficial \
+       --estilo hype --duracao 20            # --inicio 0:30 --fim 2:00 para usar só um trecho
+   ```
+   - `--estilo hype` (padrão): cortes de ~1 s, snap/crash zoom, câmera na mão, whip pan, flash.
+   - `--estilo cinema`: planos longos, dolly/travelling lentos, cortes secos (trailers).
+   - `--estilo noticia`: ritmo médio, movimentos discretos.
+   - `--formato janela`: vídeo 16:9 inteiro com fundo desfocado (quando cortar as laterais estraga).
+   - `--legendas`: legenda automática (precisa de `pip install faster-whisper`).
+   - Crédito: o canal do YouTube entra sozinho; use `--credito` para trocar.
+3. Abra `prontos/<data>/<id>/br/previa.jpg` (8 quadros da edição) e revise: personagem fora do
+   quadro, texto em cima de rosto, trecho com conteúdo explícito. Ajuste e rode de novo.
+4. A legenda em `legenda.txt`/`caption.txt` sai só com manchete + crédito: **reescreva no formato de
+   legenda do post** (gancho, fatos, pergunta) antes de entregar.
+5. Regras: trechos curtos de vídeo de terceiros, sempre com crédito e com edição/comentário próprio.
+   Nada de vídeo vazado com conteúdo explícito.
+
 ## Modelo de `post.yaml`
 
 ```yaml
@@ -80,6 +102,10 @@ en:
 
 ## Estilo visual (não mude sem pedir)
 
+Acabamento fotográfico (config `acabamento` no brand.yaml): sem contorno neon no personagem, sombra
+do personagem na palavra gigante, luz do fundo na borda do recorte, grão de filme e halação. Isso
+evita a cara de "arte gerada por IA". `neon: true` volta ao visual antigo.
+
 Paleta "Vice" (pôr do sol de Leonida): night `#0B0614`, pink `#FF2E88`, orange `#FF8A3D`,
 gold `#FFC857`, purple `#7B2FF7`, cyan `#22D3EE`. Fontes: Anton (manchetes), Inter (texto),
 Yellowtail (assinatura). Assinatura da marca: **palavra gigante atrás do personagem recortado**,
@@ -95,6 +121,7 @@ Tudo é configurável em `config/brand.yaml` (nome, @ dos perfis, paleta, selos,
 | `leonida/cutout.py` | recorte do personagem (rembg) |
 | `leonida/video.py` | vídeo animado (HyperFrames; fallback FFmpeg) |
 | `leonida/clips.py` | cortes 9:16 de vídeos (yt-dlp + FFmpeg + legendas faster-whisper) |
+| `leonida/edit.py` | edição de vídeo por link: cenas, reenquadramento, movimentos de câmera, transições (HyperFrames) |
 | `leonida/writer.py` | redação automática via Claude API (opcional) |
 | `leonida/post.py` | `post.yaml` → `prontos/` (+ README.md por post) |
 | `leonida/server.py` + `web/` | app web (`python -m leonida serve`) |

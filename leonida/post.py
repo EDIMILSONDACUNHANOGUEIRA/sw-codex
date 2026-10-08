@@ -10,7 +10,7 @@ from pathlib import Path
 
 import yaml
 
-from . import render
+from . import gfx, render
 from .config import LANG_FOLDER, LANGS, OUT_DIR, POSTS_DIR, brand
 
 FILE_NAMES = {
@@ -164,12 +164,12 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
             else:
                 im = render.slide_list(post, lang, slide, base_dir, today)
             fn = f"{n:02d}_{slugify(slide.get('title', slide.get('type', 'slide')), 24)}.png"
-            im.save(folder / fn, optimize=True)
+            gfx.finish(im.convert("RGB")).save(folder / fn, optimize=True)
             files.append(fn)
             n += 1
         if post[lang].get("slides") and post.get("cta", True):
             fn = f"{n:02d}_{'siga' if lang == 'pt' else 'follow'}.png"
-            render.slide_cta(post, lang, base_dir, today).save(folder / fn, optimize=True)
+            gfx.finish(render.slide_cta(post, lang, base_dir, today).convert("RGB")).save(folder / fn, optimize=True)
             files.append(fn)
         (folder / names["caption"]).write_text(caption_text(post, lang), encoding="utf-8")
         files.append(names["caption"])

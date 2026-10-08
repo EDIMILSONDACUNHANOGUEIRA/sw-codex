@@ -315,7 +315,12 @@ def compose_bg(src: Image.Image, full_mask: Image.Image | None, size, focus, zoo
     m = None
     if full_mask is not None:
         fm = gfx.cover_fit(full_mask.convert("RGB"), (W, h), focus).convert("L")
-        fm = Image.fromarray((np.asarray(fm, dtype=np.float32) * ramp).astype(np.uint8), "L")
+        # a máscara NÃO acompanha a rampa longa da foto (senão a cabeça fica transparente e a palavra
+        # gigante "vaza" por dentro dela); só suaviza os primeiros px, onde a foto termina
+        edge = np.ones((h, 1), dtype=np.float32)
+        e = min(48, h // 10)
+        edge[:e, 0] = np.linspace(0, 1, e, dtype=np.float32)
+        fm = Image.fromarray((np.asarray(fm, dtype=np.float32) * edge).astype(np.uint8), "L")
         m = Image.new("L", size, 0)
         m.paste(fm, (0, H - h))
     return back, m
@@ -344,6 +349,8 @@ def cover(post: dict, lang: str, base_dir: Path | None = None, today: dt.date | 
         work = src.copy()
         work.thumbnail((1920, 1920), Image.LANCZOS)
         full_mask = cut.subject_mask(work)
+        if full_mask is not None:
+            full_mask = gfx.refine_mask(work, full_mask)   # borda segue cabelo/roupa da foto
         if full_mask is not None and not focus:
             c = cut.mask_centroid(full_mask)
             if c:
@@ -383,6 +390,7 @@ def cover(post: dict, lang: str, base_dir: Path | None = None, today: dt.date | 
     # ---------- fundo (com recuo automático se o personagem esconder a palavra gigante)
     kicker = loc.get("kicker")
     k_ymin, k_ymax = s_top + 110, pill_y - 40
+    subj_src = None
     if layout == "card":
         bg = gfx.cover_fit(src, size, focus).filter(ImageFilter.GaussianBlur(38))
         bg = gfx.vice_grade(bg, 1.0).convert("RGBA")
@@ -405,21 +413,43 @@ def cover(post: dict, lang: str, base_dir: Path | None = None, today: dt.date | 
                 best = (score, z, raw_z, mask_z)
         _, zoom, raw, mask = best
         bg = gfx.vice_grade(upscale.sharpen(raw), float(post.get("grade", 1.0))).convert("RGBA")
+        subj_src = bg
+        if zoom < 0.999 and mask is not None:
+            # personagem vem da foto nítida, sem a mistura com o fundo desfocado
+            hz = int(H * zoom)
+            sharp = raw.copy()
+            sharp.paste(gfx.cover_fit(src, (W, hz), focus), (0, H - hz))
+            subj_src = gfx.vice_grade(upscale.sharpen(sharp), float(post.get("grade", 1.0))).convert("RGBA")
     bg.alpha_composite(gfx.vertical_fade(size, pal["night"], 0.0, 0.22, 200, 0))
     bg.alpha_composite(gfx.scanlines(size, 4, 4))
     layers.append(Layer("bg", bg, "kenburns", 0))
 
     # ---------- kicker + personagem
+    kl = None
     if kicker and layout != "card" and (mask is not None or post.get("kicker_without_cutout")):
         kl, _, _ = kicker_layer(size, kicker, mask, k_ymin, k_ymax)
         layers.append(Layer("kicker", kl, "kicker", 1))
     if mask is not None:
-        glow_l = gfx.glow(mask, "#FF2E88", 26, 1.15, spread=4)
-        gmask = np.asarray(glow_l.split()[-1]).astype(np.int16) - np.asarray(mask).astype(np.int16)
-        glow_l.putalpha(Image.fromarray(np.clip(gmask, 0, 255).astype(np.uint8)))
+        fin = gfx.look()
         subj = _blank(size)
-        subj.paste(bg, (0, 0), mask)
-        layers.append(Layer("subject_glow", glow_l, "subject", 2))
+        subj.paste(subj_src, (0, 0), mask)
+        if fin["neon"]:   # visual antigo: contorno rosa em volta do personagem
+            glow_l = gfx.glow(mask, "#FF2E88", 26, 1.15, spread=4)
+            gmask = np.asarray(glow_l.split()[-1]).astype(np.int16) - np.asarray(mask).astype(np.int16)
+            glow_l.putalpha(Image.fromarray(np.clip(gmask, 0, 255).astype(np.uint8)))
+            layers.append(Layer("subject_glow", glow_l, "subject", 2))
+        elif kl is not None and fin["sombra_personagem"]:
+            # sombra do personagem caindo sobre a palavra gigante (só onde há letra)
+            sh = gfx.contact_shadow(mask, (16, 20), 20, 0.55)
+            k_alpha = np.asarray(kl.split()[-1], dtype=np.float32) / 255.0
+            sh.putalpha(Image.fromarray((np.asarray(sh.split()[-1]) * k_alpha).astype(np.uint8)))
+            layers.append(Layer("subject_shadow", sh, "subject", 2))
+        if fin["light_wrap"] and not fin["neon"]:
+            behind = bg.copy()
+            if kl is not None:
+                behind.alpha_composite(kl)
+            subj = gfx.light_wrap(subj, behind, mask, 8, 0.35)
+            subj.putalpha(mask)
         layers.append(Layer("subject", subj, "subject", 3))
 
     if layout == "card":
@@ -478,7 +508,7 @@ def cover(post: dict, lang: str, base_dir: Path | None = None, today: dt.date | 
     img = _blank(size)
     for ly in sorted(layers, key=lambda L: L.order):
         img.alpha_composite(ly.image)
-    return Render(img.convert("RGB"), layers, {"focus": focus, "has_cutout": mask is not None, "zoom": zoom,
+    return Render(gfx.finish(img.convert("RGB")), layers, {"focus": focus, "has_cutout": mask is not None, "zoom": zoom,
                                               "headline_size": fh.size, "lines": len(hl_lines)})
 
 

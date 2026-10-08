@@ -11,6 +11,7 @@ tudo pronto para você só baixar e postar no perfil brasileiro e no americano.
 | 📡 **Radar** | IGN, IGN Brasil, Flow Games, TecMundo/Voxel, GameSpot, Game Informer, Kotaku, Eurogamer, PC Gamer, Push Square, Insider Gaming, Polygon, Google Notícias, Reddit r/GTA6 e YouTube da Rockstar. Junta a mesma notícia de vários sites e ranqueia por relevância. |
 | 🎨 **Estilo próprio** | Paleta "Vice" (pôr do sol de Leonida), palavra gigante **atrás do personagem recortado**, manchete com destaque em gradiente, cantos neon, contador "X dias para o GTA VI". |
 | 🎬 **Vídeo** | Capa animada de 8 s (HyperFrames + GSAP): flash, palavra entrando, personagem subindo, manchete linha a linha — com a **música tema** de fundo. |
+| 🎥 **Edição por link** | Mande um link: o app acha as cenas, reenquadra 9:16 no personagem e aplica movimentos de câmera estilo Higgsfield (crash zoom, dolly, câmera na mão, whip pan, câmera lenta) no HyperFrames, com grão de filme, marca e manchete BR/US. |
 | ✂️ **Cortes** | Trailer/gameplay/vídeo viral (baixado com **yt-dlp**) → corte 9:16 com fundo desfocado, moldura da marca, música tema por baixo e legenda automática. |
 | ✍️ **Redação** | O Codex/Claude escreve no seu PC (veja `AGENTS.md`) ou o Claude API escreve sozinho na nuvem. |
 | 📲 **Entrega** | Pasta pronta por post + galeria com botão "copiar legenda" + envio opcional no Telegram/Discord. |
@@ -76,6 +77,7 @@ python -m leonida build <post-id>        # gera capa + carrossel + vídeo + lege
 python -m leonida build <post-id> --sem-video   # rápido, só imagens
 python -m leonida contagem               # post "faltam X dias" com screenshot oficial
 python -m leonida corte URL 0:42 1:05 --pt "Manchete *destaque*" --en "Headline *highlight*" --credito "Rockstar Games"
+python -m leonida editar URL --pt "Manchete *BR*" --en "Headline *US*"   # edição 9:16 estilo Higgsfield
 python -m leonida musica URL --inicio 0:12   # define a música tema dos vídeos
 python -m leonida auto                   # radar → redação (Claude) → render → envio
 python -m leonida galeria                # atualiza prontos/index.html
@@ -112,6 +114,10 @@ $env:LEONIDA_YTDLP_BROWSER="chrome"   # usa os cookies do seu navegador (chrome,
 ```
 
 ## 🔍 Qualidade de imagem
+
+- **Sem cara de IA:** nada de contorno neon no personagem. Ele projeta sombra na palavra gigante, a
+  luz do fundo invade a borda do recorte, a máscara segue o cabelo, e a arte inteira ganha grão de
+  filme e halação. Ajuste em `config/brand.yaml → acabamento` (`neon: true` volta ao visual antigo).
 
 - Artes em **1080×1920** (máximo do TikTok para fotos), PNG sem perda, com nitidez aplicada.
 - Fotos pequenas (ex.: imagem de matéria em 1280×720) são ampliadas antes do recorte. Para upscale

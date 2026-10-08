@@ -41,6 +41,15 @@ canvas: { width: 1080, height: 1920 }
 # Áreas que a interface do TikTok cobre (em px) — nada importante é desenhado aqui
 safe_area: { top: 150, bottom: 380, right: 150, left: 64 }
 
+# Acabamento das artes — visual fotográfico (sem cara de IA)
+acabamento:
+  neon: false              # true = visual antigo (contorno rosa no personagem, brilho neon nos textos)
+  scanlines: false         # linhas de TV por cima da foto
+  grao: 1.0                # grão de filme (0 = desliga, 1 = padrão, 1.5 = forte)
+  halacao: 1.0             # brilho quente em volta das luzes fortes, como em filme
+  sombra_personagem: true  # o personagem projeta sombra na palavra gigante
+  light_wrap: true         # a luz do fundo invade a borda do recorte (integra o personagem)
+
 # Trilha dos vídeos (música tema de GTA VI). O arquivo fica só no seu PC, fora do git.
 # Baixe com:  python -m leonida musica "URL do YouTube do trailer" --inicio 0:12
 # Dica: no TikTok, escolher a MESMA música na biblioteca de sons do app é o jeito licenciado

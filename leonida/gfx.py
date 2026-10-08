@@ -83,35 +83,150 @@ def cover_fit(im: Image.Image, size, focus=(0.5, 0.5)) -> Image.Image:
     return im.crop((left, top, left + tw, top + th))
 
 
+def look() -> dict:
+    """Acabamento das artes (config/brand.yaml -> acabamento). Padrão: visual fotográfico, sem neon."""
+    from .config import brand
+    cfg = {"neon": False, "scanlines": False, "grao": 1.0, "halacao": 1.0, "sombra_personagem": True,
+           "light_wrap": True}
+    cfg.update(brand().get("acabamento") or {})
+    return cfg
+
+
+def _lum(a: np.ndarray) -> np.ndarray:
+    return 0.2126 * a[..., 0] + 0.7152 * a[..., 1] + 0.0722 * a[..., 2]
+
+
+def _skin_weight(a: np.ndarray) -> np.ndarray:
+    """0..1 — quanto o pixel parece pele (matiz laranja/vermelho, saturação moderada)."""
+    mx, mn = a.max(axis=-1), a.min(axis=-1)
+    sat = (mx - mn) / (mx + 1e-6)
+    r, g, b = a[..., 0], a[..., 1], a[..., 2]
+    warm = (r >= g) & (g >= b)                       # matiz entre vermelho e amarelo
+    hue = np.where(warm, (g - b) / (r - b + 1e-6), 0)  # 0 = vermelho, 1 = amarelo
+    w = warm * np.clip(1 - np.abs(hue - 0.42) / 0.38, 0, 1)
+    w *= np.clip(1 - np.abs(sat - 0.38) / 0.32, 0, 1) * np.clip((mx - 0.12) / 0.2, 0, 1)
+    return w.astype(np.float32)
+
+
 def vice_grade(im: Image.Image, strength: float = 1.0, seed: int = 6) -> Image.Image:
-    """Color grading do estilo: contraste, saturação, sombras roxas, altas luzes quentes, vinheta e grão."""
+    """Color grading do estilo, com cara de foto tratada (não de filtro):
+    curva fílmica (sombras levemente lavadas, altas luzes que não estouram), vibrance em vez de
+    saturação bruta, tons de pele protegidos, split toning roxo/quente discreto e vinheta suave.
+    O grão fica no acabamento final (`finish`), por cima de tudo."""
     a = np.asarray(im.convert("RGB"), dtype=np.float32) / 255.0
     h, w, _ = a.shape
-    # contraste em S
-    a = a + strength * 0.18 * (a - 0.5) * (1 - np.abs(2 * a - 1))
-    # saturação
-    lum = (0.2126 * a[..., 0] + 0.7152 * a[..., 1] + 0.0722 * a[..., 2])[..., None]
-    a = lum + (a - lum) * (1 + 0.18 * strength)
-    # split toning
-    shadow = np.array([0.20, 0.06, 0.36], dtype=np.float32)
-    high = np.array([1.00, 0.70, 0.52], dtype=np.float32)
-    ws = ((1 - lum) ** 2.2) * 0.35 * strength
-    wh = (lum ** 2.5) * 0.14 * strength
+    skin = _skin_weight(a)[..., None]
+    # curva em S suave + ombro nas altas luzes + preto levemente lavado (matte)
+    a = a + strength * 0.12 * (a - 0.5) * (1 - np.abs(2 * a - 1))
+    a = np.where(a > 0.78, 0.78 + 0.22 * np.tanh((a - 0.78) / 0.22), a)
+    a = 0.012 * strength + a * (1 - 0.012 * strength)
+    # vibrance: realça cores apagadas, quase não mexe nas já saturadas nem na pele
+    lum = _lum(a)[..., None]
+    sat = (a.max(axis=-1, keepdims=True) - a.min(axis=-1, keepdims=True))
+    a = lum + (a - lum) * (1 + 0.22 * strength * (1 - sat) * (1 - 0.7 * skin))
+    # split toning (sombras roxas, altas luzes quentes) — mais leve na pele
+    shadow = np.array([0.22, 0.10, 0.34], dtype=np.float32)
+    high = np.array([1.00, 0.80, 0.62], dtype=np.float32)
+    ws = ((1 - lum) ** 2.4) * 0.20 * strength * (1 - 0.6 * skin)
+    wh = (lum ** 2.5) * 0.08 * strength
     a = a * (1 - ws) + shadow * ws
     a = a * (1 - wh) + high * wh
-    # vinheta
+    # vinheta suave, elíptica
     yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
     d = np.sqrt(((xx - w / 2) / (w / 2)) ** 2 + ((yy - h / 2) / (h / 2)) ** 2)
-    a *= (1 - 0.32 * strength * np.clip(d - 0.55, 0, 1) ** 1.4)[..., None]
-    # grão determinístico
-    rng = np.random.default_rng(seed)
-    a += rng.normal(0, 0.008 * strength, (h, w, 1)).astype(np.float32)
-    return Image.fromarray((a.clip(0, 1) * 255).astype(np.uint8), "RGB")
+    a *= (1 - 0.22 * strength * np.clip(d - 0.6, 0, 1) ** 1.6)[..., None]
+    return Image.fromarray((a.clip(0, 1) * 255 + 0.5).astype(np.uint8), "RGB")
+
+
+def finish(im: Image.Image, grain: float | None = None, halation: float | None = None, seed: int = 7) -> Image.Image:
+    """Acabamento fotográfico aplicado na arte inteira (foto + textos), como numa revista impressa:
+    halação nas luzes fortes e grão de filme (em "grumos", mais forte nos meios-tons, quase sem cor).
+    É o que tira o aspecto liso/plástico de imagem gerada."""
+    from scipy import ndimage
+    cfg = look()
+    grain = cfg["grao"] if grain is None else grain
+    halation = cfg["halacao"] if halation is None else halation
+    mode = im.mode
+    rgb = np.asarray(im.convert("RGB"), dtype=np.float32) / 255.0
+    h, w, _ = rgb.shape
+    if halation > 0:
+        lum = _lum(rgb)
+        hot = np.clip((lum - 0.80) / 0.2, 0, 1)
+        small = ndimage.zoom(hot, 0.25, order=1)
+        glow = ndimage.zoom(ndimage.gaussian_filter(small, 5), (h / small.shape[0], w / small.shape[1]), order=1)
+        glow = glow[:h, :w]
+        tint = np.array([1.0, 0.42, 0.22], dtype=np.float32)
+        rgb = rgb + (glow[..., None] * tint * 0.07 * halation) * (1 - rgb)
+    if grain > 0:
+        rng = np.random.default_rng(seed)
+        gh, gw = int(h / 1.7) + 1, int(w / 1.7) + 1
+        mono = ndimage.zoom(rng.normal(0, 1, (gh, gw)).astype(np.float32), 1.7, order=3)[:h, :w]
+        chroma = ndimage.zoom(rng.normal(0, 1, (gh // 2 + 1, gw // 2 + 1, 3)).astype(np.float32),
+                              (3.4, 3.4, 1), order=1)[:h, :w]
+        lum = _lum(rgb)
+        weight = (0.35 + 2.6 * lum * (1 - lum))[..., None]          # mais grão nos meios-tons
+        rgb = rgb + (mono[..., None] * 0.017 + chroma * 0.0035) * grain * weight
+    out = Image.fromarray((rgb.clip(0, 1) * 255 + 0.5).astype(np.uint8), "RGB")
+    if mode == "RGBA":
+        out.putalpha(im.split()[-1])
+    return out
+
+
+def _box(x: np.ndarray, r: int) -> np.ndarray:
+    from scipy import ndimage
+    return ndimage.uniform_filter(x, size=2 * r + 1, mode="reflect")
+
+
+def refine_mask(image: Image.Image, mask: Image.Image, radius: int = 6, eps: float = 1e-3) -> Image.Image:
+    """Filtro guiado (He et al.): a borda da máscara passa a seguir a foto (cabelo, ombro, tecido)
+    em vez da borda "recortada a tesoura" típica de remoção de fundo."""
+    I = np.asarray(image.convert("L").resize(mask.size), dtype=np.float32) / 255.0
+    p = np.asarray(mask, dtype=np.float32) / 255.0
+    # o U²-Net deixa áreas meio transparentes (topo da cabeça, cabelo escuro): o fundo "vaza" por
+    # dentro do personagem. Firma o miolo antes de refinar a borda.
+    p = np.clip((p - 0.12) / 0.5, 0, 1)
+    mI, mp = _box(I, radius), _box(p, radius)
+    cov = _box(I * p, radius) - mI * mp
+    var = _box(I * I, radius) - mI * mI
+    a = cov / (var + eps)
+    b = mp - a * mI
+    q = _box(a, radius) * I + _box(b, radius)
+    # mantém o miolo sólido e só refina a faixa de borda
+    core = _box((p > 0.5).astype(np.float32), radius) 
+    q = np.where(core > 0.98, 1.0, np.where(core < 0.02, 0.0, q))
+    return Image.fromarray((np.clip(q, 0, 1) * 255 + 0.5).astype(np.uint8), "L")
+
+
+def contact_shadow(mask: Image.Image, offset=(14, 18), radius: int = 18, opacity: float = 0.5) -> Image.Image:
+    """Sombra que o personagem projeta no que está atrás dele (a palavra gigante)."""
+    m = ImageChops.offset(mask, *offset).filter(ImageFilter.GaussianBlur(radius))
+    m = m.point(lambda v: int(v * opacity))
+    layer = Image.new("RGBA", mask.size, (8, 4, 16, 0))
+    layer.putalpha(m)
+    return layer
+
+
+def light_wrap(subject: Image.Image, behind: Image.Image, mask: Image.Image, width: int = 10,
+               amount: float = 0.55) -> Image.Image:
+    """A luz do fundo "invade" a borda do personagem, como acontece numa foto real.
+    Sem isso o recorte parece colado por cima."""
+    m = np.asarray(mask, dtype=np.float32) / 255.0
+    inner = np.asarray(mask.filter(ImageFilter.GaussianBlur(width)), dtype=np.float32) / 255.0
+    band = np.clip(m - inner, 0, 1) * 2.2
+    band = np.clip(band, 0, 1)[..., None] * amount
+    back = np.asarray(behind.convert("RGB").filter(ImageFilter.GaussianBlur(width * 1.5)), dtype=np.float32)
+    s = np.asarray(subject.convert("RGBA"), dtype=np.float32)
+    rgb = s[..., :3]
+    screen = 255 - (255 - rgb) * (255 - back) / 255
+    s[..., :3] = rgb * (1 - band) + screen * band
+    return Image.fromarray(s.clip(0, 255).astype(np.uint8), "RGBA")
 
 
 def scanlines(size, alpha: int = 10, gap: int = 4) -> Image.Image:
     w, h = size
     layer = Image.new("RGBA", size, (0, 0, 0, 0))
+    if not look()["scanlines"]:          # linhas de TV denunciam "template digital"
+        return layer
     d = ImageDraw.Draw(layer)
     for y in range(0, h, gap):
         d.line([(0, y), (w, y)], fill=(0, 0, 0, alpha))
@@ -138,7 +253,12 @@ def rounded_mask(size, radius: int) -> Image.Image:
 
 
 def glow(mask: Image.Image, color: str, radius: int, strength: float = 1.0, spread: int = 0) -> Image.Image:
-    """Brilho neon a partir de uma máscara L."""
+    """Brilho neon a partir de uma máscara L.
+
+    Com `acabamento.neon: false` (padrão) vira uma sombra escura e curta: separa o elemento do
+    fundo sem o halo colorido que dá cara de arte gerada por IA."""
+    if not look()["neon"]:
+        color, radius, strength, spread = "#07030D", max(4, int(radius * 0.45)), strength * 0.38, 0
     m = mask
     if spread:
         m = m.filter(ImageFilter.MaxFilter(spread * 2 + 1))

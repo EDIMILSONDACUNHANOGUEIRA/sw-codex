@@ -40,7 +40,7 @@ def download(url: str) -> Path:
     key = hashlib.sha1(url.encode()).hexdigest()[:14]
     out_dir = CACHE_DIR / "videos"
     out_dir.mkdir(parents=True, exist_ok=True)
-    found = list(out_dir.glob(f"{key}.*"))
+    found = [f for f in out_dir.glob(f"{key}.*") if not f.name.endswith(".json")]
     if found:
         return found[0]
     import os
@@ -58,11 +58,23 @@ def download(url: str) -> Path:
     if os.environ.get("LEONIDA_YTDLP_BROWSER"):
         opts["cookiesfrombrowser"] = (os.environ["LEONIDA_YTDLP_BROWSER"],)
     with yt_dlp.YoutubeDL(opts) as ydl:
-        ydl.download([url])
-    found = list(out_dir.glob(f"{key}.*"))
+        info = ydl.extract_info(url, download=True) or {}
+    found = [f for f in out_dir.glob(f"{key}.*") if f.suffix != ".json"]
     if not found:
         raise RuntimeError("download falhou")
+    meta = {k: info.get(k) for k in ("title", "uploader", "channel", "webpage_url", "duration")}
+    (out_dir / f"{key}.info.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
     return found[0]
+
+
+def uploader(url: str) -> str | None:
+    """Canal/autor do vídeo baixado (para o crédito), se o download já aconteceu."""
+    key = hashlib.sha1(url.encode()).hexdigest()[:14]
+    meta = CACHE_DIR / "videos" / f"{key}.info.json"
+    if not meta.exists():
+        return None
+    data = json.loads(meta.read_text(encoding="utf-8"))
+    return data.get("channel") or data.get("uploader")
 
 
 def overlay(lang: str, headline: str, tag: str, source: str, date: str | None = None,
