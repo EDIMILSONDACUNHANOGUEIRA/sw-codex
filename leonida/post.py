@@ -182,6 +182,8 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
                 manifest["music"] = True
             files.append(names["video"])
             manifest.setdefault("video_engine", engine)
+        from . import publish
+        publish.export_jpegs(folder)          # cópias JPEG para publicar no TikTok
         manifest["files"][LANG_FOLDER[lang]] = files
     (out / "post.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     _write_readme(post, out, manifest)

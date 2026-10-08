@@ -21,6 +21,25 @@ from .config import LANG_FOLDER, LANGS, OUT_DIR, ROOT, STATE_DIR, brand
 
 PUBLISHED = STATE_DIR / "publicados.json"
 IMG_EXT = (".png", ".jpg", ".jpeg", ".webp")
+TIKTOK_DIR = "tiktok"
+
+
+def export_jpegs(folder: Path) -> list[Path]:
+    """Cópias JPEG (qualidade 95, cor sem subamostragem) das artes PNG, para o TikTok."""
+    from PIL import Image
+    out_dir = folder / TIKTOK_DIR
+    if out_dir.exists():
+        for old in out_dir.glob("*.jpg"):
+            old.unlink()
+    out = []
+    for png in sorted(folder.glob("*.png")):
+        if png.stem in ("previa", "preview"):
+            continue
+        out_dir.mkdir(exist_ok=True)
+        dst = out_dir / f"{png.stem}.jpg"
+        Image.open(png).convert("RGB").save(dst, "JPEG", quality=95, subsampling=0, optimize=True)
+        out.append(dst)
+    return out
 VID_NAMES = ("video.mp4", "edicao.mp4", "edit.mp4", "corte.mp4", "clip.mp4")
 
 
@@ -74,8 +93,9 @@ def package(post_id: str) -> dict:
         d = folder / sub
         if not d.exists():
             continue
-        imgs = sorted(p.name for p in d.iterdir() if p.suffix.lower() in IMG_EXT
-                      and p.stem not in ("previa", "preview"))
+        # o TikTok só aceita JPEG/WebP em post de fotos: publica a cópia em tiktok/*.jpg
+        jpg_dir = d / TIKTOK_DIR
+        imgs = sorted(f"{TIKTOK_DIR}/{p.name}" for p in jpg_dir.glob("*.jpg")) if jpg_dir.exists() else []
         vids = [n for n in VID_NAMES if (d / n).exists()]
         fmt = c["formato"]
         kind = "video" if (fmt == "video" and vids) or (fmt == "auto" and vids and not imgs) else "carrossel"
