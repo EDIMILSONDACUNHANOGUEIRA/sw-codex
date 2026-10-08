@@ -300,11 +300,10 @@ def composition(plan_: EditPlan, work: Path, audio: bool = True) -> Path:
             bg = (f'<video id="b{i}" class="blurbg" src="{s.file}" data-start="{t:.3f}" '
                   f'data-duration="{s.length:.3f}" data-media-start="0"{rate} data-track-index="{100 + i}" '
                   f'muted playsinline></video>')
-        els.append(f'{bg}<div id="w{i}" class="win"><div id="m{i}" class="mv">{vid}</div></div>')
+        # a visibilidade de cada plano fica com o HyperFrames (class="clip" + data-start/duration)
+        els.append(f'{bg}<div id="w{i}" class="win clip" data-start="{t:.3f}" data-duration="{s.length:.3f}" '
+                   f'data-track-index="{200 + i}"><div id="m{i}" class="mv">{vid}</div></div>')
         sel = f"#m{i}"
-        cmds.append(f'tl.set("#w{i}", {{autoAlpha: 0}}, 0);')
-        cmds.append(f'tl.set("#w{i}", {{autoAlpha: 1}}, {t:.3f});')
-        cmds.append(f'tl.set("#w{i}", {{autoAlpha: 0}}, {t + s.length:.3f});')
         cmds += _move_cmds(sel, s.move, t, s.length, i)
         cmds += _transition_cmds(prev, sel, s.trans_in, t) if i else []
         prev = sel
