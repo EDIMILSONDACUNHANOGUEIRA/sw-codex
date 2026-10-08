@@ -28,8 +28,12 @@ python -m leonida musica --listar        # confere se as faixas estão em assets
 As músicas ficam só no seu PC (`assets/music/`, fora do GitHub, por direitos autorais). Com mais de
 uma faixa, o app alterna entre elas, uma por post.
 
-Publicação automática: só funciona com o Metricool conectado ao seu agente (Claude/Codex). Sem ele,
-o agente gera tudo e você posta à mão o vídeo `prontos/<data>/<post>/br/tiktok/post.mp4`.
+Publicação automática: precisa de permissão de push neste repositório (os links públicos das artes
+e do vídeo vêm do GitHub) e do Metricool com o TikTok conectado ao seu agente (Claude/Codex); ajuste
+`config/brand.yaml → publicar` com a sua marca. Sem isso, o agente gera tudo e você posta à mão o vídeo
+`prontos/<data>/<post>/br/tiktok/post.mp4`, que já tem a música tema.
+Antes de cada rodada: `git pull` (para pegar o histórico do que já foi publicado).
+Windows: se aparecer erro de acentos/emojis no terminal, rode uma vez `setx PYTHONUTF8 1`.
 
 ---
 
@@ -72,6 +76,8 @@ PASSOS
    sem a flag, a capa animada abre o vídeo). O build gera as artes, as cópias JPEG e o VÍDEO DE
    PUBLICAÇÃO `br/tiktok/post.mp4`: a capa e os slides em sequência, com a música tema. Abra cada capa
    e corrija texto cortado, palavra gigante ilegível ou rosto coberto. Confira que o post.mp4 existe.
+   Se o build terminar com erro ou estourar o tempo, NÃO publique: rode de novo (leva 1–2 min; use
+   timeout maior ou rode em segundo plano).
 7. Gere o post de contagem do dia se ainda não existir (`python -m leonida contagem`).
 8. Marque as histórias usadas como `published` e as descartadas como `descartado`
    (`radar.mark_seen([...], status)`), e rode `python -m leonida galeria`.

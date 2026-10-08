@@ -244,6 +244,11 @@ def cmd_serve(a):
 
 
 def main(argv=None):
+    for _stream in (sys.stdout, sys.stderr):   # Windows (cp1252): emojis não derrubam os comandos
+        try:
+            _stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:  # noqa: BLE001
+            pass
     config.ensure_dirs()
     p = argparse.ArgumentParser(prog="leonida", description="Leonida Studio — posts de GTA VI para TikTok")
     sp = p.add_subparsers(dest="cmd", required=True)

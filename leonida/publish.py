@@ -103,8 +103,9 @@ def package(post_id: str) -> dict:
         # (a capa animada video.mp4 sozinha nunca é publicada: o vídeo do post é tiktok/post.mp4)
         own = ("edicao.mp4", "edit.mp4", "corte.mp4", "clip.mp4") if meta.get("type") in ("edit", "clip") else ()
         vids = [n for n in (f"{TIKTOK_DIR}/post.mp4", *own) if (d / n).exists()]
-        if own and vids and not music.themes():
-            vids = []                         # edição/corte sem música tema: não publica
+        if own and meta.get("music") is not True:
+            vids = []                         # edição/corte gerado sem a música tema: não publica
+        vids = [n for n in vids if music._has_audio(d / n)]   # vídeo mudo nunca é publicado
         # o TikTok só aceita JPEG/WebP em post de fotos: usa a cópia em tiktok/*.jpg
         jpg_dir = d / TIKTOK_DIR
         imgs = sorted(f"{TIKTOK_DIR}/{p.name}" for p in jpg_dir.glob("*.jpg")) if jpg_dir.exists() else []
@@ -114,9 +115,14 @@ def package(post_id: str) -> dict:
             kind, files = "carrossel", imgs
         ready, reason = bool(files), ""
         if not files:
-            reason = ("vídeo com música tema não gerado: falta a música em assets/music/ "
-                      "(python -m leonida musica \"URL do trailer\" --inicio 0:12) — rode o build de novo"
-                      if kind == "video" else "sem artes em tiktok/*.jpg — rode o build de novo")
+            if kind != "video":
+                reason = "sem artes em tiktok/*.jpg — rode o build de novo"
+            elif own:
+                reason = ("edição/corte sem a música tema embutida: baixe a música (python -m leonida musica "
+                          "\"URL do trailer\" --inicio 0:12) e gere de novo, sem --sem-musica")
+            else:
+                reason = ("vídeo com música tema não gerado: falta a música em assets/music/ "
+                          "(python -m leonida musica \"URL do trailer\" --inicio 0:12) — rode o build de novo")
         media = [f"{base}/{sha}/{rel}/{sub}/{n}" for n in files]
         tiktok_data = {"disableComment": False, "disableDuet": False, "disableStitch": False,
                        "privacyOption": "PUBLIC_TO_EVERYONE", "commercialContentThirdParty": False,

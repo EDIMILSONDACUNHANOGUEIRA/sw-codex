@@ -540,6 +540,7 @@ def make_edit(src: str, *, start: str | float = 0, end: str | float | None = Non
         _render_ffmpeg(p, work, base, audio=audio)
     out_root = OUT_DIR / date / name
     files = {}
+    got_music = True                         # vira False se algum idioma ficar sem a música tema
     for lang in langs:
         folder = out_root / ("br" if lang == "pt" else "us")
         folder.mkdir(parents=True, exist_ok=True)
@@ -554,7 +555,11 @@ def make_edit(src: str, *, start: str | float = 0, end: str | float | None = Non
         finish_video(base, out, ov, work, lang, subtitles=subtitles, subs_y=subs_y)
         if music_on:
             from . import music
-            music.apply(out)
+            got_music = music.apply(out, seed=name) and got_music
+        else:
+            got_music = False
+        if not got_music:
+            log("  ⚠️  sem música tema: esta edição NÃO pode ser publicada (baixe a música e gere de novo)")
         contact_sheet(out, folder / ("previa.jpg" if lang == "pt" else "preview.jpg"))
         cap_name = "legenda.txt" if lang == "pt" else "caption.txt"
         base_tags = " ".join(brand()["hashtags"][lang])
@@ -564,7 +569,8 @@ def make_edit(src: str, *, start: str | float = 0, end: str | float | None = Non
         files[lang] = str(out)
     (out_root / "post.json").write_text(json.dumps({
         "id": name, "type": "edit", "date": date, "src": src, "engine": used, "style": style, "layout": layout,
-        "duration": round(p.duration, 2), "shots": [asdict(s) for s in p.shots], "files": files}, indent=2,
+        "duration": round(p.duration, 2), "shots": [asdict(s) for s in p.shots], "files": files,
+        "music": got_music}, indent=2,
         ensure_ascii=False))
     log(f"  [editar] motor: {used} · {len(p.shots)} trechos · {p.duration:.1f}s")
     return out_root

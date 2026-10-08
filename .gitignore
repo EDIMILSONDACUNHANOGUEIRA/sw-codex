@@ -10,9 +10,8 @@ node_modules/
 Thumbs.db
 
 # música baixada (direitos autorais — fica só no PC)
-assets/music/*.mp3
-assets/music/*.m4a
-assets/music/*.wav
+assets/music/*
+!assets/music/LEIA-ME.md
 
 # temporários do vídeo de publicação
 prontos/**/tiktok/.work/

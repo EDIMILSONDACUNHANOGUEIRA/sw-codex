@@ -8,7 +8,8 @@ editor-chefe: encontra a notícia, escreve o post, gera as artes e agenda no Tik
 ## Fluxo padrão ("faz os posts de hoje")
 
 Prompt completo e modelo do relatório de entrega: [`docs/PROMPT-DIARIO.md`](docs/PROMPT-DIARIO.md).
-Por enquanto o vídeo está desligado: use sempre `--sem-video`.
+Use `--sem-video` para pular só a capa animada (HyperFrames); o vídeo de publicação
+`br/tiktok/post.mp4`, com a música tema, é gerado do mesmo jeito.
 
 1. `python -m leonida radar` — lista as histórias do momento (já agrupadas e ranqueadas).
    Também grava `state/radar.json` e `prontos/RADAR.md`.

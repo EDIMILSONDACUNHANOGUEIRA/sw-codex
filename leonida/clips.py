@@ -195,6 +195,7 @@ def make_clip(src: str, start: str | float, end: str | float, *, headline: dict,
                     "veryfast", "-crf", "18", "-c:a", "aac", "-b:a", "192k", str(raw)], check=True,
                    capture_output=True)
     files = {}
+    got_music = True                         # vira False se algum idioma ficar sem a música tema
     for lang in langs:
         folder = out_root / ("br" if lang == "pt" else "us")
         folder.mkdir(parents=True, exist_ok=True)
@@ -222,7 +223,11 @@ def make_clip(src: str, start: str | float, end: str | float, *, headline: dict,
                         "+faststart", str(out)], check=True, capture_output=True)
         if music_on:
             from . import music
-            music.apply(out)
+            got_music = music.apply(out, seed=name) and got_music
+        else:
+            got_music = False
+        if not got_music:
+            log("  ⚠️  sem música tema: este corte NÃO pode ser publicado (baixe a música e gere de novo)")
         cap_name = "legenda.txt" if lang == "pt" else "caption.txt"
         base_tags = " ".join(brand()["hashtags"][lang])
         credit = ("Fonte: " if lang == "pt" else "Source: ") + source if source else ""
@@ -230,5 +235,6 @@ def make_clip(src: str, start: str | float, end: str | float, *, headline: dict,
                                        encoding="utf-8")
         files[lang] = str(out)
     (out_root / "post.json").write_text(json.dumps({"id": name, "type": "clip", "date": date, "src": src,
-                                                    "start": t0, "end": t1, "files": files}, indent=2))
+                                                    "start": t0, "end": t1, "files": files,
+                                                    "music": got_music}, indent=2))
     return out_root

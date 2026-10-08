@@ -74,7 +74,7 @@ As regras de redação, o estilo e o formato dos arquivos estão no [`AGENTS.md`
 python -m leonida radar                  # notícias do momento (ranking)
 python -m leonida rascunho 1             # cria posts/<id>/post.yaml da notícia nº 1
 python -m leonida build <post-id>        # gera capa + carrossel + vídeo + legendas (BR e US)
-python -m leonida build <post-id> --sem-video   # rápido, só imagens
+python -m leonida build <post-id> --sem-video   # sem capa animada; ainda gera tiktok/post.mp4 com a música tema
 python -m leonida contagem               # post "faltam X dias" com screenshot oficial
 python -m leonida corte URL 0:42 1:05 --pt "Manchete *destaque*" --en "Headline *highlight*" --credito "Rockstar Games"
 python -m leonida editar URL --pt "Manchete *BR*" --en "Headline *US*"   # edição 9:16 estilo Higgsfield

@@ -192,6 +192,9 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
                 postvideo.build(folder, seed=post["id"], intro=intro, log=log)
             except postvideo.MusicMissing as exc:
                 log(f"  ⚠️  {exc}")
+            except Exception as exc:  # noqa: BLE001 — artes já estão prontas; só o vídeo falhou
+                (folder / "tiktok" / postvideo.OUT_NAME).unlink(missing_ok=True)
+                log(f"  ⚠️  vídeo de publicação não gerado ({exc}); o post NÃO será publicado")
         manifest["files"][LANG_FOLDER[lang]] = files
     (out / "post.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     _write_readme(post, out, manifest)

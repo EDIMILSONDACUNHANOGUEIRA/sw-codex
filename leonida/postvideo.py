@@ -14,6 +14,7 @@ Saída: <post>/<br|us>/tiktok/post.mp4
 """
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -97,7 +98,9 @@ def build(folder: Path, seed: str, intro: Path | None = None, log=print) -> Path
         seg = work / f"s{len(segs):02d}.mp4"
         _still_segment(img, seg, secs, 1.045 if is_cover else 1.02)   # zoom leve: não corta margens
         segs.append(seg)
-    out = folder / "tiktok" / OUT_NAME
+    final = folder / "tiktok" / OUT_NAME
+    final.unlink(missing_ok=True)            # nunca deixar um post.mp4 antigo/mudo para trás
+    out = work / OUT_NAME                    # monta e coloca a música em .work/; só move no fim
     if len(segs) == 1:
         shutil.copy(segs[0], out)
     else:
@@ -115,10 +118,17 @@ def build(folder: Path, seed: str, intro: Path | None = None, log=print) -> Path
                         "-r", str(FPS), "-c:v", "libx264", "-preset", "slow", "-crf", "19", "-maxrate", "10M",
                         "-bufsize", "20M", "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(out)],
                        check=True, capture_output=True)
-    if not music.apply(out, under_original=False, seed=seed):
-        out.unlink(missing_ok=True)
-        raise MusicMissing("não consegui colocar a música tema no vídeo")
+    try:
+        ok = music.apply(out, under_original=False, seed=seed)
+    except (subprocess.CalledProcessError, OSError) as exc:
+        ok = False
+        log(f"  ⚠️  falha ao colocar a música tema ({exc})")
+    if not ok or not music._has_audio(out):
+        shutil.rmtree(work, ignore_errors=True)
+        raise MusicMissing("não consegui colocar a música tema no vídeo (arquivo de música inválido?) — "
+                           "o vídeo NÃO foi gerado; confira assets/music/ e rode o build de novo")
+    os.replace(out, final)
     shutil.rmtree(work, ignore_errors=True)
-    log(f"  🎵 vídeo com música tema: {out.relative_to(ROOT)} "
-        f"({_duration(out):.1f}s, {music.theme_path(seed).name})")
-    return out
+    log(f"  🎵 vídeo com música tema: {final.relative_to(ROOT)} "
+        f"({_duration(final):.1f}s, {music.theme_path(seed).name})")
+    return final
