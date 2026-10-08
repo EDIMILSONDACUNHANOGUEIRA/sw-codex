@@ -1,0 +1,29 @@
+id: 2026-10-08-gta6-entrevista-rockstar-detalhes
+date: "2026-10-08"
+tag: oficial
+image: "https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_03.15z-.c0tptrzs.jpg"
+source: { name: "IGN", url: "https://www.ign.com/articles/gta-6-the-big-interview" }
+pt:
+  kicker: CASAL
+  headline: "Rockstar revela *5 detalhes novos* da vida de *Jason e Lucia*"
+  summary: "Rob Nelson, da Rockstar North, contou na entrevista completa à IGN."
+  caption: |
+    📱 A Rockstar contou detalhes novos de GTA VI na entrevista completa de Rob Nelson à IGN.
+
+    Snapmatic: dá pra seguir perfis, mas Jason e Lucia não postam. "Vocês são um casal em fuga, só espiam."
+    Todas as armas compradas ficam no veículo pessoal, que você chama a qualquer hora.
+    Academia a dois: treinando juntos, os dois cuidam dos atributos de uma vez.
+    Tempo de qualidade: zoológico, mergulho, paraquedas, caiaque, passeio de mãos dadas e até assalto juntos.
+    Ryde Me, o "Uber" do jogo, é um jeito de fazer viagem rápida.
+
+    Qual desses você vai testar primeiro? 👇
+  hashtags: ["#jasonelucia", "#vicecity", "#gta6gameplay"]
+  slides:
+    - type: list
+      title: "O que a *Rockstar* contou"
+      items:
+        - "Snapmatic: segue perfis, mas o casal não posta"
+        - "Armas sempre no veículo pessoal, chamado a qualquer hora"
+        - "Academia a dois: atributos dos dois de uma vez"
+        - "Tempo de qualidade: zoológico, mergulho, caiaque"
+        - "Ryde Me, o Uber do jogo, como viagem rápida"
