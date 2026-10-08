@@ -88,16 +88,28 @@ def download(url: str, start=None, length: float = 120.0, log=print, name: str |
     raw = next(iter(sorted(tmp_dir.glob("raw.*"))), None)
     if not raw:
         raise RuntimeError("download do áudio falhou")
+    try:
+        return import_file(raw, start=start, length=length, name=name, log=log)
+    finally:
+        raw.unlink(missing_ok=True)
+
+
+def import_file(src: Path, start=None, length: float = 120.0, name: str | None = None, log=print) -> Path:
+    """Instala um arquivo de áudio como música tema: corta a partir de `start` (e o silêncio do começo),
+    padroniza o volume para o nível do TikTok (-14 LUFS), remove a capa embutida e salva em MP3."""
+    import re
+    ff = shutil.which("ffmpeg")
+    if not ff:
+        raise RuntimeError("ffmpeg não encontrado")
     out = ROOT / _cfg().get("file", "assets/music/tema.mp3")
     if name:
-        import re
         out = out.with_name(re.sub(r"[^a-z0-9-]+", "-", name.lower()).strip("-") + ".mp3")
     out.parent.mkdir(parents=True, exist_ok=True)
-    s = _ts(start)
-    subprocess.run([ff, "-y", "-ss", str(s), "-t", str(length), "-i", str(raw),
-                    "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-ar", "44100", "-b:a", "256k", str(out)],
-                   check=True, capture_output=True)
-    raw.unlink(missing_ok=True)
+    tmp = out.with_suffix(".tmp.mp3")
+    subprocess.run([ff, "-y", "-ss", str(_ts(start)), "-t", str(length), "-i", str(src), "-map", "0:a:0", "-vn",
+                    "-af", "silenceremove=start_periods=1:start_threshold=-50dB,loudnorm=I=-14:TP=-1.5:LRA=11",
+                    "-ar", "44100", "-b:a", "256k", str(tmp)], check=True, capture_output=True)
+    tmp.replace(out)
     log(f"  [música] salva em {out}")
     return out
 

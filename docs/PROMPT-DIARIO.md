@@ -21,6 +21,8 @@ pip install -r requirements.txt
 # Use o link do trailer no YouTube e o segundo em que a música começa.
 python -m leonida musica "URL do Trailer 1 no YouTube" --inicio 0:00 --nome trailer-1
 python -m leonida musica "URL do Trailer 2 no YouTube" --inicio 0:00 --nome trailer-2
+# ou, se já tiver o arquivo (ex.: "GTA 6 - Official Main Theme Music.mp3"):
+python -m leonida musica --arquivo "caminho/do/arquivo.mp3"
 python -m leonida musica --listar        # confere se as faixas estão em assets/music/
 # Se o YouTube pedir login: defina LEONIDA_YTDLP_BROWSER=chrome (usa os cookies do seu Chrome).
 ```

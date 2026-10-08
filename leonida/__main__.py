@@ -191,8 +191,6 @@ def cmd_publicacao(a):
 
 
 def cmd_musica(a):
-    import re
-    import shutil
     from . import music
     from .config import ROOT
     if a.listar:
@@ -202,13 +200,9 @@ def cmd_musica(a):
             print(f"   {f.relative_to(ROOT)}")
         return
     if a.arquivo:
-        dst = ROOT / (config.brand().get("music") or {}).get("file", "assets/music/tema.mp3")
-        src = Path(a.arquivo)
-        if a.nome:
-            dst = dst.with_name(re.sub(r"[^a-z0-9-]+", "-", a.nome.lower()).strip("-") + src.suffix.lower())
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy(src, dst)
-        print(f"🎵 música tema copiada para {dst}")
+        # normaliza o volume e converte para MP3 (mesmo tratamento do download)
+        dst = music.import_file(Path(a.arquivo), start=a.inicio, length=a.duracao, name=a.nome)
+        print(f"🎵 música tema instalada: {dst.relative_to(ROOT)}")
         return
     if not a.url:
         raise SystemExit("informe a URL do vídeo, --arquivo ou --listar")
