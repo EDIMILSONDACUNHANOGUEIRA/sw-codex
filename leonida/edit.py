@@ -214,7 +214,7 @@ def _move_cmds(sel: str, move: str, t0: float, d: float, idx: int) -> list[str]:
     e = f"{t0:.3f}"
     c = [f'tl.set("{sel}", {{scale: 1.0, x: 0, y: 0, rotation: 0, filter: "blur(0px)"}}, {e});']
     if move in ("push_in", "slowmo"):
-        c.append(f'tl.fromTo("{sel}", {{scale: 1.0}}, {{scale: 1.14, duration: {d:.3f}, ease: "power1.inOut"}}, {e});')
+        c.append(f'tl.fromTo("{sel}", {{scale: 1.0}}, {{scale: 1.14, duration: {d:.3f}, ease: "power1.inOut", immediateRender: false}}, {e});')
     elif move == "pull_out":
         c.append(f'tl.fromTo("{sel}", {{scale: 1.18}}, {{scale: 1.0, duration: {d:.3f}, ease: "power2.out"}}, {e});')
     elif move == "snap_zoom":
@@ -264,7 +264,8 @@ def _transition_cmds(prev: str | None, cur: str, kind: str, t: float) -> list[st
         c.append(f'tl.from("{cur}", {{scale: "+=0.35", filter: "blur(12px)", duration: {TRANS_LEN + 0.06}, '
                  f'ease: "power3.out", immediateRender: false}}, {b});')
     elif kind == "flash":
-        c.append(f'tl.fromTo("#flash", {{opacity: 0.85}}, {{opacity: 0, duration: 0.28, ease: "power2.out"}}, {b});')
+        c.append(f'tl.fromTo("#flash", {{opacity: 0.85}}, {{opacity: 0, duration: 0.28, ease: "power2.out", '
+                 f'immediateRender: false}}, {b});')
     return c
 
 
@@ -336,6 +337,7 @@ def composition(plan_: EditPlan, work: Path, audio: bool = True) -> Path:
       window.__timelines = window.__timelines || {{}};
       const tl = gsap.timeline({{ paused: true }});
       {chr(10).join('      ' + c for c in cmds).lstrip()}
+      tl.set("#flash", {{opacity: 0}}, 0);
       tl.set({{}}, {{}}, {total:.3f});
       window.__timelines["main"] = tl;
       tl.seek(0);
