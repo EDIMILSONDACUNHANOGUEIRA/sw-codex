@@ -1,9 +1,7 @@
 {
- "generated_at": "2026-10-08T21:02:52.312337+00:00",
+ "generated_at": "2026-10-08T23:44:41.670035+00:00",
  "count": 40,
- "errors": [
-  "Reddit r/GTA6 (hot): 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/GTA6/hot/.rss"
- ],
+ "errors": [],
  "stories": [
   {
    "id": "4a27f57dba",
@@ -11,19 +9,19 @@
    "title_pt": "GTA 6 revela algumas estações de rádio, DJs e músicas antes do lançamento",
    "title_en": "The Music of Grand Theft Auto VI: In-Game Radio Stations",
    "summary": "The Music of Grand Theft Auto VI: In-Game Radio Stations Rockstar Games",
-   "score": 253.1,
-   "coverage": 63,
+   "score": 248.8,
+   "coverage": 66,
    "official": true,
    "video": false,
    "community": false,
-   "published": "2026-10-08T20:57:35+00:00",
+   "published": "2026-10-08T23:06:34+00:00",
    "first_seen": "2026-10-08T02:58:28+00:00",
-   "thumb": "https://preview.redd.it/ecxven6i49uh1.png?width=140&height=140&auto=webp&s=ec40adf388471829b8704218a338e3b412ca8032",
+   "thumb": "https://www.gamespot.com/wp-content/uploads/2026/10/GTA-6-Radio-stations.jpg?w=300",
    "sources": [
     {
      "name": "Rockstar Newswire (via Google News)",
      "title": "The Music of Grand Theft Auto VI: In-Game Radio Stations",
-     "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxOSVg2T3lySVZhc2p4akxWcC1xWEJnc0ZvRS00dUdDemNPdE1ONVRHbHdRME1SQ2hvdVFYTjVFbkIxMmE3SnFtR0ZycTczRmNZdGdTZmRNcGtrUXlWS1NDZ29DMDRpT0ZZaDdkWlg3UzVtS2FidDZaX1UwRFp3NW9QemxzXzVnMDJvbXUyX3NDSWxPU0t0ZnNsbHBNY0U3TzVvdjI1amV1cWZwb09DQW0wcnhxTlVLUzNPVjFqZQ?oc=5",
+     "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNc0p3MDZDMmdxSDAzcWhycWRYY0pKNjZwT0g1ZTZxdTZ4VmNyTlFGUE5WRUZxUUxaNkRtUGF1R1dlOW1NOXJaZHJvM3JYRG8yeDVUa1AyZTRKUkxRR2RFWXlObnpSRmxoakdtZlhUV0hnR0xnSm9WUmRVX1piZjFoNTNiODRzenA2REJTakpfaTdPQVYxOUNpQndWdGFqN2dHUjNUQmZSQ0xHYUtfWXVPSWktMlpDZWs4V2xGaA?oc=5",
      "lang": "en"
     },
     {
@@ -101,12 +99,12 @@
    "title_pt": "Depois de um mês de silêncio, leaker de GTA 6 retorna e divulga 24 minutos de \"gameplay estendida\"",
    "title_en": "GTA 6 Leaks Aren’t Over Yet, As New 25-Minute Gameplay Footage Appears",
    "summary": "As the GTA 6 release date creeps ever closer, the now-notorious leaker Cyberleek doesn't seem to be finished showing off unreleased content just yet. Having been relatively quiet since August's wave of shorter GTA 6 leaks , Cyberleek has released a 25-minute video of new gameplay footage and cutscen",
-   "score": 207.6,
-   "coverage": 37,
+   "score": 203.3,
+   "coverage": 35,
    "official": false,
    "video": false,
    "community": false,
-   "published": "2026-10-08T20:55:47+00:00",
+   "published": "2026-10-08T23:13:15+00:00",
    "first_seen": "2026-10-07T12:37:39+00:00",
    "thumb": "https://www.gamespot.com/wp-content/uploads/2026/06/Feature_GTA6_site.jpg?w=300",
    "sources": [
@@ -129,12 +127,6 @@
      "lang": "en"
     },
     {
-     "name": "Kotaku",
-     "title": "Massive GTA 6 Leak Reveals Story Spoilers, Car Chases, And Jason’s Dong",
-     "url": "https://kotaku.com/gta-6-grand-theft-auto-vi-leak-cyberleek-nudity-jason-footage-2000742598",
-     "lang": "en"
-    },
-    {
      "name": "Push Square",
      "title": "GTA 6 Gameplay Leaks Are Back with Potentially Big Spoilers",
      "url": "https://www.pushsquare.com/news/2026/10/gta-6-gameplay-leaks-are-back-with-potentially-big-spoilers",
@@ -150,6 +142,12 @@
      "name": "Google Notícias BR",
      "title": "Novo vazamento de GTA 6 traz 25 minutos de jogo",
      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFAyY005dHJoMXdsMFpnbEdGVUNkVElHOHRIU2MzNTkyNWR1SER4UTdhajlHaEpzanY1Ykl6VkxVZXk3dEFZdG1wMlVKV0tLOWdHNDR2UnlZMnF1YUVKMUl5ZGx0QndIWWNDenlrRw?oc=5",
+     "lang": "pt"
+    },
+    {
+     "name": "Google Notícias BR",
+     "title": "Suposto vazamento de GTA 6 traz 25 minutos de gameplay e cenas de nudez",
+     "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPdEdMbEt5YVBaQ0l5bjlKOTJNSWFjQ2NUMEJyb08xeUM2X2dWa1JwRHhzNFJMbVpUNFBYdkR2TUtBdy1ER1hBRGtzbmE2ZHVpd3AyVUxmNXdrUm5FSENDQVZ2SFMxV2dsenJaYnF0c3Y4S01CMUw2UjVzSG5Hb3BNMy1lQzY3eDJrZDJwWDUwaGJaZDVNenNaZzVCQUNpYmM3ZjdQMUhjd1NoT1E?oc=5",
      "lang": "pt"
     },
     {
@@ -189,14 +187,14 @@
    "id": "93c1387c4c",
    "title": "GTA 6: Rockstar Games libera três imagens inéditas",
    "title_pt": "GTA 6 Screenshots (October 8, 2026)",
-   "title_en": "Slideshow: GTA 6 Screenshots (October 8, 2026)",
+   "title_en": "New GTA 6 Screenshots Reveal Jaw-Dropping Effects",
    "summary": "Junto com a revelação de algumas estações de rádio, a Rockstar Games também liberou novas imagens do GTA 6. Confira!",
-   "score": 182.3,
-   "coverage": 13,
+   "score": 199.0,
+   "coverage": 18,
    "official": false,
    "video": false,
    "community": false,
-   "published": "2026-10-08T19:21:58+00:00",
+   "published": "2026-10-08T22:51:30+00:00",
    "first_seen": "2026-10-08T14:03:20+00:00",
    "thumb": "https://preview.redd.it/5n9zq4v739uh1.jpg?width=140&height=78&auto=webp&s=8b23c72b1a1de107220aedc64b15c33ec673d580",
    "sources": [
@@ -219,6 +217,24 @@
      "lang": "pt"
     },
     {
+     "name": "Insider Gaming",
+     "title": "New GTA 6 Screenshots Reveal Jaw-Dropping Effects",
+     "url": "https://insider-gaming.com/new-gta-6-screenshots-jaw-dropping-effects/",
+     "lang": "en"
+    },
+    {
+     "name": "Kotaku",
+     "title": "Damn, This GTA 6 Screenshot Looks So Good People Don’t Believe It’s Real",
+     "url": "https://kotaku.com/damn-this-gta-6-screenshot-looks-so-good-people-dont-believe-its-real-2000742750",
+     "lang": "en"
+    },
+    {
+     "name": "Google Notícias BR",
+     "title": "Slideshow: GTA 6 Screenshots (October 8, 2026)",
+     "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxOQldBQmgxeEozc0RiMGNZbWRscC1valdVRGVwOGppV2EyVnhqODV1ZVRyUGNBenotMXZPVkdsaWlrWkFHUjVSSzhmT0R5WWpNV1hHaVp6YmZXVWNyc2RFOUtOcVYxZWZpMzJWYmc0eHdGOEVaRmU2M1FVWTFuN2xXYzk4TFBETkxhcUE?oc=5",
+     "lang": "pt"
+    },
+    {
      "name": "Google News US",
      "title": "Slideshow: GTA 6 Screenshots (October 8, 2026)",
      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPblVIUWRTcjZsNnhBdnZBbTRJbkE1RnV6cUZhVG5MMTZzeEpuc0Q0MUx5eVcxVjNOQlpVUDdiNHYwajBjVjNVOHhDZFA5Unlka3VJQ2JtY0lzalUwbWJiN3hEQl9EaU5XNDBTR29RUG81dHZkcGkxbkVMa2E5WHh6TEpQbnpBQUlFdTJhaTdxVk9YTnFIOHEteTVIS2w?oc=5",
@@ -229,12 +245,6 @@
      "title": "Slideshow: GTA 6 Screenshots (October 8, 2026)",
      "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNSkh1NXlmRGlPSUUtQkVReEZ0Skg4bzhrRmhrZFY4YVFhMUVPbS1hOEQtc2xtVzBVOWQxSWhnZDRHX01ac2QzVGFVUGlIaEo4V1l2TXdaa0lDT29zS1ZKVGJGU1ZSVFFKUEhpbFBWejZ3VlZsZWRNcUJmVUdnaWN3SHJLWXJJY3l5?oc=5",
      "lang": "en"
-    },
-    {
-     "name": "Google Notícias BR",
-     "title": "Slideshow: GTA 6 Screenshots (October 8, 2026)",
-     "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxPQmxJMF96Z3J6Q3lJU2VVTnJyTHFleF9DQnY0bkhGVHpVdXpxRXJkd3I4WFJTN1llaUZXWFlibHJvSWhLTC1KV0plZFg3T0VSbV8tR0I3LV9zZ3lscjFqWlFiVnVZLVNOendOT1hxbGFrSVRtQnNaWFJvaUE5MXJvTW9zV0U?oc=5",
-     "lang": "pt"
     },
     {
      "name": "Google News US",
@@ -256,60 +266,12 @@
     },
     {
      "name": "Google News US",
-     "title": "GTA 6: Rockstar Releases Brand New Official Screenshots Showing Off Stunning Reflections",
-     "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQTDlBQlNJTVlSNzQ3TW5YN2RnUmhneUtQV1NYM3dXam42UEE3b0JTYU1TanluZm50MDNuXy1uQnFOODhBYkx6UUVNNGgxM0VVM1g2bm5McmhZVkZFU19taTNCZmtfOWxvbUtwQk1nNGFIMXlWRDRoSV9LdktMNkgzc2p6VHJFQXY0bEVNVVVXbU44emxEQ3NmbkYwMFROcUxBTzFiaUdJWGpEOEw5eGZ5T1ZKOVBWUkU?oc=5",
-     "lang": "en"
-    },
-    {
-     "name": "Google News US",
-     "title": "3 New Stunning GTA 6 Screenshots Released By Rockstar",
-     "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxNWk5icDhlRXNKdnVRM2hWRHRtRnJ5LUl0NmVBYkRGekxoMXRlT3FTZmcxaXFUa3Q1bDM2Q2ZEUDgzWkdmNDJWbG4yaVVYOE5SbWt1Sy0tem9pVG83dVAxNDZsUDFiZ2FhT0ZldjhhQXpWdjkwVU5FWjlTcGt1Q0ZUQ3E4RENwUlk?oc=5",
-     "lang": "en"
-    },
-    {
-     "name": "Reddit r/GTA6 (top do dia)",
-     "title": "New GTA VI Screenshots",
-     "url": "https://www.reddit.com/r/GTA6/comments/1x0ru0h/new_gta_vi_screenshots/",
+     "title": "Damn, This GTA 6 Screenshot Looks So Good People Don’t Believe It’s Real",
+     "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxNaTlVYWttUVVLZWlhZGFseThvLTRsX0RMTW9BVHBvaHNOY0ZOQ2I5MnVrTUdjbmg0OE1KeXhNWXA2X1doTjc0ZHBFUldlb21BSzdKa05tcUJreFRzZmdRSy1YSXlNOFlaN0JPbXJCYnRrYlpDSTFZV0RGX0NqSTRxRHJidlFUM0xNeExQRTJWVDdMWEFxX3pfZ0pETGg1bXZV?oc=5",
      "lang": "en"
     }
    ],
    "is_new": false
-  },
-  {
-   "id": "9c1d567036",
-   "title": "Official GTA 6 Merch Store Opened by Rockstar Games",
-   "title_pt": null,
-   "title_en": "Official GTA 6 Merch Store Opened by Rockstar Games",
-   "summary": "Rockstar Games has unveiled the official GTA 6 merchandise store, presenting players with a new GTA IV Collection. The post Official GTA 6 Merch Store Opened by Rockstar Games appeared first on Insider Gaming .",
-   "score": 103.6,
-   "coverage": 3,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-08T20:47:10+00:00",
-   "first_seen": "2026-10-08T16:24:25+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Insider Gaming",
-     "title": "Official GTA 6 Merch Store Opened by Rockstar Games",
-     "url": "https://insider-gaming.com/official-gta-6-merch-store-opened-rockstar-games/",
-     "lang": "en"
-    },
-    {
-     "name": "Google News US",
-     "title": "Official GTA 6 Merch Starts at $4.99 With Tees, Collectibles and Vice City Gear",
-     "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQRm5wZmk0b0tBVnZEdlp0VG9GNDFrTk5mQ2xHZWJ4djg5MGdjNE5OX2I0bVAyWmc2X3pKNXlXdWdxWkNrZmt4ZlpKajRtZk0yNjlHQ204bF9KZWtIaHYyWkxHa0wyOFlKbUdHTFprbk1mRTVjRk1lSFNsaVhkUzQzeTZrTlNHanNTUUJLc3kxSnBQbnBVMWNMU0ZKc2ZzTnlYM1hwRUZJTnJHR0dJSFI4?oc=5",
-     "lang": "en"
-    },
-    {
-     "name": "Google News US",
-     "title": "GTA 6 Reveals 3 New Official Screenshots of Vice City",
-     "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxOcE90THk3QW40eS15UnNZLUtKYjUzWnJOWVRiUGhsalBwRlg0SmtoTzkxWHo4ejN1TVl0ai1FWV9MdWdNODZoRkFmWWh5QThTbTgwSXVmbE5rc0xvUTkyVExUTlIwdU5nOEMwX1B6STJmOXd0LUszbDhVM3JUX3BFLVdfcnVUVnd5T2tDV3BSZDk?oc=5",
-     "lang": "en"
-    }
-   ],
-   "is_new": true
   },
   {
    "id": "d43fd38a6c",
@@ -317,12 +279,12 @@
    "title_pt": null,
    "title_en": "Grand Theft Auto VI Collection Now at the Rockstar Store",
    "summary": "Grand Theft Auto VI Collection | GTA Rockstar Store | Rockstar Store Rockstar Store",
-   "score": 100.3,
+   "score": 96.0,
    "coverage": 4,
    "official": true,
    "video": false,
    "community": false,
-   "published": "2026-10-08T19:07:30+00:00",
+   "published": "2026-10-08T19:11:24+00:00",
    "first_seen": "2026-10-08T16:13:37+00:00",
    "thumb": null,
    "sources": [
@@ -335,7 +297,7 @@
     {
      "name": "Rockstar Newswire (via Google News)",
      "title": "Grand Theft Auto VI Collection Now at the Rockstar Store",
-     "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPdlNZZFhiRjVfaDBUSmJyejdmLUdrTkZIa0N1NFJ2czlWaFQ3NG9XYjVaTk4zRnRtNmZ6NVZ2VEF0Q0M5YnVoM25JcC0tX0puRUhhN2wxeWtMRElkdHhTNHVpUllkU2cyWmxOejVUdEFNSGNUNUlneWQ5Qlp6eExpUnoyNlZPX0h5Z1BYU1YtTWh0ZlNTODNOVVZsa0NneFF3VG9KNlBxTUYwUkl0OUFoY1hxbTB6cU9FZWFSS3Z3?oc=5",
+     "url": "https://news.google.com/rss/articles/CBMi2AJBVV95cUxOWmt5eUg2MkdPaW1nZ3RiZW03dW15SVNyYlZXNEx5VURoaS1oa2RqbXF2QUVKeXZfb1lEejVOTFdsWWpuMjFFMmRiVUFOS2MzaElreGJBbTM0QTVfdzVibGduckJIMEFYR21INnF4c3cyN2pZUWk0Z1Y4UkdfZDVIMHRvN2tiYWNwQlNWS3hGRnYzRWFMWTNYSkY3WjdfSjhKREdoZU9ENGdtZGJNakY2Y1Z3TFJvY21zZ1NCOTQ5SlVrQXdvVlVycFdaNU40OGZFd295alByTTEwUGtlM0duQ3gwU2Z1T2xUbWdHaThaZzNCUENnaW5sdFpST1ZUcWJOVGlwWTY2bzZyYmVCZWJuYXRVWHhjNlVDR2NucHhpNGN0YXVGVnVHcGlHLXJ1ZWhsZEttTWw2cWhTUi1hYWtQLVg5VVRtVktrYzZhbXFoZUNiWVVHamRhVw?oc=5",
      "lang": "en"
     },
     {
@@ -351,15 +313,273 @@
      "lang": "en"
     }
    ],
+   "is_new": false
+  },
+  {
+   "id": "7a8e31639a",
+   "title": "GTA 6 é tão grande que até a Rockstar se surpreende com o jogo: “Não sei se alguém conhece tudo”",
+   "title_pt": "GTA 6 é tão grande que até a Rockstar se surpreende com o jogo: “Não sei se alguém conhece tudo”",
+   "title_en": null,
+   "summary": "GTA 6 promete uma experiência vasta e imprevisível durante o gameplay.",
+   "score": 84.7,
+   "coverage": 2,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-08T23:15:00+00:00",
+   "first_seen": "2026-10-08T23:15:00+00:00",
+   "thumb": "https://www.estadao.com.br/resizer/v2/UQUNVAIIZZP2FJFVDGXX7W4BXM.jpg?quality=80&auth=60822a27d25704967324b5af6bb4f77aa2c772ef8a8c2c1dd4ff4bfd94eb1f5f&width=710",
+   "sources": [
+    {
+     "name": "TecMundo / Voxel",
+     "title": "GTA 6 é tão grande que até a Rockstar se surpreende com o jogo: “Não sei se alguém conhece tudo”",
+     "url": "https://www.estadao.com.br/tecmundo/voxel/gta-6-e-tao-grande-que-ate-a-rockstar-se-surpreende-com-o-jogo-nao-sei-se-alguem-conhece-tudo/",
+     "lang": "pt"
+    },
+    {
+     "name": "Google Notícias BR",
+     "title": "GTA 6 é tão grande que até a Rockstar se surpreende com o jogo: “Não sei se alguém conhece tudo”",
+     "url": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxNX3ZaRFVBVmVPRHRObFhjYkxhMVFZNUNnRlpEWHN2MG1LYVFtQ0NFNU1TdDhmOUV4VVpCS21aVG1KaXgzQXVLcFNUWkZwMGhOck4xUko0OGtWNUVMVFpacEpvN21qTFRYWWo5RUJPbkpZTExhVzdGN3hKNmk5aVluaGdjLXJJUkluRldoaDNEUGdLMTVCVkNkaVBwMGh1Z1JSQnVGZndVOUphMVBRNVFHZE1yRHk0QmdiOHNwQ2UtRWxLaFZNTEUwalF1bjFuVG1VSGfSAdcBQVVfeXFMTkFiWC1XSGE4TkNtUmlzZ1BRei13UGUxM1VGbUhCTTZpbFcyVzRhaER3T19fSllzT05IT052MHNhcFhoNTRjMnMwbGRTR2xlNk5XQS1MOFl4ckYzYXhCd0FWU194NkFseC1GME9sQUoza09POXFhdFBYb2pNQVZtenkwOUh4SVNhc2QxNkhWaVNFdHIzQnVyQ2RhdnJRTloxNWE0dXNQN3NqbFBDS1FNMEk3NzRXT0pTSG10d3BINWFGQ3VmMjNDaVBsdmpFdWRBVktvYnpHWEk?oc=5",
+     "lang": "pt"
+    }
+   ],
    "is_new": true
+  },
+  {
+   "id": "e920c9cc98",
+   "title": "Grand Theft Auto VI Keychain",
+   "title_pt": null,
+   "title_en": "Grand Theft Auto VI Keychain",
+   "summary": "Grand Theft Auto VI Keychain Rockstar Store",
+   "score": 82.7,
+   "coverage": 1,
+   "official": true,
+   "video": false,
+   "community": false,
+   "published": "2026-10-08T19:11:53+00:00",
+   "first_seen": "2026-10-08T19:11:53+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Rockstar Newswire (via Google News)",
+     "title": "Grand Theft Auto VI Keychain",
+     "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxQQTluWW9fTWNzRWpzVTk3LVBOcy1nSklvUk5qVktuYkFGelF0RUsxd0RPek9PamFtakNWRkVWOEl0SVNSWWtxV1EzUXFTbml5WmhIRW01b0ZMWnl3UFpmSldtR3lwMVR5ZDRlNWRmci0xd3RoZ2NoSzh6aUI1b3g4LUZn?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": false
+  },
+  {
+   "id": "a37f39b2f0",
+   "title": "Grand Theft Auto VI: The Album",
+   "title_pt": null,
+   "title_en": "Grand Theft Auto VI: The Album - Standard CD",
+   "summary": "Grand Theft Auto VI: The Album Rockstar Store",
+   "score": 80.9,
+   "coverage": 5,
+   "official": true,
+   "video": false,
+   "community": false,
+   "published": "2026-10-08T19:18:59+00:00",
+   "first_seen": "2026-10-08T18:02:50+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Rockstar Newswire (via Google News)",
+     "title": "Grand Theft Auto VI: The Album - Standard CD",
+     "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxPcGlDbFBEM1ZMOElqd3pNYzlEdjBlbGNBWWVIb19qSVlaUGlBYmkySFpOM3Z1RFBEMHd2QXNsWWg2c0s3dDg4YmVuTEhLQzRidFFhSVYwcjEyQXUtWU9CUVEySk9ELXVuWG5iTlFMU0FBQjR4bXpEWEMxVkFIXzFsbg?oc=5",
+     "lang": "en"
+    },
+    {
+     "name": "Rockstar Newswire (via Google News)",
+     "title": "Grand Theft Auto VI: The Album - Standard CD",
+     "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNaklEbVdNVExobkNEX2FfMTZXSWhESnphRzBabjZaUExpY3FIeUhLckNRTTYxZHZwOU9wWGQwdGE3dlBObmh2dXV5anBGeUhRODdpeTBMZ2VUS3gySGRJeU0yaHNjSU9wT0YzVFNIZzZCRUFsWDRha2VtOG1LcnpDYw?oc=5",
+     "lang": "en"
+    },
+    {
+     "name": "Rockstar Newswire (via Google News)",
+     "title": "Grand Theft Auto VI: The Album - Standard Vinyl",
+     "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNN202X3lmSENQSlI1WDAzeVFRcjJPQ09Xbl9wRVdhRGVaaHQ0RHdQWUItREhDLVNNVEkxcXdDUWhNaHJFV25CYlZDUHlKTUZEVThnR0xGUXhrekFhOWgzOUdFV05SOWdOTTQza1ZIVENRVFhpLW9oWnJfdGVfZkJ6MA?oc=5",
+     "lang": "en"
+    },
+    {
+     "name": "Rockstar Newswire (via Google News)",
+     "title": "Grand Theft Auto VI: The Album – Exclusive Vinyl",
+     "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE42YnhXSUtsY2lhODBBYkktYks4WTBQbTJ5aS1vcHlieUhmZ3pMWDZLa01oWUpESm9pZ01TZFJ2akE5b1FFM2FqZmFGUC1xMG9KMUktRlN5MG5uM0pUVnB6Wkk1SzRIRnlhNlc4V1Njc3dETjZh?oc=5",
+     "lang": "en"
+    },
+    {
+     "name": "Rockstar Newswire (via Google News)",
+     "title": "Grand Theft Auto VI: The Album",
+     "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1jNGFsdVpLMW00MlhSOE1PVko5UklnSlREbjl3N2pnRlFVUDlVakY5S1RjRF9QbllJV3hLczBEVkhGX1o4NS0wOFkyTlNyQ1N2QWtremVENlVsM05ITkd3c0cwVkgyREJCbDgtNnlZWTk?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": false
+  },
+  {
+   "id": "d972bcfc75",
+   "title": "Black Grand Theft Auto VI Logo Tee",
+   "title_pt": null,
+   "title_en": "Pink Grand Theft Auto VI Logo Tee",
+   "summary": "Black Grand Theft Auto VI Logo Tee Rockstar Store",
+   "score": 80.9,
+   "coverage": 2,
+   "official": true,
+   "video": false,
+   "community": false,
+   "published": "2026-10-08T18:02:54+00:00",
+   "first_seen": "2026-10-08T18:02:46+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Rockstar Newswire (via Google News)",
+     "title": "Pink Grand Theft Auto VI Logo Tee",
+     "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQTHZIeFh2Z2E5QUJTXzY5dlRrR2RaX2Q0Smw3V0FGaDVmZVB2YTlVbXh6T2FkaU91N2dYQ1dQQlNxMHlEZlk1SHdxeUlHSm1QQ25GTDdCdXZXcGJYX0NTNUF6cGdaTzc2RDJHY2xnUFB1dDVjczJlUi1sOTctOHRIanBsTng5TF9z?oc=5",
+     "lang": "en"
+    },
+    {
+     "name": "Rockstar Newswire (via Google News)",
+     "title": "Black Grand Theft Auto VI Logo Tee",
+     "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxPUjVQbnMySWxfQ3lQb0xQNUcxbHk5NW9lN0hUVDU2NXlSeGRFRGlNS044cEhNSXIzbHdHUTRoOFhmUm52YWsxTUEzSERiOWN1QksyZ1JsS0l6MW9IVzJHMk5aY0FIWDJ3LW03R29XMzFaOUVyY1lqZjB3dVNTcGZxMHN1RF9ucUM4ZlE?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": false
+  },
+  {
+   "id": "9697eae40b",
+   "title": "Black Grand Theft Auto VI Goodtime State Tee",
+   "title_pt": null,
+   "title_en": "Black Grand Theft Auto VI Goodtime State Tee",
+   "summary": "Black Grand Theft Auto VI Goodtime State Tee Rockstar Store",
+   "score": 80.9,
+   "coverage": 1,
+   "official": true,
+   "video": false,
+   "community": false,
+   "published": "2026-10-08T18:02:53+00:00",
+   "first_seen": "2026-10-08T18:02:53+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Rockstar Newswire (via Google News)",
+     "title": "Black Grand Theft Auto VI Goodtime State Tee",
+     "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQcUlhbll5RVNTeW9sSkJQa2JUTHBOWXRTbWpOQzhuSlU1YWp2MWtrMlkwRmEzdEJENlhKc1NSTnN2MkpENjhXUk1KN3UxYXhfRGJ4MUJYOGJnUzdkUi00b0JXbEJfOEhuT21CR2FmOUF3R2N3ZzB6bjRRNzk0YVJOUGFSWVdwQjk0bGxCcEs3WUlnS1k4QnBr?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": false
+  },
+  {
+   "id": "d927fb92d5",
+   "title": "Grand Theft Auto VI and Rockstar Games Sticker Collection",
+   "title_pt": null,
+   "title_en": "Grand Theft Auto VI and Rockstar Games Holographic Sticker Collection",
+   "summary": "Grand Theft Auto VI and Rockstar Games Sticker Collection Rockstar Store",
+   "score": 80.9,
+   "coverage": 2,
+   "official": true,
+   "video": false,
+   "community": false,
+   "published": "2026-10-08T18:02:50+00:00",
+   "first_seen": "2026-10-08T18:02:48+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Rockstar Newswire (via Google News)",
+     "title": "Grand Theft Auto VI and Rockstar Games Holographic Sticker Collection",
+     "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNWGFwblBJeC1GRTM0V3BmS2k2N3Y3THJab1JfbHlOSXBjeGNVdVQzaXFNYUdJUTMwdW55bndDWnFsdUM1azcyZkt5c3YzSXhmSnBPRXc0clJkMGRPbHJ1Ml95d2ZUbXVLSldYZjVmdk5aZS1MSmxBVGdBQVY0Y0ZWWlRTRDRPRDN5bk01M2prY2NzdHJMd2wzNGt3bXJtZEdSZmpoVGdtZ1dRVWxTaFdZdFc2SEZ0MDU1?oc=5",
+     "lang": "en"
+    },
+    {
+     "name": "Rockstar Newswire (via Google News)",
+     "title": "Grand Theft Auto VI and Rockstar Games Sticker Collection",
+     "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNNzRGVGF2dWJFdEp2WURHRGZMbVN0YjRzR2U2X1JTZk1WS2RfaHRwUXJuZVZiamhrU0dkTXl5cVB4REZmaE9zU0JXeGZqYUd3NHRkOFd3OU9XeXJmU2U2Nk9tSTB6aTlxVTQyNTVqVWkycWxVN0YwVWVBMFk1VlVBZkZUQi0wNFZ2c0JEaURYYUNhZGZncTVxQTZxT0NVOVJTa0lvc09hb0E?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": false
+  },
+  {
+   "id": "a07cd31cb5",
+   "title": "Grand Theft Auto VI – Vice City Zippo® Lighter",
+   "title_pt": null,
+   "title_en": "Grand Theft Auto VI – Vice City Money Clip",
+   "summary": "Grand Theft Auto VI – Vice City Zippo® Lighter Rockstar Store",
+   "score": 80.3,
+   "coverage": 2,
+   "official": true,
+   "video": false,
+   "community": false,
+   "published": "2026-10-08T18:02:49+00:00",
+   "first_seen": "2026-10-08T17:40:39+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Rockstar Newswire (via Google News)",
+     "title": "Grand Theft Auto VI – Vice City Money Clip",
+     "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPc2JTRkxiZUdJdm1NM0RFY3M1eTNLTFlxOFJJQWkxbWdtbEx5NEpFNGdZRlF4TURrRjFhdGdCcDFraldWVGhYMHpWelp5QW13WjIzbmYwM2hCT3pzWS0zY0U4eGpLcGMtcUxVeUQ3SEJxOE1SSDVzR0wxT3VwYnhrYzliTmtTZDkyZ1g3T2hDWExmQQ?oc=5",
+     "lang": "en"
+    },
+    {
+     "name": "Rockstar Newswire (via Google News)",
+     "title": "Grand Theft Auto VI – Vice City Zippo® Lighter",
+     "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPYVBJNTlkWDBvTmU2dUdQa3dHSVRyWnktUkxnWjU3dDd0OTdVSFgzS3BobEhub2hrZnVVZWdic2ZON0FYSVJSZXFGUTZGRjZsMkNqX2ZmdFBXbHRLZHZyMWU1dnZuQnhYSUNUek9Bb0xGR2M1TGZqbk5QMjEtWUVuRk1BOVdNaS0tcUhzN19aNC1mX1JzSUE?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": false
+  },
+  {
+   "id": "f04f5eac24",
+   "title": "Grand Theft Auto VI Baseball Cap: Black and Pink",
+   "title_pt": null,
+   "title_en": "Grand Theft Auto VI Baseball Cap: Blue and Pink",
+   "summary": "Grand Theft Auto VI Baseball Cap: Black and Pink Rockstar Store",
+   "score": 80.3,
+   "coverage": 4,
+   "official": true,
+   "video": false,
+   "community": false,
+   "published": "2026-10-08T18:02:44+00:00",
+   "first_seen": "2026-10-08T17:40:40+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Rockstar Newswire (via Google News)",
+     "title": "Grand Theft Auto VI Baseball Cap: Blue and Pink",
+     "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQTnIwNC1ZbmJUeWVLT3ZOTUNqM0lJLUt0UjZTRkpuMHJOeFJQQlZQMGR1S3lWS1hrT3FLeHVXNXp5azUwUVV3azJaTEJRWnNaRUItMW5zWWNtemVReC1QTGdYVG8zV1BjR1JLVEtHTDduYWJQRGhab0N4VUFqSmtRM0NKS0h6d0RwRGVBYmE1eXhWa3NKVGlELVhB?oc=5",
+     "lang": "en"
+    },
+    {
+     "name": "Rockstar Newswire (via Google News)",
+     "title": "Blue and Pink Grand Theft Auto VI Canvas Tote",
+     "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQZnFIYVdZU0VnNjZwNmczZEhtbGpyc2NQYmRUS1YzRnFFVG4zXzRHMEh5bVN2bGExNlRwNVdic2gwSnFUVlRNdjQtNDQwNG5VbVV4dVZjbkJsTHBHMTQ4WVppLVVaOU1wTUl2MTY4eG00OGRrWWlndXpkekFFWDlZVVZxeEZPSU5VSUhOMTB0WGpLS2tMaUlpTA?oc=5",
+     "lang": "en"
+    },
+    {
+     "name": "Rockstar Newswire (via Google News)",
+     "title": "Grand Theft Auto VI Baseball Cap: Black and Pink",
+     "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxObzdOdVMybHJCcGl3OVc4TXJQbkVkOTBaMkI2WF9qcWRpSEZoYURhV0h5YjMyeEZ2MF9oRE85Zzl3QUtRNnVDQ2dxRmZWc0hxbDJFQ1lRTVZnWDV6WGtSLUhxR05XbU44cm1rTUFNRG96MDZfUjd1RVZmZHBVc0x0MDJ3UElqOWdKU0t2b2xnUDktc2NPTEcxZ2toYw?oc=5",
+     "lang": "en"
+    },
+    {
+     "name": "Rockstar Newswire (via Google News)",
+     "title": "Pink and Blue Grand Theft Auto VI Canvas Tote",
+     "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPSVlxZmQwSHRPZFdHNGhSRURmRU5Ic0xLQVB5WlNsdlhWaTlXYTZjUmNUWm9yc0lfeUQxNVBBWVZidUdVbXV2N09QUS1nQWZLRGVUenJHMXRVcW84UEtNeEt2MEU2R25nSTRTRGhCUHVJOWRHeWFmWHFNdXRoVFZ0SjZ4ZktKWWptdGtERVNobGpNSWo5V2xpYw?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": false
   },
   {
    "id": "14f9d6e36d",
    "title": "Governo australiano ajuda trabalhadores a conhecerem seus direitos ao tirarem folga para jogar GTA 6",
    "title_pt": "Governo australiano ajuda trabalhadores a conhecerem seus direitos ao tirarem folga para jogar GTA 6",
-   "title_en": "Australian Government Issues Official Advice On How To Get Time Off For GTA 6",
+   "title_en": "GTA 6 Fans Get Australian Government Guidance on Taking Time Off Work for Launch Day",
    "summary": "“Você pode tirar uma folga não remunerada?”",
-   "score": 93.0,
+   "score": 79.7,
    "coverage": 5,
    "official": false,
    "video": false,
@@ -389,223 +609,37 @@
     {
      "name": "Google Notícias BR",
      "title": "GTA 6: Governo australiano explica como tirar licença no trabalho para o lançamento do jogo",
-     "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxONm02RG9zRkNJT0tWVVJiNEpMaWJ0NkU3Z2VPaG5ZcXdjYW5YSkluRnRNR0k0bXFpdzM3enBhWWFjd0RCZ1B0TElXYlhURTVUTHFaOHd5X2FGTXNoWmlvX09wR2F4TVlXUFM1dWdFVnkxbTlqbkVneVlqM1FZdnlKd0o1RnNJWW1NRFgtSklVZE9xMmdwaVBUc0FWZjZ2V1ZUT0d0d1RRd29MTXJ6eWp3XzdMNUdrT201cW5WWGM0b0RlSElFNzZrSUREOTgtZ9IB0wFBVV95cUxPVFEzaDcxMDZpM1cwU202TVJHWHp1VjZZRENWNU5IbUc4NlNxVWZoRnlEQjFHam5uSEhGMDgtUTJHVDZSMW13SHExb3pWcGhNcDkzcE9ORXNLRjNpblo0VmtxZEFZMGVyRU44WEdEa1FzRjdObzVIQmJnZnItaUJzWGlHT3htN05wYmNXajJ0RTJKOTdSN2hRZ01TZ1czZHBHRkhNWmMwUVIxQ3c1TUctTF9ReTl6bGRORFRSUkQ3cmdqUDBwQjRtQjIxWmYzNVlvYnU4?oc=5",
+     "url": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxPVFEzaDcxMDZpM1cwU202TVJHWHp1VjZZRENWNU5IbUc4NlNxVWZoRnlEQjFHam5uSEhGMDgtUTJHVDZSMW13SHExb3pWcGhNcDkzcE9ORXNLRjNpblo0VmtxZEFZMGVyRU44WEdEa1FzRjdObzVIQmJnZnItaUJzWGlHT3htN05wYmNXajJ0RTJKOTdSN2hRZ01TZ1czZHBHRkhNWmMwUVIxQ3c1TUctTF9ReTl6bGRORFRSUkQ3cmdqUDBwQjRtQjIxWmYzNVlvYnU40gHTAUFVX3lxTE9UUTNoNzEwNmkzVzBTbTZNUkdYenVWNllEQ1Y1TkhtRzg2U3FVZmhGeURCMUdqbm5ISEYwOC1RMkdUNlIxbXdIcTFvelZwaE1wOTNwT05Fc0tGM2luWjRWa3FkQVkwZXJFTjhYR0RrUXNGN05vNUhCYmdmci1pQnNYaUdPeG03TnBiY1dqMnRFMko5N1I3aFFnTVNnVzNkcEdGSE1aYzBRUjFDdzVNRy1MX1F5OXpsZE5EVFJSRDdyZ2pQMHBCNG1CMjFaZjM1WW9idTg?oc=5",
      "lang": "pt"
     },
     {
-     "name": "TheGamer",
-     "title": "Australian Government Issues Official Advice On How To Get Time Off For GTA 6",
-     "url": "https://www.thegamer.com/australia-government-time-off-work-gta-6/",
+     "name": "Google News US",
+     "title": "GTA 6 Fans Get Australian Government Guidance on Taking Time Off Work for Launch Day",
+     "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOWm5lMVdGdG8zOUpiRkUwS1pwX1pwZW4ySVUxQTk1RGtFQUI3cE9ja1JrX1hWcFF2UVdJTm5pZUVUeXlYTGUwSkJ0MVN5bVNacUtPeHUyNU53TnJRVVVZQTVpTy1EdS1RUUVxLWNqampSbm5mTG9QUjlRekUzeWNjdVV1aFR3SE5pc0VYOHlPeUZqSEJXaTh1MVdBT2hYYUpZalVRczlaSENsMnc?oc=5",
      "lang": "en"
     }
    ],
    "is_new": false
   },
   {
-   "id": "e920c9cc98",
-   "title": "Grand Theft Auto VI Keychain",
+   "id": "b2866b6b19",
+   "title": "Grand Theft Auto VI 컬렉션, 지금 Rockstar 스토어에 출시",
    "title_pt": null,
-   "title_en": "Grand Theft Auto VI Keychain",
-   "summary": "Grand Theft Auto VI Keychain Rockstar Store",
-   "score": 87.0,
+   "title_en": "Grand Theft Auto VI 컬렉션, 지금 Rockstar 스토어에 출시",
+   "summary": "Grand Theft Auto VI 컬렉션, 지금 Rockstar 스토어에 출시 Rockstar Games",
+   "score": 78.1,
    "coverage": 1,
    "official": true,
    "video": false,
    "community": false,
-   "published": "2026-10-08T19:11:53+00:00",
-   "first_seen": "2026-10-08T19:11:53+00:00",
+   "published": "2026-10-08T16:17:37+00:00",
+   "first_seen": "2026-10-08T16:17:37+00:00",
    "thumb": null,
    "sources": [
     {
      "name": "Rockstar Newswire (via Google News)",
-     "title": "Grand Theft Auto VI Keychain",
-     "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxQQTluWW9fTWNzRWpzVTk3LVBOcy1nSklvUk5qVktuYkFGelF0RUsxd0RPek9PamFtakNWRkVWOEl0SVNSWWtxV1EzUXFTbml5WmhIRW01b0ZMWnl3UFpmSldtR3lwMVR5ZDRlNWRmci0xd3RoZ2NoSzh6aUI1b3g4LUZn?oc=5",
-     "lang": "en"
-    }
-   ],
-   "is_new": true
-  },
-  {
-   "id": "7e9253515e",
-   "title": "Grand Theft Auto VI: The Album – Exclusive CD",
-   "title_pt": null,
-   "title_en": "Grand Theft Auto VI: The Album - Standard CD",
-   "summary": "Grand Theft Auto VI: The Album – Exclusive CD Rockstar Store",
-   "score": 85.2,
-   "coverage": 3,
-   "official": true,
-   "video": false,
-   "community": false,
-   "published": "2026-10-08T19:18:14+00:00",
-   "first_seen": "2026-10-08T18:02:50+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Rockstar Newswire (via Google News)",
-     "title": "Grand Theft Auto VI: The Album - Standard CD",
-     "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNaklEbVdNVExobkNEX2FfMTZXSWhESnphRzBabjZaUExpY3FIeUhLckNRTTYxZHZwOU9wWGQwdGE3dlBObmh2dXV5anBGeUhRODdpeTBMZ2VUS3gySGRJeU0yaHNjSU9wT0YzVFNIZzZCRUFsWDRha2VtOG1LcnpDYw?oc=5",
-     "lang": "en"
-    },
-    {
-     "name": "Rockstar Newswire (via Google News)",
-     "title": "Grand Theft Auto VI: The Album – Exclusive Vinyl",
-     "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE42YnhXSUtsY2lhODBBYkktYks4WTBQbTJ5aS1vcHlieUhmZ3pMWDZLa01oWUpESm9pZ01TZFJ2akE5b1FFM2FqZmFGUC1xMG9KMUktRlN5MG5uM0pUVnB6Wkk1SzRIRnlhNlc4V1Njc3dETjZh?oc=5",
-     "lang": "en"
-    },
-    {
-     "name": "Rockstar Newswire (via Google News)",
-     "title": "Grand Theft Auto VI: The Album – Exclusive CD",
-     "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1jNGFsdVpLMW00MlhSOE1PVko5UklnSlREbjl3N2pnRlFVUDlVakY5S1RjRF9QbllJV3hLczBEVkhGX1o4NS0wOFkyTlNyQ1N2QWtremVENlVsM05ITkd3c0cwVkgyREJCbDgtNnlZWTk?oc=5",
-     "lang": "en"
-    }
-   ],
-   "is_new": true
-  },
-  {
-   "id": "9697eae40b",
-   "title": "Black Grand Theft Auto VI Goodtime State Tee",
-   "title_pt": null,
-   "title_en": "Black Grand Theft Auto VI Goodtime State Tee",
-   "summary": "Black Grand Theft Auto VI Goodtime State Tee Rockstar Store",
-   "score": 85.2,
-   "coverage": 1,
-   "official": true,
-   "video": false,
-   "community": false,
-   "published": "2026-10-08T18:02:53+00:00",
-   "first_seen": "2026-10-08T18:02:53+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Rockstar Newswire (via Google News)",
-     "title": "Black Grand Theft Auto VI Goodtime State Tee",
-     "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQcUlhbll5RVNTeW9sSkJQa2JUTHBOWXRTbWpOQzhuSlU1YWp2MWtrMlkwRmEzdEJENlhKc1NSTnN2MkpENjhXUk1KN3UxYXhfRGJ4MUJYOGJnUzdkUi00b0JXbEJfOEhuT21CR2FmOUF3R2N3ZzB6bjRRNzk0YVJOUGFSWVdwQjk0bGxCcEs3WUlnS1k4QnBr?oc=5",
-     "lang": "en"
-    }
-   ],
-   "is_new": true
-  },
-  {
-   "id": "d927fb92d5",
-   "title": "Grand Theft Auto VI and Rockstar Games Sticker Collection",
-   "title_pt": null,
-   "title_en": "Grand Theft Auto VI and Rockstar Games Holographic Sticker Collection",
-   "summary": "Grand Theft Auto VI and Rockstar Games Sticker Collection Rockstar Store",
-   "score": 85.2,
-   "coverage": 2,
-   "official": true,
-   "video": false,
-   "community": false,
-   "published": "2026-10-08T18:02:50+00:00",
-   "first_seen": "2026-10-08T18:02:48+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Rockstar Newswire (via Google News)",
-     "title": "Grand Theft Auto VI and Rockstar Games Holographic Sticker Collection",
-     "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNWGFwblBJeC1GRTM0V3BmS2k2N3Y3THJab1JfbHlOSXBjeGNVdVQzaXFNYUdJUTMwdW55bndDWnFsdUM1azcyZkt5c3YzSXhmSnBPRXc0clJkMGRPbHJ1Ml95d2ZUbXVLSldYZjVmdk5aZS1MSmxBVGdBQVY0Y0ZWWlRTRDRPRDN5bk01M2prY2NzdHJMd2wzNGt3bXJtZEdSZmpoVGdtZ1dRVWxTaFdZdFc2SEZ0MDU1?oc=5",
-     "lang": "en"
-    },
-    {
-     "name": "Rockstar Newswire (via Google News)",
-     "title": "Grand Theft Auto VI and Rockstar Games Sticker Collection",
-     "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNNzRGVGF2dWJFdEp2WURHRGZMbVN0YjRzR2U2X1JTZk1WS2RfaHRwUXJuZVZiamhrU0dkTXl5cVB4REZmaE9zU0JXeGZqYUd3NHRkOFd3OU9XeXJmU2U2Nk9tSTB6aTlxVTQyNTVqVWkycWxVN0YwVWVBMFk1VlVBZkZUQi0wNFZ2c0JEaURYYUNhZGZncTVxQTZxT0NVOVJTa0lvc09hb0E?oc=5",
-     "lang": "en"
-    }
-   ],
-   "is_new": true
-  },
-  {
-   "id": "f04f5eac24",
-   "title": "Grand Theft Auto VI Baseball Cap: Black and Pink",
-   "title_pt": null,
-   "title_en": "Pink Grand Theft Auto VI Logo Tee",
-   "summary": "Grand Theft Auto VI Baseball Cap: Black and Pink Rockstar Store",
-   "score": 84.6,
-   "coverage": 8,
-   "official": true,
-   "video": false,
-   "community": false,
-   "published": "2026-10-08T18:02:54+00:00",
-   "first_seen": "2026-10-08T17:40:40+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Rockstar Newswire (via Google News)",
-     "title": "Pink Grand Theft Auto VI Logo Tee",
-     "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQTHZIeFh2Z2E5QUJTXzY5dlRrR2RaX2Q0Smw3V0FGaDVmZVB2YTlVbXh6T2FkaU91N2dYQ1dQQlNxMHlEZlk1SHdxeUlHSm1QQ25GTDdCdXZXcGJYX0NTNUF6cGdaTzc2RDJHY2xnUFB1dDVjczJlUi1sOTctOHRIanBsTng5TF9z?oc=5",
-     "lang": "en"
-    },
-    {
-     "name": "Rockstar Newswire (via Google News)",
-     "title": "Blue Grand Theft Auto VI Logo Tee",
-     "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNeXRaUVdaVk5pWlNGWVN5SUU5eFVVLVFCU0dIa09tTFo3XzAyamdTY2ZlRlhHZ2VJVG9ERWtraXNkSGk4Z3VmdVFQLUtKOWFPZGpBbE5ISVVhVldjMkVONjdoeFRrTkVXTlVYYUctQlEwLWZBOFF0SHZrUm9JSy1wQ2F0cVFjRzl1?oc=5",
-     "lang": "en"
-    },
-    {
-     "name": "Rockstar Newswire (via Google News)",
-     "title": "Black Grand Theft Auto VI Logo Tee",
-     "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxPUjVQbnMySWxfQ3lQb0xQNUcxbHk5NW9lN0hUVDU2NXlSeGRFRGlNS044cEhNSXIzbHdHUTRoOFhmUm52YWsxTUEzSERiOWN1QksyZ1JsS0l6MW9IVzJHMk5aY0FIWDJ3LW03R29XMzFaOUVyY1lqZjB3dVNTcGZxMHN1RF9ucUM4ZlE?oc=5",
-     "lang": "en"
-    },
-    {
-     "name": "Rockstar Newswire (via Google News)",
-     "title": "Grand Theft Auto VI Baseball Cap: Blue and Pink",
-     "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQTnIwNC1ZbmJUeWVLT3ZOTUNqM0lJLUt0UjZTRkpuMHJOeFJQQlZQMGR1S3lWS1hrT3FLeHVXNXp5azUwUVV3azJaTEJRWnNaRUItMW5zWWNtemVReC1QTGdYVG8zV1BjR1JLVEtHTDduYWJQRGhab0N4VUFqSmtRM0NKS0h6d0RwRGVBYmE1eXhWa3NKVGlELVhB?oc=5",
-     "lang": "en"
-    },
-    {
-     "name": "Rockstar Newswire (via Google News)",
-     "title": "Blue and Pink Grand Theft Auto VI Canvas Tote",
-     "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQZnFIYVdZU0VnNjZwNmczZEhtbGpyc2NQYmRUS1YzRnFFVG4zXzRHMEh5bVN2bGExNlRwNVdic2gwSnFUVlRNdjQtNDQwNG5VbVV4dVZjbkJsTHBHMTQ4WVppLVVaOU1wTUl2MTY4eG00OGRrWWlndXpkekFFWDlZVVZxeEZPSU5VSUhOMTB0WGpLS2tMaUlpTA?oc=5",
-     "lang": "en"
-    },
-    {
-     "name": "Rockstar Newswire (via Google News)",
-     "title": "Grand Theft Auto VI Baseball Cap: Pink and Blue",
-     "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxNWFRBMUE1N3pySkJZd1l5NDlkbmFqWDZsOXZVUXNfOXpXN2hpakxmanM1eU9vazA3QnB2UzV0ZFlXaFFWdWNIZ1p0b0NMUUtjcUhmM1pYMktKMVRycTc1VVROQmJEeVJGNUMxbldId0FScXRuWGhzZGRScHFLVWhCYXRoQnExbkE2UkNjWmJ4bnFfRUdjYjhwNFZ3?oc=5",
-     "lang": "en"
-    },
-    {
-     "name": "Rockstar Newswire (via Google News)",
-     "title": "Grand Theft Auto VI Baseball Cap: Black and Pink",
-     "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxObzdOdVMybHJCcGl3OVc4TXJQbkVkOTBaMkI2WF9qcWRpSEZoYURhV0h5YjMyeEZ2MF9oRE85Zzl3QUtRNnVDQ2dxRmZWc0hxbDJFQ1lRTVZnWDV6WGtSLUhxR05XbU44cm1rTUFNRG96MDZfUjd1RVZmZHBVc0x0MDJ3UElqOWdKU0t2b2xnUDktc2NPTEcxZ2toYw?oc=5",
-     "lang": "en"
-    },
-    {
-     "name": "Rockstar Newswire (via Google News)",
-     "title": "Pink and Blue Grand Theft Auto VI Canvas Tote",
-     "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPSVlxZmQwSHRPZFdHNGhSRURmRU5Ic0xLQVB5WlNsdlhWaTlXYTZjUmNUWm9yc0lfeUQxNVBBWVZidUdVbXV2N09QUS1nQWZLRGVUenJHMXRVcW84UEtNeEt2MEU2R25nSTRTRGhCUHVJOWRHeWFmWHFNdXRoVFZ0SjZ4ZktKWWptdGtERVNobGpNSWo5V2xpYw?oc=5",
-     "lang": "en"
-    }
-   ],
-   "is_new": true
-  },
-  {
-   "id": "a07cd31cb5",
-   "title": "Grand Theft Auto VI – Vice City Zippo® Lighter",
-   "title_pt": null,
-   "title_en": "Grand Theft Auto VI – Vice City Money Clip",
-   "summary": "Grand Theft Auto VI – Vice City Zippo® Lighter Rockstar Store",
-   "score": 84.6,
-   "coverage": 2,
-   "official": true,
-   "video": false,
-   "community": false,
-   "published": "2026-10-08T18:02:49+00:00",
-   "first_seen": "2026-10-08T17:40:39+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Rockstar Newswire (via Google News)",
-     "title": "Grand Theft Auto VI – Vice City Money Clip",
-     "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPc2JTRkxiZUdJdm1NM0RFY3M1eTNLTFlxOFJJQWkxbWdtbEx5NEpFNGdZRlF4TURrRjFhdGdCcDFraldWVGhYMHpWelp5QW13WjIzbmYwM2hCT3pzWS0zY0U4eGpLcGMtcUxVeUQ3SEJxOE1SSDVzR0wxT3VwYnhrYzliTmtTZDkyZ1g3T2hDWExmQQ?oc=5",
-     "lang": "en"
-    },
-    {
-     "name": "Rockstar Newswire (via Google News)",
-     "title": "Grand Theft Auto VI – Vice City Zippo® Lighter",
-     "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPYVBJNTlkWDBvTmU2dUdQa3dHSVRyWnktUkxnWjU3dDd0OTdVSFgzS3BobEhub2hrZnVVZWdic2ZON0FYSVJSZXFGUTZGRjZsMkNqX2ZmdFBXbHRLZHZyMWU1dnZuQnhYSUNUek9Bb0xGR2M1TGZqbk5QMjEtWUVuRk1BOVdNaS0tcUhzN19aNC1mX1JzSUE?oc=5",
+     "title": "Grand Theft Auto VI 컬렉션, 지금 Rockstar 스토어에 출시",
+     "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPQVNQUU1aek1PNXRLMzRvbXVSYllGcXE4M1lOWGFHVTdRUnhYZFVFcXRkdHh0b2dqNktMVzdWYW5rRWZ0Q0hKZjlncFM3NDJlaHFYWWo3eTVKbHc1UGJ2YkNWd1o4QVNDOFFUbDRZNkRuUjFSc2EzSW1KQlJONlZDOE16cUpZWXA0cVU1R1Nvay1jYkM0cHF5eDNCeG9iWGpBQjh5RXluQUF4SjM2NWhBX0x4T0xFT3lLSjlYZHNR?oc=5",
      "lang": "en"
     }
    ],
@@ -617,7 +651,7 @@
    "title_pt": null,
    "title_en": "Grand Theft Auto VI",
    "summary": "Grand Theft Auto VI Rockstar Games",
-   "score": 80.5,
+   "score": 76.2,
    "coverage": 1,
    "official": true,
    "video": false,
@@ -636,42 +670,12 @@
    "is_new": true
   },
   {
-   "id": "e3949af402",
-   "title": "GTA 6 Merch Revealed, Including T-Shirt With Alligator Wearing Sunglasses And Drinking A Cocktail",
-   "title_pt": null,
-   "title_en": "GTA 6 Merch Revealed, Including T-Shirt With Alligator Wearing Sunglasses And Drinking A Cocktail",
-   "summary": "Ahead of GTA 6 's release in November, Rockstar Games has announced an official merch collection for the game, and it includes some snazzy stuff like a t-shirt featuring an alligator wearing sunglasses and drinking a cocktail. The alligator's name is Macca the Gator, and he's the star of a fictional",
-   "score": 80.0,
-   "coverage": 2,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-08T17:37:17+00:00",
-   "first_seen": "2026-10-08T17:37:17+00:00",
-   "thumb": "https://www.gamespot.com/wp-content/uploads/2026/09/alligator.png?w=300",
-   "sources": [
-    {
-     "name": "GameSpot",
-     "title": "GTA 6 Merch Revealed, Including T-Shirt With Alligator Wearing Sunglasses And Drinking A Cocktail",
-     "url": "https://www.gamespot.com/articles/gta-6-merch-revealed-including-t-shirt-with-alligator-wearing-sunglasses-and-drinking-a-cocktail/",
-     "lang": "en"
-    },
-    {
-     "name": "Google News US",
-     "title": "GTA 6 Merch Revealed, Including T-Shirt With Alligator Wearing Sunglasses And Drinking A Cocktail",
-     "url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxNQ0p1NkJZR3pfWGdHQklkVEFhc1NHWGxvaTloQy1LOVA0ZWxObmhad3dWWFg5VDU0b05OaHlzdG5fOU1IVHI4dmR3cnJVdDkwdlRnaDJ4eW1jVGNXRjBqdzFkbXcwMmRWQnAtaFBKQ3dPZGVDdHhvcE5wNHhxRHoxQmFoMDF1OWlGanJpd2FiNVpRcTJKZ3JCcFpvXzIwSmhxWHlKOWFfWFNiRk1LZjdVOERGX2lfQUdndjZ3SmozQm84WnhNcmJ4NWo4TQ?oc=5",
-     "lang": "en"
-    }
-   ],
-   "is_new": true
-  },
-  {
    "id": "325847697d",
    "title": "GTA 6 ganha coleção oficial de produtos na loja da Rockstar",
    "title_pt": "GTA 6 ganha coleção oficial de produtos na loja da Rockstar",
    "title_en": null,
    "summary": "E aí, preparado para desembolsar uma grana e se \"enfeitar\" de GTA 6? Confira a relação de produtos!",
-   "score": 77.9,
+   "score": 73.6,
    "coverage": 2,
    "official": false,
    "video": false,
@@ -693,37 +697,7 @@
      "lang": "pt"
     }
    ],
-   "is_new": true
-  },
-  {
-   "id": "687cb8df43",
-   "title": "GTA 6 dispara nas pré-encomendas e ganhará trailer com gameplay na Netflix",
-   "title_pt": "Por que a Rockstar escolheu a Netflix para estrear o novo trailer de GTA 6?",
-   "title_en": null,
-   "summary": "GTA 6 dispara nas pré-encomendas e ganhará trailer com gameplay na Netflix Fast Company Brasil",
-   "score": 76.8,
-   "coverage": 2,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-08T13:05:00+00:00",
-   "first_seen": "2026-10-08T07:09:56+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google Notícias BR",
-     "title": "Por que a Rockstar escolheu a Netflix para estrear o novo trailer de GTA 6?",
-     "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQc1VmZERnekRNZUdsNFBaeGRpN2x3REhMMkUzYmY1dG9sQXlhZTNrWFZZYUtNY3dOaEhjQWVqM2Vfc1A2WHZFYS1oR0lKU2FsYzVvVzdGN3ZEZ3l3aFh1NURzWFBzNW1vU3ItNjNUcWs4WDN0dFZBSXBSdDVJU2pfSEEyU19Tbmt2TVFUYlJHY2NBSXl3UEFOSXJlVTBSWmhMQi1lUEpzaDhQZw?oc=5",
-     "lang": "pt"
-    },
-    {
-     "name": "Google Notícias BR",
-     "title": "GTA 6 dispara nas pré-encomendas e ganhará trailer com gameplay na Netflix",
-     "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxOdVljOE9OQzg2cDVyZXpnZFFVZlV5YlNMUm1MMWI1WnFvR1JoTlRFUkRzVWdfYm5sa3hTRVI0U0oxQ1lNcUlXRE5uZXRRTzY3SFVVUFlXLW5CbzJSMml5bFhmYmZZX2IzN1FIVGt2Ump3Z3V0RVE0TVhhaC1yZk4tMEo4OXpIcEJoVU9XbXpRYW50QVNPM0dWV09mWHVZUXM?oc=5",
-     "lang": "pt"
-    }
-   ],
-   "is_new": true
+   "is_new": false
   },
   {
    "id": "1d3eb10892",
@@ -731,7 +705,7 @@
    "title_pt": "Efeito GTA 6? Emulação de PS5 evolui rápido enquanto jogo da Rockstar não ganha data para PC",
    "title_en": null,
    "summary": "Ausência de GTA 6 no PC pode ter impulsionado a evolução dos emuladores de PS5 nos computadores.",
-   "score": 75.9,
+   "score": 71.5,
    "coverage": 3,
    "official": false,
    "video": false,
@@ -748,7 +722,7 @@
     },
     {
      "name": "Google Notícias BR",
-     "title": "Efeito GTA 6? Emulação de PS5 evolui rápido enquanto jogo da Rockstar não ganha data para PC",
+     "title": "Emulação de PS5 evolui com 'efeito GTA 6' sem data para PC",
      "url": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxQdzFPdF9LMG83LTEwZ2U2cWZ0cENwam03cVNJRVIyNWFRUUVqSGtyNEJnaTk0UzdOZjczY3hLMHQydVJJWndIUXZ1TWhVVkVYTEZsWHo3UEZtQXdua2ppZVkzbmUwTDJrcENGWlAtNlF2OUgxUVpDSWF3WXBLWVJCZy1ReTNuQTNxYkV0TzVXUzE4RkMtVjZ0OXJQSzRpd2c5aUIwZU56b2tKVHlKZUlaS1lCajJ5c2kyLTJDS1J5NDNIZUdDZ3RidWF6QWdCbU1oWTdKcHJ2cGpNUQ?oc=5",
      "lang": "pt"
     },
@@ -767,7 +741,7 @@
    "title_pt": "GTA 6 tem 25 minutos de gameplay vazados com possível modo em primeira pessoa",
    "title_en": null,
    "summary": "GTA 6 tem 25 minutos de gameplay vazados com possível modo em primeira pessoa Combo Infinito",
-   "score": 74.9,
+   "score": 70.6,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -786,12 +760,36 @@
    "is_new": false
   },
   {
+   "id": "919f4b5334",
+   "title": "Por que a Rockstar escolheu a Netflix para estrear o novo trailer de GTA 6?",
+   "title_pt": "Por que a Rockstar escolheu a Netflix para estrear o novo trailer de GTA 6?",
+   "title_en": null,
+   "summary": "Por que a Rockstar escolheu a Netflix para estrear o novo trailer de GTA 6? Canaltech",
+   "score": 63.9,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-08T13:05:00+00:00",
+   "first_seen": "2026-10-08T13:05:00+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google Notícias BR",
+     "title": "Por que a Rockstar escolheu a Netflix para estrear o novo trailer de GTA 6?",
+     "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQc1VmZERnekRNZUdsNFBaeGRpN2x3REhMMkUzYmY1dG9sQXlhZTNrWFZZYUtNY3dOaEhjQWVqM2Vfc1A2WHZFYS1oR0lKU2FsYzVvVzdGN3ZEZ3l3aFh1NURzWFBzNW1vU3ItNjNUcWs4WDN0dFZBSXBSdDVJU2pfSEEyU19Tbmt2TVFUYlJHY2NBSXl3UEFOSXJlVTBSWmhMQi1lUEpzaDhQZw?oc=5",
+     "lang": "pt"
+    }
+   ],
+   "is_new": true
+  },
+  {
    "id": "2609c47b35",
    "title": "Jason may or may not appear fully nude in GTA 6, but either way we've now seen his dong",
    "title_pt": null,
    "title_en": "Jason may or may not appear fully nude in GTA 6, but either way we've now seen his dong",
    "summary": "Cyberleek's back, this time with nude Jason riding a dirt bike.",
-   "score": 68.2,
+   "score": 63.8,
    "coverage": 2,
    "official": false,
    "video": false,
@@ -816,12 +814,36 @@
    "is_new": true
   },
   {
+   "id": "852f512b23",
+   "title": "'GTA 6' Release Sends PlayStation Prices Through the Roof",
+   "title_pt": null,
+   "title_en": "'GTA 6' Release Sends PlayStation Prices Through the Roof",
+   "summary": "'GTA 6' Release Sends PlayStation Prices Through the Roof Collider",
+   "score": 62.2,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-08T23:15:12+00:00",
+   "first_seen": "2026-10-08T23:15:12+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google News US",
+     "title": "'GTA 6' Release Sends PlayStation Prices Through the Roof",
+     "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQZzFQS0JmcHoyb1JsTmJZMGZYR050TEgxeDlCaUdMM3d3eHRKNnlxald2ZF9zaFhMbUg2MjdLS2c3SWwyNnlqeXMtNmtZenF3a3VFaHd4QVlkbnVQMGdPaEluQ19jaXhma0ZtSEdCQ25UTmE1bmdBdGE3REVQVUl1MjhOdw?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": true
+  },
+  {
    "id": "f176d195f6",
    "title": "Rockstar confirma tamanho de GTA 6 e apresenta o maior mundo aberto já criado pelo estúdio",
    "title_pt": "Rockstar confirma tamanho de GTA 6 e apresenta o maior mundo aberto já criado pelo estúdio",
    "title_en": null,
    "summary": "Rockstar confirma tamanho de GTA 6 e apresenta o maior mundo aberto já criado pelo estúdio africanizeoficial.com.br",
-   "score": 62.2,
+   "score": 57.9,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -840,30 +862,96 @@
    "is_new": true
   },
   {
-   "id": "a4c6246889",
-   "title": "GTA VI não terá Cloud Gaming no PC",
+   "id": "e3949af402",
+   "title": "GTA 6 Merch Revealed, Including T-Shirt With Alligator Wearing Sunglasses And Drinking A Cocktail",
+   "title_pt": null,
+   "title_en": "GTA 6 Merch Revealed, Including T-Shirt With Alligator Wearing Sunglasses And Drinking A Cocktail",
+   "summary": "Ahead of GTA 6 's release in November, Rockstar Games has announced an official merch collection for the game, and it includes some snazzy stuff like a t-shirt featuring an alligator wearing sunglasses and drinking a cocktail. The alligator's name is Macca the Gator, and he's the star of a fictional",
+   "score": 57.7,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-08T17:37:17+00:00",
+   "first_seen": "2026-10-08T17:37:17+00:00",
+   "thumb": "https://www.gamespot.com/wp-content/uploads/2026/09/alligator.png?w=300",
+   "sources": [
+    {
+     "name": "GameSpot",
+     "title": "GTA 6 Merch Revealed, Including T-Shirt With Alligator Wearing Sunglasses And Drinking A Cocktail",
+     "url": "https://www.gamespot.com/articles/gta-6-merch-revealed-including-t-shirt-with-alligator-wearing-sunglasses-and-drinking-a-cocktail/",
+     "lang": "en"
+    }
+   ],
+   "is_new": false
+  },
+  {
+   "id": "b4ab29d860",
+   "title": "Official GTA 6 Merch Starts at $4.99 With Tees, Collectibles and Vice City Gear",
+   "title_pt": null,
+   "title_en": "Official GTA 6 Merch Starts at $4.99 With Tees, Collectibles and Vice City Gear",
+   "summary": "Official GTA 6 Merch Starts at $4.99 With Tees, Collectibles and Vice City Gear GTA BOOM",
+   "score": 53.3,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-08T20:47:10+00:00",
+   "first_seen": "2026-10-08T20:47:10+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google News US",
+     "title": "Official GTA 6 Merch Starts at $4.99 With Tees, Collectibles and Vice City Gear",
+     "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQRm5wZmk0b0tBVnZEdlp0VG9GNDFrTk5mQ2xHZWJ4djg5MGdjNE5OX2I0bVAyWmc2X3pKNXlXdWdxWkNrZmt4ZlpKajRtZk0yNjlHQ204bF9KZWtIaHYyWkxHa0wyOFlKbUdHTFprbk1mRTVjRk1lSFNsaVhkUzQzeTZrTlNHanNTUUJLc3kxSnBQbnBVMWNMU0ZKc2ZzTnlYM1hwRUZJTnJHR0dJSFI4?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": false
+  },
+  {
+   "id": "58564ca169",
+   "title": "GTA 6 pode ter missão insana com tigre, revela ex-Rockstar",
+   "title_pt": "GTA 6 pode ter missão insana com tigre, revela ex-Rockstar",
+   "title_en": null,
+   "summary": "GTA 6 pode ter missão insana com tigre, revela ex-Rockstar einerd.com",
+   "score": 50.6,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-08T23:30:00+00:00",
+   "first_seen": "2026-10-08T23:30:00+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google Notícias BR",
+     "title": "GTA 6 pode ter missão insana com tigre, revela ex-Rockstar",
+     "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE5QaTdkMGxyT2ZfOFBNeHFTSVNMdE5JNUs5TFNaeWdsX1NQRVRfTDhQTjFiM1AxMXE5bzZtMHR0aXFyemJ5RzlqUTRUSW82eTdqV3NRR2RBcE1LYWRlREp0TDg0OVljUFBNODVYU2dvcFM0YTdJ?oc=5",
+     "lang": "pt"
+    }
+   ],
+   "is_new": true
+  },
+  {
+   "id": "7b9d226784",
+   "title": "Microsoft acaba com festa dos PC gamers e nega que GTA 6 rodará via Xbox Cloud Gaming",
    "title_pt": "Microsoft acaba com festa dos PC gamers e nega que GTA 6 rodará via Xbox Cloud Gaming",
    "title_en": null,
-   "summary": "GTA VI não terá Cloud Gaming no PC Arkade",
-   "score": 49.7,
-   "coverage": 2,
+   "summary": "Microsoft acaba com festa dos PC gamers e nega que GTA 6 rodará via Xbox Cloud Gaming Canaltech",
+   "score": 39.7,
+   "coverage": 1,
    "official": false,
    "video": false,
    "community": false,
    "published": "2026-10-08T14:11:00+00:00",
-   "first_seen": "2026-10-08T14:00:00+00:00",
+   "first_seen": "2026-10-08T14:11:00+00:00",
    "thumb": null,
    "sources": [
     {
      "name": "Google Notícias BR",
      "title": "Microsoft acaba com festa dos PC gamers e nega que GTA 6 rodará via Xbox Cloud Gaming",
      "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNTlNjRU9ZQU5JVWFsTWx5WDR3S1I2Y0VoZG1aYWRZZElfMGd2dU4wT0dvQ2wwSXVpWHBXZEZMeU1kaGlmYWZ6ajZVaGxkZmxqVG5La3dmN2Zsd0xZVDNTMnF5dEhmeDEzNVFiYUk1MWhjOXVPZGxDeE81QUdITjV1bzZ6b1RrUGd1Y0dhQ3dJSk9KNS00aWQ0bE9Cdk5XRnVtalNqZHQxM2JZbFlfSnFKUHZHYWRLaDZl?oc=5",
-     "lang": "pt"
-    },
-    {
-     "name": "Google Notícias BR",
-     "title": "GTA VI não terá Cloud Gaming no PC",
-     "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPb0Z2ZzRpdXJiTjM1UHF2NEJkVTNaQTFZM0hHUjNQYWk3bE9ucW4wNURnVXJjdU5oMkt5OFl6MzM0dVg3Wk9mREpVdzZOTTVNS3lycVpGeTJfWm5IY1RUV2tUZFJBYWJFdUo0a0xaRlFfdkVuLWtvYUFwWnNkQlNCM0ctakZvMnJORHNrOHZGY0lNSkNQa3FkX2J6ZVhvTjduTkI1Ym0zRG1LQQ?oc=5",
      "lang": "pt"
     }
    ],
@@ -875,7 +963,7 @@
    "title_pt": "GTA 6 mais barato! Confira como adquirir o jogo para PS5 em promoção com cupom",
    "title_en": null,
    "summary": "GTA 6 para PS5 fica mais barato com oferta relâmpago + cupom de R$60 Omelete",
-   "score": 43.9,
+   "score": 39.5,
    "coverage": 2,
    "official": false,
    "video": false,
@@ -900,66 +988,12 @@
    "is_new": true
   },
   {
-   "id": "07d35e0b3f",
-   "title": "GTA 6 gamers goon over fully nude Jason as 7 new gameplay features confirmed",
-   "title_pt": null,
-   "title_en": "GTA 6 gamers goon over fully nude Jason as 7 new gameplay features confirmed",
-   "summary": "GTA 6 gamers goon over fully nude Jason as 7 new gameplay features confirmed GAMINGbible",
-   "score": 43.9,
-   "coverage": 1,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-08T09:08:03+00:00",
-   "first_seen": "2026-10-08T09:08:03+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google News US",
-     "title": "GTA 6 gamers goon over fully nude Jason as 7 new gameplay features confirmed",
-     "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxNejlHTVI4VHdUaEp6VHNRTW5oZENqSGlmZlljcnk2M2cwRHk3NmlzeER4eWhORnVsWGtxQW5rS251ZEJOUVZycTdER2JTYzVxWEkyR1A3SEpUa3hZSkR6eXYzZl9Ka25UNklOXzNURWlWOE9ub1l5dTZJWWNVcmFKTEpIYk5IMml4ZzBMdFY3cnhpc05VZkxBYW9YbXRyZTdY?oc=5",
-     "lang": "en"
-    }
-   ],
-   "is_new": true
-  },
-  {
-   "id": "60781f6997",
-   "title": "At 11 years, GTA VI has the second-longest development time of any Grand Theft Auto game — just behind the original, which took around 4.54 billion years to be released",
-   "title_pt": null,
-   "title_en": "New GTA 6 And Rockstar Merchandise Released",
-   "summary": "submitted by /u/wakaja [link] [comments]",
-   "score": 42.9,
-   "coverage": 2,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-08T16:25:42+00:00",
-   "first_seen": "2026-10-08T08:30:44+00:00",
-   "thumb": "https://preview.redd.it/eyjc0uudf7uh1.jpeg?width=640&crop=smart&auto=webp&s=71d30c0817875685b82b389277239e7d0e9cb433",
-   "sources": [
-    {
-     "name": "Google News US",
-     "title": "New GTA 6 And Rockstar Merchandise Released",
-     "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTE5QLWFDT2R2LWJ1dTR0VU9SUGxXalJYaUZKOWMxcnhXUzNqc2h1LVB1Szc5c2JqemFOaWRjcXZDMkJOU0tkNjJWNDJiNkNVSk1xakRpQjZMUXJlb1Vya2ZtM2N6dlJENDBIUlkybVJMZkZ0clFaNFVYVk9R?oc=5",
-     "lang": "en"
-    },
-    {
-     "name": "Reddit r/GTA6 (top do dia)",
-     "title": "At 11 years, GTA VI has the second-longest development time of any Grand Theft Auto game — just behind the original, which took around 4.54 billion years to be released",
-     "url": "https://www.reddit.com/r/GTA6/comments/1x0lksw/at_11_years_gta_vi_has_the_secondlongest/",
-     "lang": "en"
-    }
-   ],
-   "is_new": true
-  },
-  {
    "id": "cd92f96d31",
    "title": "GTA 6 Online wishlist: What we want to see in multiplayer",
    "title_pt": null,
    "title_en": "GTA 6 Online wishlist: What we want to see in multiplayer",
    "summary": "GTA 6 Online wishlist: What we want to see in multiplayer Red Bull",
-   "score": 42.5,
+   "score": 38.2,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -978,12 +1012,36 @@
    "is_new": true
   },
   {
+   "id": "94a1e58ee2",
+   "title": "GameStop makes surprising PS5 Pro pricing move before GTA 6 launch",
+   "title_pt": null,
+   "title_en": "GameStop makes surprising PS5 Pro pricing move before GTA 6 launch",
+   "summary": "GameStop makes surprising PS5 Pro pricing move before GTA 6 launch TheStreet",
+   "score": 38.0,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-08T20:37:00+00:00",
+   "first_seen": "2026-10-08T20:37:00+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google News US",
+     "title": "GameStop makes surprising PS5 Pro pricing move before GTA 6 launch",
+     "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPWUtGM3NydXJCalBuT2RzOFFwc0lPZm9pMHVUMWZCNEI5WmhWMHNKdjlqNGRGVkxsejFRelB5cVEyUUdSNmg4ZV9lY0ZoNWN5UjBLZlpHY1g1Smc4eXFveW1mZTQyUTMwNVYtN0lHQzBWUG40MjZ3dGlLT1JlTnpIYzdGT1o2OVU?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": true
+  },
+  {
    "id": "f0d062b415",
    "title": "GTA 6 Wants Losing Your Wanted Level To Feel Like A “Hit-And-Run”",
    "title_pt": null,
    "title_en": "GTA 6 Wants Losing Your Wanted Level To Feel Like A “Hit-And-Run”",
    "summary": "Gamers hoping for GTA 6 to amp up the realism when it comes to losing their wanted level in the sunny state of Leonida are in luck, with Rockstar confirming in a recent interview that Jason and Lucia can do far more than escape a glowing red zone on the map to shake off the law. Speaking to IGN ahea",
-   "score": 41.7,
+   "score": 37.4,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -1007,7 +1065,7 @@
    "title_pt": "GTA VI, Wolverine e mais: os jogos de PS5 que você precisa ter no seu setup",
    "title_en": null,
    "summary": "GTA VI, Wolverine e mais: os jogos de PS5 que você precisa ter no seu setup Olhar Digital",
-   "score": 39.9,
+   "score": 35.5,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -1026,12 +1084,36 @@
    "is_new": true
   },
   {
+   "id": "f03a8d89fe",
+   "title": "Just In Time For GTA 6: PS5 Owners Get Big Graphics Upgrade For Free",
+   "title_pt": null,
+   "title_en": "Just In Time For GTA 6: PS5 Owners Get Big Graphics Upgrade For Free",
+   "summary": "Just In Time For GTA 6: PS5 Owners Get Big Graphics Upgrade For Free SlashGear",
+   "score": 35.0,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-08T18:45:00+00:00",
+   "first_seen": "2026-10-08T18:45:00+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google News US",
+     "title": "Just In Time For GTA 6: PS5 Owners Get Big Graphics Upgrade For Free",
+     "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxOR3JQbXlUMlRQeW9QbEtxdDVNbnAzeF90UkRNWks3T2JTUnNwcnlqT2hjM2l2RXdkMHFIWlRhdjc3LUozQjBoaGR6YUFUN1RuS054ODNsa0VaaFRidXVZaEVPZ0szdW8zVVJvNi1XZkJKOGxVSVAtSFZSemhWQlpFOUNSeGxiZlNCNjZmZ1F1MUZraEk?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": true
+  },
+  {
    "id": "290fa3b092",
    "title": "New GTA 6 Merch Gives Fans a Way to Get Vice City-Ready Before Launch",
    "title_pt": null,
    "title_en": "New GTA 6 Merch Gives Fans a Way to Get Vice City-Ready Before Launch",
    "summary": "New GTA 6 Merch Gives Fans a Way to Get Vice City-Ready Before Launch PlayStation LifeStyle",
-   "score": 39.2,
+   "score": 34.9,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -1043,11 +1125,11 @@
     {
      "name": "Google News US",
      "title": "New GTA 6 Merch Gives Fans a Way to Get Vice City-Ready Before Launch",
-     "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOY3lBa3hjNWRQOHFTeG44bjFXRk42bUM2QjJ4cjJvYTQ3M2Z6VjdSaW5UY0FsZFcxTDRudzhrZ2EzMXFTZkhNbmhmZEFDRlMtam44V1lBbjU5Nnl5MGlMVEZsZFNlUWlpM29QRElCaGpwMHd2WGpwVFJDb3pTX3I5Q2YtWjNGZHRYd2RwQ3VFeUYwbnY5OHRSUNIBmAFBVV95cUxOY3lBa3hjNWRQOHFTeG44bjFXRk42bUM2QjJ4cjJvYTQ3M2Z6VjdSaW5UY0FsZFcxTDRudzhrZ2EzMXFTZkhNbmhmZEFDRlMtam44V1lBbjU5Nnl5MGlMVEZsZFNlUWlpM29QRElCaGpwMHd2WGpwVFJDb3pTX3I5Q2YtWjNGZHRYd2RwQ3VFeUYwbnY5OHRSUA?oc=5",
+     "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxPMEhsaU5MS3l0WmhRT0hHTTc3eWZMUDRteEFFTG9RTk96STRnd2RqaDBtOHlpQW1jYlpQbWNFMm5HeWNjVXAyWS1JSmxRRTJzTlQ4XzJKQlFTWmxqN1o1S3BqcUFXTG02Rk1ZUnBDc1NGR1FjSTJBNTZaS0xoekl6SEtBeXhBTHZnc05IODhuRnhFZlXSAZgBQVVfeXFMTmN5QWt4YzVkUDhxU3huOG4xV0ZONm1DNkIyeHIyb2E0NzNmelY3UmluVGNBbGRXMUw0bnc4a2dhMzFxU2ZITW5oZmRBQ0ZTLWpuOFdZQW41OTZ5eTBpTFRGbGRTZVFpaTNvUERJQmhqcDB3dlhqcFRSQ296U19yOUNmLVozRmR0WHdkcEN1RXlGMG52OTh0UlA?oc=5",
      "lang": "en"
     }
    ],
-   "is_new": true
+   "is_new": false
   },
   {
    "id": "ca6ec0bf72",
@@ -1055,7 +1137,7 @@
    "title_pt": "Quer folga para jogar GTA 6? Entenda o debate sobre possibilidade de licença aos jogadores",
    "title_en": null,
    "summary": "Quer folga para jogar GTA 6? Entenda o debate sobre possibilidade de licença aos jogadores Exame",
-   "score": 38.7,
+   "score": 34.4,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -1079,7 +1161,7 @@
    "title_pt": "GTA 6 terá grande aquário inspirado no Seaquarium de Miami",
    "title_en": null,
    "summary": "GTA 6 terá boas atrações para os turistas de plantão curtirem peixes e mamíferos",
-   "score": 37.9,
+   "score": 33.6,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -1103,7 +1185,7 @@
    "title_pt": "GTA VI terá missões menos lineares e dará mais liberdade aos jogadores",
    "title_en": null,
    "summary": "GTA VI terá missões menos lineares e dará mais liberdade aos jogadores O Vício",
-   "score": 37.8,
+   "score": 33.5,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -1127,7 +1209,7 @@
    "title_pt": null,
    "title_en": "Israeli Parties Make GTA 6 the Latest Weapon in Their Campaign Ad Arsenal",
    "summary": "Israeli Parties Make GTA 6 the Latest Weapon in Their Campaign Ad Arsenal Haaretz",
-   "score": 37.7,
+   "score": 33.4,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -1151,7 +1233,7 @@
    "title_pt": null,
    "title_en": "Level up your PS5 audio before GTA 6 with Sony’s PULSE Explore earbuds at $149 low",
    "summary": "Level up your PS5 audio before GTA 6 with Sony’s PULSE Explore earbuds at $149 low 9to5Toys",
-   "score": 37.6,
+   "score": 33.3,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -1170,36 +1252,12 @@
    "is_new": true
   },
   {
-   "id": "e8172c2726",
-   "title": "Golpistas se antecipam a GTA 6 e criam sites falsos para roubar dados e pagamentos, aponta Avast",
-   "title_pt": "Golpistas se antecipam a GTA 6 e criam sites falsos para roubar dados e pagamentos, aponta Avast",
-   "title_en": null,
-   "summary": "Golpistas se antecipam a GTA 6 e criam sites falsos para roubar dados e pagamentos, aponta Avast AdNews",
-   "score": 36.6,
-   "coverage": 1,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-08T17:01:24+00:00",
-   "first_seen": "2026-10-08T17:01:24+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google Notícias BR",
-     "title": "Golpistas se antecipam a GTA 6 e criam sites falsos para roubar dados e pagamentos, aponta Avast",
-     "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPUjkwQjVabG9sYlN6VEFZd1NEOVdnY2FvY1hiUC13ODhTZVVTam10eWFLQm9iRk12aE91dnUzNDBFZjFsLUh3aHIxdlVMMmpBa3ZDeWJYYkZYdVRFdE1TZ1ZwMm83RUREQXhJcTFubklrbmQ3LWZJeHVndW1lWUJOWFZzVjBYamtTcDg4SmU0SmdCT3drZDdXT05kdzZFMzdncjZXbnNacXNtUFZMamVZZU1pZlNJTEd2NTlRSGJvQQ?oc=5",
-     "lang": "pt"
-    }
-   ],
-   "is_new": true
-  },
-  {
    "id": "4c63dfb096",
    "title": "Where to Buy Grand Theft Auto 6 Merch",
    "title_pt": null,
    "title_en": "Where to Buy Grand Theft Auto 6 Merch",
    "summary": "Where to Buy Grand Theft Auto 6 Merch Sole Retriever",
-   "score": 36.5,
+   "score": 32.2,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -1215,31 +1273,7 @@
      "lang": "en"
     }
    ],
-   "is_new": true
-  },
-  {
-   "id": "9615310174",
-   "title": "GTA VI confirma podcasts e uso de fones enquanto estiver a pé",
-   "title_pt": "GTA VI confirma podcasts e uso de fones enquanto estiver a pé",
-   "title_en": null,
-   "summary": "GTA VI confirma podcasts e uso de fones enquanto estiver a pé O Vício",
-   "score": 34.0,
-   "coverage": 1,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-08T15:24:12+00:00",
-   "first_seen": "2026-10-08T15:24:12+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google Notícias BR",
-     "title": "GTA VI confirma podcasts e uso de fones enquanto estiver a pé",
-     "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOa3RDaTdEVVRNTU1wNzdXcllQUE9UZ29qS01NcDlOZEZYdFVtZXFnd0V5WlR1VmxwTTVpQWlfWVNjWDhncURvVzFHdTVXUjFiUm1HQlRSVFNpQVFtNUJ4NUxUQlFtWlBFN3ZOdHc5TkhjN1VGTzM1YmdUbm9SVElwU3VyRFRBak52WS1tdtIBkgFBVV95cUxPQWs2d0NiUDdDNXNZZEVwRF9Qd2MtMzM5a0lYRTBTekJkczlUeERIbVRySlhfblJFamctMHMtVC05TGszcm4xSE1CLTdQX21MckZXX3Jhd0tGQnBkN3JMU2ZURzROQnhCZldaejVMMmU0ZzhsTF94emZrX292N0I3b1AtU28xVFFCZEQzdU5zQ1N6QQ?oc=5",
-     "lang": "pt"
-    }
-   ],
-   "is_new": true
+   "is_new": false
   },
   {
    "id": "2193cfe48f",
@@ -1247,7 +1281,7 @@
    "title_pt": "Rockstar assume que vai evitar questões políticas reais em GTA 6! Entenda motivo",
    "title_en": null,
    "summary": "Rockstar assume que vai evitar questões políticas reais em GTA 6! Entenda motivo Estadão",
-   "score": 32.7,
+   "score": 28.4,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -1261,78 +1295,6 @@
      "title": "Rockstar assume que vai evitar questões políticas reais em GTA 6! Entenda motivo",
      "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxPcjA4aXR1RjlhdmhNLUtiNy1YNThhR1JFUWdIbUNlTU9sU29NOGVfVzNxMzQtZXRyelRZUFA3dmQxaTdXbW5kVWg0bEVuNkVSRGdKOE0zVU5wLTR4bDRpNkQ3dTNqclNzUDBOYU1lZlBWNDBieVRyUmRrUjRaRTgyM1R3eV9DUjFES2c4MFI5R0I0TnJYb2oyTGN6VDM1Z2Z5Y0VKTU9pQlB3a2VRcF9zRXpaQXprZXNBX1g2WUJvVzhxczl2MXJz?oc=5",
      "lang": "pt"
-    }
-   ],
-   "is_new": true
-  },
-  {
-   "id": "4dc18af436",
-   "title": "'Vice City Is Unmistakably Miami' — CBS News Amazed by Accuracy of GTA 6",
-   "title_pt": null,
-   "title_en": "'Vice City Is Unmistakably Miami' — CBS News Amazed by Accuracy of GTA 6",
-   "summary": "'Vice City Is Unmistakably Miami' — CBS News Amazed by Accuracy of GTA 6 IGN",
-   "score": 26.9,
-   "coverage": 1,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-08T11:00:47+00:00",
-   "first_seen": "2026-10-08T11:00:47+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google News US",
-     "title": "'Vice City Is Unmistakably Miami' — CBS News Amazed by Accuracy of GTA 6",
-     "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1yWmlZUUIzZmNRNWZvdjFkUDQ4bVlaejRFRUFYVUFZMWRoNjM5UU5rT05TQnRkeWJsOVlhY1dFSTE0ZEU1bW1FQldrVWQ5NlZ2bFhyODZ2TXJ4dmRYQk55eTdBaDg5cGN4U0xV?oc=5",
-     "lang": "en"
-    }
-   ],
-   "is_new": true
-  },
-  {
-   "id": "3697b4932b",
-   "title": "Dezenas de sites falsos de GTA 6 tentam roubar gamers; veja domínios",
-   "title_pt": "Dezenas de sites falsos de GTA 6 tentam roubar gamers; veja domínios",
-   "title_en": null,
-   "summary": "Dezenas de sites falsos de GTA 6 tentam roubar gamers; veja domínios Estadão",
-   "score": 25.0,
-   "coverage": 1,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-08T09:46:08+00:00",
-   "first_seen": "2026-10-08T09:46:08+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google Notícias BR",
-     "title": "Dezenas de sites falsos de GTA 6 tentam roubar gamers; veja domínios",
-     "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxNdUJYZGFZb3EtYW9HX3NCWTVuREpDNDlMMXpBS19KUnNMb2s3VmhCbFphWmszaWVaTWhBRWV5amJYNHh2SnBtcGoyU0ZRM014UTdQbDFub3FDdXpqVGVUTERrLXZNMFhlN05hZGJ3TnZmcU5fdGZuUzlGUlIzRjFtZE9kRUx5MFlFRTM3cnZhS0tKV2JzdFFVZmZ1ejdSY1VraWk3U0w5U2I2eGZRalVfZXFfc2pDbTlYclNmNlREdmRiQmc3U3c?oc=5",
-     "lang": "pt"
-    }
-   ],
-   "is_new": true
-  },
-  {
-   "id": "c9af549829",
-   "title": "GTA 6 Finished Artwork (no Ai) Rate it from 0-10",
-   "title_pt": null,
-   "title_en": "GTA 6 Finished Artwork (no Ai) Rate it from 0-10",
-   "summary": "submitted by /u/TheParsaLife [link] [comments]",
-   "score": 20.3,
-   "coverage": 1,
-   "official": false,
-   "video": false,
-   "community": true,
-   "published": "2026-10-08T12:11:24+00:00",
-   "first_seen": "2026-10-08T12:11:24+00:00",
-   "thumb": "https://preview.redd.it/hrocumhdi8uh1.jpeg?width=640&crop=smart&auto=webp&s=7826c4733ac41a70f0d6dcb25c9652f9421cc4b1",
-   "sources": [
-    {
-     "name": "Reddit r/GTA6 (top do dia)",
-     "title": "GTA 6 Finished Artwork (no Ai) Rate it from 0-10",
-     "url": "https://www.reddit.com/r/GTA6/comments/1x0pa5g/gta_6_finished_artwork_no_ai_rate_it_from_010/",
-     "lang": "en"
     }
    ],
    "is_new": true
