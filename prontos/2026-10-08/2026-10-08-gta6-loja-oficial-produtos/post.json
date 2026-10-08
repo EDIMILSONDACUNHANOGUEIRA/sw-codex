@@ -1,0 +1,17 @@
+{
+  "id": "2026-10-08-gta6-loja-oficial-produtos",
+  "date": "2026-10-08",
+  "tag": "oficial",
+  "source": {
+    "name": "Rockstar Store",
+    "url": "https://store.rockstargames.com/"
+  },
+  "files": {
+    "br": [
+      "01_capa.png",
+      "02_o-que-tem-na-colecao.png",
+      "03_siga.png",
+      "legenda.txt"
+    ]
+  }
+}
