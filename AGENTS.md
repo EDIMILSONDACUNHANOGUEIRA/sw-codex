@@ -1,8 +1,9 @@
 # AGENTS.md — instruções para o Codex (e Claude Code) neste projeto
 
 Este repositório é o **Leonida Studio**: uma fábrica de posts de notícias de **GTA VI** para TikTok,
-com dois perfis — **BR** (português do Brasil) e **US** (inglês americano). O agente é o redator e
-editor-chefe: encontra a notícia, escreve o post nos dois idiomas, gera as artes e entrega pronto.
+para o perfil **BR @leonidawirebrz** (português do Brasil). O perfil US está desativado
+(`idiomas: [pt]` em `config/brand.yaml`): não escreva a parte `en`. O agente é o redator e
+editor-chefe: encontra a notícia, escreve o post, gera as artes e agenda no TikTok pelo Metricool.
 
 ## Fluxo padrão ("faz os posts de hoje")
 
@@ -28,16 +29,17 @@ Por enquanto o vídeo está desligado: use sempre `--sem-video`.
 Post diário de contagem regressiva: `python -m leonida contagem`.
 Música tema: `python -m leonida musica <url-youtube> --inicio 0:12` (todos os vídeos e cortes usam
 automaticamente; arquivo em `assets/music/`, fora do git). Downloads de vídeo: sempre via **yt-dlp**.
-Perfis: BR **@leonidawirebrz**, US **@leonidawireusa** (em `config/brand.yaml`).
+Perfil ativo: BR **@leonidawirebrz** (Metricool, marca 7317240). Publicação: passo 10 de
+`docs/PROMPT-DIARIO.md` e `python -m leonida publicacao <id>`.
 Cortes de vídeo: `python -m leonida corte <url|arquivo> 0:10 0:25 --pt "..." --en "..." --credito "..."`.
 
 ## Quando chegar um link de vídeo ("edita esse vídeo")
 
 1. Descubra do que se trata (título/canal do vídeo, matéria relacionada) e **confirme os fatos** como
-   num post normal. Escreva a manchete BR e US (≤ 70 caracteres, `*destaque*`) e escolha a tag.
+   num post normal. Escreva a manchete BR (≤ 70 caracteres, `*destaque*`) e escolha a tag.
 2. Rode a edição:
    ```bash
-   python -m leonida editar "URL" --pt "Manchete *BR*" --en "Headline *US*" --tag oficial \
+   python -m leonida editar "URL" --pt "Manchete *BR*" --tag oficial \
        --estilo hype --duracao 20            # --inicio 0:30 --fim 2:00 para usar só um trecho
    ```
    - `--estilo hype` (padrão): cortes de ~1 s, snap/crash zoom, câmera na mão, whip pan, flash.
@@ -48,7 +50,7 @@ Cortes de vídeo: `python -m leonida corte <url|arquivo> 0:10 0:25 --pt "..." --
    - Crédito: o canal do YouTube entra sozinho; use `--credito` para trocar.
 3. Abra `prontos/<data>/<id>/br/previa.jpg` (8 quadros da edição) e revise: personagem fora do
    quadro, texto em cima de rosto, trecho com conteúdo explícito. Ajuste e rode de novo.
-4. A legenda em `legenda.txt`/`caption.txt` sai só com manchete + crédito: **reescreva no formato de
+4. A legenda em `legenda.txt` sai só com manchete + crédito: **reescreva no formato de
    legenda do post** (gancho, fatos, pergunta) antes de entregar.
 5. Regras: trechos curtos de vídeo de terceiros, sempre com crédito e com edição/comentário próprio.
    Nada de vídeo vazado com conteúdo explícito.
@@ -82,8 +84,7 @@ pt:
     - type: grid                                   # grade de imagens (logos, prints)
       title: "As 6 *rádios*"
       items: [{ image: "URL", label: "Cocoteo FM", sub: "Bad Bunny & RaiNao" }]
-en:
-  # mesmos campos, em inglês americano
+# en: (só se o perfil US for reativado em brand.yaml -> idiomas)
 ```
 
 ## Regras editoriais (obrigatórias)
@@ -93,7 +94,7 @@ en:
 - **Nada explícito** (nudez, sexo, violência gráfica) — mesmo que a matéria cite. O TikTok derruba.
   Não use imagens vazadas; use screenshots oficiais.
 - Sempre credite a fonte (`source`). A legenda ganha "Fonte: X" automaticamente.
-- BR: português do Brasil, tom de gamer, direto e empolgado, sem exagero. US: inglês americano, punchy.
+- Português do Brasil, tom de gamer, direto e empolgado, sem exagero.
 - Manchete ≤ 70 caracteres, 2–4 palavras em `*destaque*`. "GTA VI" nunca quebra linha (automático).
 - Legenda: gancho na 1ª linha, fatos em linhas curtas, pergunta no final, no máx. 3 emojis.
   **Sem hashtags dentro da legenda** (vão no campo `hashtags`).

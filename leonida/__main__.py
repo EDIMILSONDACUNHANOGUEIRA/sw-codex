@@ -174,6 +174,18 @@ def cmd_editar(a):
     gallery.build()
 
 
+def cmd_publicacao(a):
+    import json as _json
+    from . import publish
+    if a.marcar:
+        for item in a.marcar:
+            sub, _, ref = item.partition(":")
+            publish.mark(a.post_id, sub, ref)
+        print(f"✅ registrado em {publish.PUBLISHED}")
+        return
+    print(_json.dumps(publish.package(a.post_id), ensure_ascii=False, indent=1))
+
+
 def cmd_musica(a):
     from . import music
     if a.arquivo:
@@ -266,7 +278,7 @@ def main(argv=None):
     r.add_argument("inicio")
     r.add_argument("fim")
     r.add_argument("--pt", required=True)
-    r.add_argument("--en", required=True)
+    r.add_argument("--en", default="", help="manchete US (só se o perfil US estiver ativo)")
     r.add_argument("--tag", default="viral")
     r.add_argument("--credito", default="")
     r.add_argument("--legendas", action="store_true", help="legenda automática (faster-whisper)")
@@ -291,6 +303,12 @@ def main(argv=None):
     r.add_argument("--sem-musica", action="store_true", help="não colocar a música tema")
     r.add_argument("--motor", default=None, choices=["auto", "hyperframes", "ffmpeg"])
     r.set_defaults(fn=cmd_editar)
+
+    r = sp.add_parser("publicacao", help="pacote para publicar no TikTok via Metricool (links + legenda)")
+    r.add_argument("post_id")
+    r.add_argument("--marcar", nargs="+", metavar="PERFIL:REF",
+                   help="registra como publicado, ex.: br:123 us:456")
+    r.set_defaults(fn=cmd_publicacao)
 
     r = sp.add_parser("musica", help="baixa/define a música tema usada nos vídeos")
     r.add_argument("url", nargs="?", help="URL do YouTube (ex.: trailer oficial)")

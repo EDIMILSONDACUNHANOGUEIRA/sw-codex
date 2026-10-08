@@ -30,7 +30,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 from . import clips, gfx, render
-from .config import CACHE_DIR, FONTS_DIR, HF_DIR, OUT_DIR, brand
+from .config import CACHE_DIR, FONTS_DIR, HF_DIR, LANGS, OUT_DIR, brand
 
 W, H = 1080, 1920
 FPS = 30
@@ -501,7 +501,7 @@ def contact_sheet(video: Path, out: Path, n: int = 8) -> Path:
 
 def make_edit(src: str, *, start: str | float = 0, end: str | float | None = None, duration: float = 20.0,
               style: str = "hype", layout: str = "cheio", headline: dict | None = None, tag: str = "viral",
-              source: str = "", date: str | None = None, langs=("pt", "en"), subtitles: bool = False,
+              source: str = "", date: str | None = None, langs=LANGS, subtitles: bool = False,
               audio: bool = True, music_on: bool = True, engine: str | None = None, name: str | None = None,
               log=print) -> Path:
     """Gera prontos/<data>/<nome>/{br,us}/edicao.mp4 (+ legenda e prévia)."""

@@ -19,7 +19,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 from . import gfx, render
-from .config import CACHE_DIR, FONTS_DIR, OUT_DIR, brand
+from .config import CACHE_DIR, FONTS_DIR, LANGS, OUT_DIR, brand
 
 W, H = 1080, 1920
 VIDEO_TOP = 640          # topo da janela do vídeo (16:9 -> 1080x608)
@@ -174,7 +174,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
 
 def make_clip(src: str, start: str | float, end: str | float, *, headline: dict, tag: str = "viral",
-              source: str = "", date: str | None = None, langs=("pt", "en"), subtitles: bool = False,
+              source: str = "", date: str | None = None, langs=LANGS, subtitles: bool = False,
               name: str | None = None, music_on: bool = True, log=print) -> Path:
     """Gera prontos/<data>/<nome>/{br,us}/corte.mp4 + legenda."""
     ff = shutil.which("ffmpeg")
@@ -185,7 +185,7 @@ def make_clip(src: str, start: str | float, end: str | float, *, headline: dict,
     if t1 <= t0:
         raise ValueError("fim precisa ser depois do início")
     date = date or dt.date.today().isoformat()
-    name = name or f"{date}-corte-{re.sub(r'[^a-z0-9]+', '-', headline.get('en', 'clip').lower())[:40].strip('-')}"
+    name = name or f"{date}-corte-{re.sub(r'[^a-z0-9]+', '-', (headline.get('en') or headline.get('pt') or 'clip').lower())[:40].strip('-')}"
     out_root = OUT_DIR / date / name
     work = CACHE_DIR / "clips" / name
     work.mkdir(parents=True, exist_ok=True)

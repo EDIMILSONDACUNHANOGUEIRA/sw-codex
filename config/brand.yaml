@@ -7,6 +7,9 @@ handle:
   pt: "@leonidawirebrz"        # perfil brasileiro (TikTok)
   en: "@leonidawireusa"        # perfil americano (TikTok)
 
+# Perfis produzidos: pt = BR (@leonidawirebrz). Para voltar a fazer o US, use [pt, en].
+idiomas: [pt]
+
 # Data oficial de lançamento (usada no contador "faltam X dias")
 release_date: "2026-11-19"
 
@@ -40,6 +43,15 @@ hashtags:
 canvas: { width: 1080, height: 1920 }
 # Áreas que a interface do TikTok cobre (em px) — nada importante é desenhado aqui
 safe_area: { top: 150, bottom: 380, right: 150, left: 64 }
+
+# Publicação no TikTok via Metricool (python -m leonida publicacao <id>)
+publicar:
+  repo_raw: "https://raw.githubusercontent.com/EDIMILSONDACUNHANOGUEIRA/sw-codex"
+  metricool:               # blogId da marca no Metricool com cada TikTok conectado
+    br: "7317240"          # marca com o @leonidawirebrz (conectada)
+    us: ""                 # perfil US desativado
+  formato: auto            # auto (carrossel; vídeo só se não houver imagens) | carrossel | video
+  revisao_manual: [vazamento, rumor]   # essas tags não publicam sozinhas: vão como rascunho
 
 # Acabamento das artes — visual fotográfico (sem cara de IA)
 acabamento:

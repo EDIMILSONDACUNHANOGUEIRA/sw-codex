@@ -17,7 +17,7 @@ STATE_DIR = ROOT / "state"          # radar.json, seen.json (histórico do radar
 CACHE_DIR = Path(os.environ.get("LEONIDA_CACHE", ROOT / ".cache"))
 HF_DIR = Path(__file__).resolve().parent / "hyperframes"
 
-LANGS = ("pt", "en")
+LANGS = ("pt", "en")       # substituído abaixo por brand.yaml -> idiomas
 # Pasta de saída por idioma: br = perfil brasileiro, us = perfil americano
 LANG_FOLDER = {"pt": "br", "en": "us"}
 
@@ -46,6 +46,10 @@ def days_to_release(today: dt.date | None = None) -> int:
     today = today or dt.date.today()
     release = dt.date.fromisoformat(str(brand()["release_date"]))
     return (release - today).days
+
+
+# Idiomas/perfis ativos (brand.yaml -> idiomas). Hoje só o perfil BR (pt) é produzido.
+LANGS = tuple(brand().get("idiomas") or LANGS)
 
 
 def ensure_dirs() -> None:

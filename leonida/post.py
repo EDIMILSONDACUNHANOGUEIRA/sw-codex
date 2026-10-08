@@ -195,6 +195,8 @@ def _write_readme(post: dict, out: Path, manifest: dict) -> None:
     if src.get("url"):
         lines += [f"Fonte: [{src.get('name', src['url'])}]({src['url']})", ""]
     for lang, label in (("pt", "🇧🇷 Perfil BR"), ("en", "🇺🇸 Perfil US")):
+        if lang not in LANGS:
+            continue
         folder = LANG_FOLDER[lang]
         files = manifest["files"].get(folder, [])
         if not files:
