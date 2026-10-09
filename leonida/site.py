@@ -34,7 +34,7 @@ MONTHS = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "
 
 
 def cfg() -> dict:
-    c = {"nome": "Leonida Wire", "url": "https://leonida-wire.vercel.app",
+    c = {"nome": "Leonida Wire", "url": "https://leonida-wire-sage.vercel.app",
          "descricao": "Notícias oficiais de GTA VI todos os dias, em português.",
          "tiktok": "https://www.tiktok.com/@leonidawirebrz"}
     c.update(brand().get("site") or {})
