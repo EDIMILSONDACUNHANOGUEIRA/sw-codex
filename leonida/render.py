@@ -536,6 +536,48 @@ def _slide_title(img: Image.Image, title: str, y: int) -> int:
     return y + len(lines) * lh
 
 
+def is_official_image(ref: str | None) -> bool:
+    """Screenshot/arte oficial da Rockstar (site oficial ou mídia da Rockstar)."""
+    ref = (ref or "").lower()
+    return "rockstargames.com" in ref or "media-rockstargames-com" in ref
+
+
+def slide_foto(post: dict, lang: str, img_ref: str | None = None, base_dir: Path | None = None,
+               credit: str = "Rockstar Games") -> Image.Image:
+    """Imagem LIMPA: a foto oficial inteira, sem texto por cima, sem recorte e sem filtro.
+    Fundo = a própria foto desfocada; só um selo discreto "IMAGEM OFICIAL" e o crédito."""
+    W, H = _canvas()
+    s_top, s_bottom, s_left, s_right = _safe()
+    src = load_image(img_ref or post["image"], base_dir).convert("RGB")
+    src = upscale.ensure_min(src, W, 0)
+    bg = gfx.cover_fit(src, (W, H)).filter(ImageFilter.GaussianBlur(48))
+    bg = Image.blend(bg, Image.new("RGB", (W, H), gfx.hex_rgb(brand()["palette"]["night"])), 0.55).convert("RGBA")
+    ratio = src.height / src.width
+    if ratio <= 1.0:                                   # paisagem/quadrada: largura total
+        fw, fh = W, int(round(W * ratio))
+    else:                                              # retrato: cabe em 75% da altura
+        fh = int(H * 0.72)
+        fw = min(W, int(round(fh / ratio)))
+        fh = int(round(fw * ratio))
+    fg = upscale.sharpen(src.resize((fw, fh), Image.LANCZOS), 40).convert("RGBA")
+    x, y = (W - fw) // 2, max(s_top + 140, (H - fh) // 2 - 60)
+    sm = Image.new("L", (W, H), 0)
+    sm.paste(255, (x, y, x + fw, y + fh))
+    bg.alpha_composite(gfx.drop_shadow(sm, (0, 14), 30, 160))
+    bg.alpha_composite(fg, (x, y))
+    # selo e crédito discretos, FORA da foto
+    pill, _ = tag_pill((W, H), "IMAGEM OFICIAL" if lang == "pt" else "OFFICIAL IMAGE", "#22D3EE", s_left, y - 58 - 24)
+    bg.alpha_composite(pill)
+    fc = gfx.font("bold", 26)
+    cred = f"{'Imagem' if lang == 'pt' else 'Image'}: {credit}"
+    bg.alpha_composite(text_block((W, H), [cred], fc, s_left, y + fh + 24, 0, gfx.rgba("#E9E3F5", 220)))
+    fw2 = gfx.font("heavy", 26)
+    handle = brand()["handle"][lang]
+    wm = gfx.text_mask((W, H), ((W - gfx.text_width(handle, fw2, 3)) / 2, H - 92), handle, fw2, 3)
+    bg.alpha_composite(gfx.fill_with(wm, gfx.rgba("#FFFFFF", 150)))
+    return bg.convert("RGB")
+
+
 def slide_grid(post: dict, lang: str, slide: dict, base_dir: Path | None = None, today=None) -> Image.Image:
     W, H = _canvas()
     s_top, s_bottom, s_left, s_right = _safe()

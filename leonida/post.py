@@ -157,6 +157,18 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
         r.image.save(folder / names["cover"], optimize=True)
         files = [names["cover"]]
         n = 2
+        # imagem nova da Rockstar: primeiro a arte editada (capa), depois a IMAGEM LIMPA (original)
+        clean = list(post.get("fotos_limpas") or [])
+        fl = post.get("foto_limpa", "auto")
+        if fl is True or (fl == "auto" and render.is_official_image(post.get("image"))):
+            clean.insert(0, post["image"])
+        for ref in dict.fromkeys(clean):
+            log(f"  [{lang}] imagem limpa…")
+            im = render.slide_foto(post, lang, ref, base_dir)
+            fn = f"{n:02d}_{'imagem-limpa' if lang == 'pt' else 'clean-image'}.png"
+            im.save(folder / fn, optimize=True)          # sem grão/filtro: é a imagem original
+            files.append(fn)
+            n += 1
         for slide in (post[lang].get("slides") or []):
             log(f"  [{lang}] slide {slide.get('type')}…")
             if slide.get("type") == "grid":
@@ -167,7 +179,7 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
             gfx.finish(im.convert("RGB")).save(folder / fn, optimize=True)
             files.append(fn)
             n += 1
-        if post[lang].get("slides") and post.get("cta", True):
+        if (post[lang].get("slides") or clean) and post.get("cta", True):
             fn = f"{n:02d}_{'siga' if lang == 'pt' else 'follow'}.png"
             gfx.finish(render.slide_cta(post, lang, base_dir, today).convert("RGB")).save(folder / fn, optimize=True)
             files.append(fn)

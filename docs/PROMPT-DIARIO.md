@@ -70,10 +70,15 @@ PASSOS
      ou explícita → ignore. Lançamento oficial da Rockstar (ex.: produtos na loja oficial) é notícia.
 3. Confirme cada fato em pelo menos 2 fontes, ou na fonte oficial da Rockstar. Se as fontes se
    contradizem, NÃO publique: liste em "Deixei de fora" com o motivo.
-4. Vazamento ou rumor: tag `vazamento`/`rumor`, deixe claro que não é oficial, use só screenshot
-   oficial e não descreva conteúdo explícito.
+4. SÓ NOTÍCIA OFICIAL. Vazamento e rumor NÃO entram (nem no TikTok, nem no site): ignore e
+   liste em "Deixei de fora". Vale o que a Rockstar/Take-Two anunciou, imagem/trailer oficial,
+   entrevista com a equipe da Rockstar e o que os grandes sites confirmam (como a Flow Games posta).
 5. Crie `posts/<data>-<slug>/post.yaml` só com o bloco `pt`. Carrossel só quando houver 3+ fatos ou imagens
    que valem um slide. Imagem: screenshot oficial ou foto de matéria com ≥ 1600 px.
+   IMAGEM NOVA DA ROCKSTAR: o post mostra primeiro a imagem EDITADA (a capa) e depois a imagem
+   LIMPA (a original, sem texto). Com imagem oficial (rockstargames.com) isso é automático; se
+   saíram várias imagens novas, liste todas em `fotos_limpas: [url1, url2, ...]` (uma imagem limpa
+   para cada, logo depois da capa).
 6. Rode `python -m leonida build <id> --sem-video` (sem a capa animada do HyperFrames, mais rápido;
    sem a flag, a capa animada abre o vídeo). O build gera as artes, as cópias JPEG e o VÍDEO DE
    PUBLICAÇÃO `br/tiktok/post.mp4`: a capa e os slides em sequência, com a música tema. Abra cada capa
@@ -83,7 +88,11 @@ PASSOS
 7. Gere o post de contagem do dia se ainda não existir (`python -m leonida contagem`).
 8. Marque as histórias usadas como `published` e as descartadas como `descartado`
    (`radar.mark_seen([...], status)`), e rode `python -m leonida galeria`.
-9. Commit + push (os links públicos das artes e do vídeo vêm do GitHub; o repositório é público).
+9. SITE: rode `python -m leonida site` (o post vira matéria no site, com a imagem limpa e as fontes).
+   Depois commit + push (os links públicos das artes e do vídeo vêm do GitHub; o repositório é público).
+   Publique o site: na Vercel (projeto `leonida-wire`), crie um deploy de PRODUÇÃO a partir do
+   branch atual (ferramenta `create_deployment` com `gitSource` = github EDIMILSONDACUNHANOGUEIRA/sw-codex,
+   ref = o branch, `target` = production). Sem acesso à Vercel, só avise que o site não foi atualizado.
 10. PUBLICAR NO TIKTOK (Metricool). Para cada post novo, rode `python -m leonida publicacao <id>`:
     - Perfil sem `blog_id` (config/brand.yaml → publicar.metricool) ou Metricool sem TikTok
       conectado: não publique; avise em uma linha no relatório.

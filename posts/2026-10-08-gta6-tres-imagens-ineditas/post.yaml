@@ -3,6 +3,11 @@ date: "2026-10-08"
 tag: oficial
 image: "https://www.rockstargames.com/VI/_next/static/media/radio-background-desktop.0hl~wc1-j9tqg.jpg"
 layout: card
+# imagens novas: depois da capa editada, as 3 imagens oficiais limpas
+fotos_limpas:
+  - "https://www.rockstargames.com/VI/_next/static/media/radio-background-desktop.0hl~wc1-j9tqg.jpg"
+  - "https://www.rockstargames.com/VI/_next/static/media/album-background-desktop.0sxn7hogv.8xn.jpg"
+  - "https://www.rockstargames.com/VI/_next/static/media/hero-background-desktop.05jwq4z-sjai_.jpg"
 source:
   name: Rockstar Games
   url: "https://www.rockstargames.com/VI/music"

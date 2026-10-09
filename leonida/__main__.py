@@ -209,6 +209,11 @@ def cmd_musica(a):
     print(f"🎵 {music.download(a.url, a.inicio, a.duracao, name=a.nome)}")
 
 
+def cmd_site(a):
+    from . import site
+    site.build()
+
+
 def cmd_galeria(a):
     from . import gallery
     print(f"🖼️  {gallery.build()}")
@@ -334,6 +339,9 @@ def main(argv=None):
     r.add_argument("--nome", help="nome da faixa (ex.: trailer-2); permite ter várias músicas tema")
     r.add_argument("--listar", action="store_true", help="lista as músicas tema disponíveis")
     r.set_defaults(fn=cmd_musica)
+
+    r = sp.add_parser("site", help="gera o site de notícias (pasta site/, publicada na Vercel)")
+    r.set_defaults(fn=cmd_site)
 
     r = sp.add_parser("galeria", help="gera prontos/index.html")
     r.set_defaults(fn=cmd_galeria)

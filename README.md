@@ -14,6 +14,7 @@ tudo pronto para você só baixar e postar no perfil brasileiro e no americano.
 | 🎥 **Edição por link** | Mande um link: o app acha as cenas, reenquadra 9:16 no personagem e aplica movimentos de câmera estilo Higgsfield (crash zoom, dolly, câmera na mão, whip pan, câmera lenta) no HyperFrames, com grão de filme, marca e manchete BR/US. |
 | ✂️ **Cortes** | Trailer/gameplay/vídeo viral (baixado com **yt-dlp**) → corte 9:16 com fundo desfocado, moldura da marca, música tema por baixo e legenda automática. |
 | ✍️ **Redação** | O Codex/Claude escreve no seu PC (veja `AGENTS.md`) ou o Claude API escreve sozinho na nuvem. |
+| 🌐 **Site** | Cada post oficial vira matéria no site **Leonida Wire** (Vercel): imagem oficial limpa, texto, galeria e fontes. `python -m leonida site` gera a pasta `site/`. |
 | 📲 **Entrega** | Pasta pronta por post + galeria com botão "copiar legenda" + envio opcional no Telegram/Discord. |
 
 ## Como fica
@@ -80,6 +81,7 @@ python -m leonida corte URL 0:42 1:05 --pt "Manchete *destaque*" --en "Headline 
 python -m leonida editar URL --pt "Manchete *BR*" --en "Headline *US*"   # edição 9:16 estilo Higgsfield
 python -m leonida musica URL --inicio 0:12 --nome trailer-1   # música tema (obrigatória)
 python -m leonida auto                   # radar → redação (Claude) → render → envio
+python -m leonida site                   # gera o site de notícias (site/, publicado na Vercel)
 python -m leonida galeria                # atualiza prontos/index.html
 python -m leonida serve                  # app web
 ```

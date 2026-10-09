@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "echo 'site estático pré-gerado (python -m leonida site)'",
+  "buildCommand": "echo 'site estático pré-gerado (python -m leonida site)'",
+  "outputDirectory": "site",
+  "cleanUrls": true,
+  "trailingSlash": true,
+  "headers": [
+    { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
+    { "source": "/img/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }] }
+  ]
+}

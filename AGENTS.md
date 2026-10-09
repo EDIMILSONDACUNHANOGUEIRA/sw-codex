@@ -38,6 +38,17 @@ Perfil ativo: BR **@leonidawirebrz** (Metricool, marca 7317240). Publicação: p
 `docs/PROMPT-DIARIO.md` e `python -m leonida publicacao <id>`.
 Cortes de vídeo: `python -m leonida corte <url|arquivo> 0:10 0:25 --pt "..." --en "..." --credito "..."`.
 
+## Site (Leonida Wire) e imagens oficiais
+
+- `python -m leonida site` gera o site estático em `site/` (versionado) a partir de `posts/*/post.yaml`.
+  A Vercel (projeto `leonida-wire`) publica essa pasta (`vercel.json`). Só entram notícias oficiais:
+  posts com tag `vazamento`/`rumor` ou `site: false` ficam de fora. Para escrever um texto próprio
+  para o site, use `site: {texto: "markdown"}` no post.yaml (senão o texto vem da legenda + slides).
+- Vazamentos e rumores não são publicados em lugar nenhum.
+- Imagem nova da Rockstar: o carrossel/vídeo mostra a capa EDITADA e logo depois a imagem LIMPA
+  (slide `imagem-limpa`, automático para imagens de rockstargames.com; `foto_limpa: false` desliga;
+  `fotos_limpas: [urls]` para várias imagens novas).
+
 ## Quando chegar um link de vídeo ("edita esse vídeo")
 
 1. Descubra do que se trata (título/canal do vídeo, matéria relacionada) e **confirme os fatos** como
