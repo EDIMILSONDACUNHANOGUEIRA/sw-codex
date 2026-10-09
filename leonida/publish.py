@@ -129,9 +129,10 @@ def package(post_id: str) -> dict:
                        "commercialContentOwnBrand": False,
                        # NUNCA música automática: o TikTok sorteia qualquer faixa. A música tema vai
                        # embutida no vídeo.
-                       "autoAddMusic": False, "isAigc": False}
+                       "autoAddMusic": False, "isAigc": False,
+                       "title": title[:90]}          # o Metricool exige título no TikTok (vídeo e fotos)
         if kind == "carrossel":
-            tiktok_data.update({"title": title[:90], "photoCoverIndex": 0})
+            tiktok_data["photoCoverIndex"] = 0
         out["profiles"][sub] = {
             "handle": brand()["handle"][lang],
             "blog_id": str((c.get("metricool") or {}).get(sub) or ""),
