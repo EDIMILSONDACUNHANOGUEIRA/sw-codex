@@ -4,7 +4,7 @@ Fonte: [IGN](https://www.ign.com/articles/gta-6-the-big-interview)
 
 ## 🇧🇷 Perfil BR
 
-<img src="br/01_capa.png" width="240"> <img src="br/02_o-que-a-rockstar-contou.png" width="240"> <img src="br/03_siga.png" width="240">
+<img src="br/01_capa.png" width="240"> <img src="br/02_imagem-limpa.png" width="240"> <img src="br/03_o-que-a-rockstar-contou.png" width="240"> <img src="br/04_siga.png" width="240">
 
 ```
 📱 A Rockstar contou detalhes novos de GTA VI na entrevista completa de Rob Nelson à IGN.

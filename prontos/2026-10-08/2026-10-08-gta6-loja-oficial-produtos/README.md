@@ -4,7 +4,7 @@ Fonte: [Rockstar Store](https://store.rockstargames.com/)
 
 ## 🇧🇷 Perfil BR
 
-<img src="br/01_capa.png" width="240"> <img src="br/02_o-que-tem-na-colecao.png" width="240"> <img src="br/03_siga.png" width="240">
+<img src="br/01_capa.png" width="240"> <img src="br/02_imagem-limpa.png" width="240"> <img src="br/03_o-que-tem-na-colecao.png" width="240"> <img src="br/04_siga.png" width="240">
 
 ```
 🛍️ GTA VI ganhou coleção oficial na loja da Rockstar.

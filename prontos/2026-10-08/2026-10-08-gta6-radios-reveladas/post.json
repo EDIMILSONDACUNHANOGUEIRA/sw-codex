@@ -9,17 +9,11 @@
   "files": {
     "br": [
       "01_capa.png",
-      "02_as-6-radios-de-leonida.png",
-      "03_o-que-sabemos.png",
-      "04_siga.png",
+      "02_imagem-limpa.png",
+      "03_as-6-radios-de-leonida.png",
+      "04_o-que-sabemos.png",
+      "05_siga.png",
       "legenda.txt"
-    ],
-    "us": [
-      "01_cover.png",
-      "02_leonida-s-first-6-statio.png",
-      "03_what-we-know.png",
-      "04_follow.png",
-      "caption.txt"
     ]
   }
 }
