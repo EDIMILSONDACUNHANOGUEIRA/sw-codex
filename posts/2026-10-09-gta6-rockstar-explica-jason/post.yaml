@@ -32,3 +32,29 @@ pt:
         - "O jogador decide: necessidade ou jeito de ser"
         - "Lucia quer uma vida melhor, sem desistir"
         - "Os dois foram feitos para se completar"
+en:
+  kicker: JASON
+  headline: "Rockstar explains *who Jason* really is"
+  summary: "Rupert Humphries, Rockstar's narrative chief, opened up to LOVE Magazine."
+  caption: |
+    🎯 Rockstar just opened up about Jason like never before.
+
+    Rupert Humphries, Rockstar's senior vice president of narrative, told LOVE Magazine the team "didn't want to make any kind of statement with Jason's backstory."
+
+    He says Jason turns to drug trafficking and bank robbery "because of his material circumstances." But "a lot of this is up to the player to decide whether he needs to do that, or if it's a choice he makes because he's wired differently from other people."
+
+    And Lucia "had to be someone who wanted a better life for herself" and wouldn't let any obstacle stop her. The two were built to complement each other.
+
+    GTA VI drops November 19.
+
+    Is Jason a product of his circumstances or born for crime? 👇
+  hashtags: ["#jasonduval", "#rockstargames", "#gta6story"]
+  slides:
+    - type: list
+      title: "What *Rockstar* said"
+      items:
+        - "No \"statement\" in Jason's backstory"
+        - "Drugs and bank jobs driven by circumstance"
+        - "Players decide: necessity or wiring"
+        - "Lucia won't let obstacles stop her"
+        - "Built to complement each other"

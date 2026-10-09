@@ -13,6 +13,13 @@
       "03_o-que-a-rockstar-disse.png",
       "04_siga.png",
       "legenda.txt"
+    ],
+    "us": [
+      "01_cover.png",
+      "02_clean-image.png",
+      "03_what-rockstar-said.png",
+      "04_follow.png",
+      "caption.txt"
     ]
   }
 }
