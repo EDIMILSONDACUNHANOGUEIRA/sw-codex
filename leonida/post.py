@@ -201,7 +201,8 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
             from . import postvideo
             intro = folder / names["video"] if (folder / names["video"]).exists() else None
             try:
-                postvideo.build(folder, seed=post["id"], intro=intro, log=log)
+                postvideo.build(folder, seed=post["id"], intro=intro, log=log,
+                                target=post.get("video_segundos"))
             except postvideo.MusicMissing as exc:
                 log(f"  ⚠️  {exc}")
             except Exception as exc:  # noqa: BLE001 — artes já estão prontas; só o vídeo falhou

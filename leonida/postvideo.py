@@ -73,8 +73,11 @@ def _normalize_intro(src: Path, out: Path) -> None:
                    check=True, capture_output=True)
 
 
-def build(folder: Path, seed: str, intro: Path | None = None, log=print) -> Path:
-    """Gera <folder>/tiktok/post.mp4 com a música tema. Lança MusicMissing se não houver música tema."""
+def build(folder: Path, seed: str, intro: Path | None = None, log=print, target: float | None = None) -> Path:
+    """Gera <folder>/tiktok/post.mp4 com a música tema. Lança MusicMissing se não houver música tema.
+
+    target: duração total desejada em segundos (ex.: 30). Os slides do meio esticam ou encolhem para caber;
+    sem target, cada slide fica SLIDE_SECONDS."""
     if not music.theme_path(seed):
         raise MusicMissing("nenhuma música tema em assets/music/ — rode: "
                            "python -m leonida musica \"URL do trailer\" --inicio 0:12")
@@ -91,10 +94,17 @@ def build(folder: Path, seed: str, intro: Path | None = None, log=print) -> Path
         rest = slides[1:]                      # a capa já está no vídeo animado
     else:
         rest = slides
+    slide_secs = SLIDE_SECONDS
+    n_mid = len(slides) - 2                  # slides entre a capa e o último
+    if target and n_mid > 0:
+        head = _duration(segs[0]) if segs else COVER_SECONDS
+        # total = capa + n_mid*s + último - XFADE*(transições)
+        slide_secs = (float(target) - head - LAST_SECONDS + XFADE * (len(slides) - 1)) / n_mid
+        slide_secs = max(3.0, min(9.0, slide_secs))
     for i, img in enumerate(rest):
         is_cover = not segs and i == 0
         is_last = i == len(rest) - 1 and len(slides) > 1
-        secs = COVER_SECONDS if is_cover else (LAST_SECONDS if is_last else SLIDE_SECONDS)
+        secs = COVER_SECONDS if is_cover else (LAST_SECONDS if is_last else slide_secs)
         seg = work / f"s{len(segs):02d}.mp4"
         _still_segment(img, seg, secs, 1.045 if is_cover else 1.02)   # zoom leve: não corta margens
         segs.append(seg)
