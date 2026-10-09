@@ -1,0 +1,34 @@
+id: 2026-10-09-gta6-album-cardi-b-fuerza-regida
+date: "2026-10-09"
+tag: oficial
+layout: card
+image: "https://www.rockstargames.com/VI/_next/static/media/GTAVI_MusicPage_AlbumArt.05qucexa8vzgb.jpg"
+source: { name: "Rockstar Games", url: "https://x.com/RockstarGames/status/2108392405707735366" }
+fontes:
+  - { name: "Rockstar Games (X)", url: "https://x.com/RockstarGames/status/2108392405707735366" }
+  - { name: "NME", url: "https://www.nme.com/news/gaming-news/cardi-b-grand-theft-auto-6-the-album-fuerza-regida-3972743" }
+  - { name: "Exame", url: "https://exame.com/pop/cardi-b-lanca-musica-inedita-para-gta-6-ouco-as-faixas-do-album/" }
+pt:
+  kicker: TRILHA
+  headline: "*Cardi B* e *Fuerza Regida* lançam músicas da trilha de GTA VI"
+  summary: "A Rockstar soltou 2 faixas novas de GTA VI: The Album. Já são 8 de 34."
+  caption: |
+    🎧 A trilha de GTA VI ganhou mais 2 músicas inéditas!
+
+    A Rockstar lançou "Don't Chart", da Cardi B, e "Suzuki", do Fuerza Regida. As duas já estão nas plataformas de streaming.
+
+    Elas fazem parte de GTA VI: The Album, o disco oficial do jogo, feito pela Rockstar com a Atlantic Records. Com elas, já são 8 das 34 faixas inéditas reveladas.
+
+    O álbum completo sai em 19/11, no mesmo dia do jogo, e já tem pré-venda em vinil e CD.
+
+    Já ouviu a da Cardi B? 👇
+  hashtags: ["#cardib", "#gta6trilha", "#gta6album"]
+  slides:
+    - type: list
+      title: "O que *saiu*"
+      items:
+        - "\"Don't Chart\", da Cardi B"
+        - "\"Suzuki\", do Fuerza Regida"
+        - "As duas já estão no streaming"
+        - "Já são 8 das 34 faixas reveladas"
+        - "Álbum completo em 19/11, junto com o jogo"
