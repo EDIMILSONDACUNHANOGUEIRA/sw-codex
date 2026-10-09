@@ -42,8 +42,12 @@ Cortes de vídeo: `python -m leonida corte <url|arquivo> 0:10 0:25 --pt "..." --
 
 - `python -m leonida site` gera o site estático em `site/` (versionado) a partir de `posts/*/post.yaml`.
   A Vercel (projeto `leonida-wire`) publica essa pasta (`vercel.json`). Só entram notícias oficiais:
-  posts com tag `vazamento`/`rumor` ou `site: false` ficam de fora. Para escrever um texto próprio
-  para o site, use `site: {texto: "markdown"}` no post.yaml (senão o texto vem da legenda + slides).
+  posts com tag `vazamento`/`rumor`/`contagem` ou `site: false` ficam de fora, e o gerador barra
+  qualquer post que fale em vazamento/leak/rumor. Para escrever um texto próprio para o site, use
+  `site: {texto: "markdown"}` no post.yaml (senão o texto vem da legenda + slides que não repetem a
+  legenda). Mais de uma fonte: `fontes: [{name: ..., url: ...}, ...]` (aparece como "Fontes: a · b").
+- As fontes do site são WOFF2 recortadas (latim) em `leonida/site_assets/fonts/`; se trocar a fonte,
+  gere de novo com `pyftsubset ... --flavor=woff2`.
 - Vazamentos e rumores não são publicados em lugar nenhum.
 - Imagem nova da Rockstar: o carrossel/vídeo mostra a capa EDITADA e logo depois a imagem LIMPA
   (slide `imagem-limpa`, automático para imagens de rockstargames.com; `foto_limpa: false` desliga;

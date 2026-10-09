@@ -89,6 +89,7 @@ PASSOS
 8. Marque as histórias usadas como `published` e as descartadas como `descartado`
    (`radar.mark_seen([...], status)`), e rode `python -m leonida galeria`.
 9. SITE: rode `python -m leonida site` (o post vira matéria no site, com a imagem limpa e as fontes).
+   Se a notícia tiver mais de uma fonte, liste todas em `fontes:` no post.yaml (nome + link).
    Depois commit + push (os links públicos das artes e do vídeo vêm do GitHub; o repositório é público).
    Publique o site: na Vercel (projeto `leonida-wire`), crie um deploy de PRODUÇÃO a partir do
    branch atual (ferramenta `create_deployment` com `gitSource` = github EDIMILSONDACUNHANOGUEIRA/sw-codex,

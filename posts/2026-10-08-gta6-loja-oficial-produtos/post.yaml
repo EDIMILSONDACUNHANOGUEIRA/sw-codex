@@ -5,7 +5,7 @@ image: "https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_GOO
 source: { name: "Rockstar Store", url: "https://store.rockstargames.com/" }
 pt:
   kicker: LOJA
-  headline: "Rockstar abre a *loja oficial* de *GTA VI* com produtos de Vice City"
+  headline: "GTA VI ganha *coleção oficial* na *Rockstar Store*"
   summary: "Camisetas, chaveiro, isqueiro Zippo, bolsas e adesivos já estão na Rockstar Store."
   caption: |
     🛍️ GTA VI ganhou coleção oficial na loja da Rockstar.
@@ -20,6 +20,6 @@ pt:
       title: "O que tem na *coleção*"
       items:
         - "Camisetas de GTA VI e da Goodtime State"
-        - "Chaveiro e prendedor de dinheiro de Vice City"
+        - "Chaveiro de GTA VI e prendedor de dinheiro de Vice City"
         - "Isqueiro Zippo e bolsas de tecido"
         - "Adesivos, e mais produtos chegando com o tempo"

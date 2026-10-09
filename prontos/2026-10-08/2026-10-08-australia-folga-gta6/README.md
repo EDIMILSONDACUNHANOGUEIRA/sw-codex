@@ -12,7 +12,7 @@ Fonte: [IGN](https://www.ign.com/articles/australian-government-time-off-gta-6)
 As opções de licença não remunerada listadas:
 1. Cuidar de alguém que precisa de você
 2. Atividade voluntária de emergência
-3. Licença-parental (o bebê teria que nascer em ~5 semanas 💀)
+3. Licença-parental (o bebê teria que nascer em ~6 semanas 💀)
 4. Simplesmente pedir pro chefe
 
 Spoiler: a 4ª é a única que funciona. Você vai faltar no dia 19/11? 👇

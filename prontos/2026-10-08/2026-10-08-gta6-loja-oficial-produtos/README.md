@@ -1,4 +1,4 @@
-# Rockstar abre a loja oficial de GTA VI com produtos de Vice City
+# GTA VI ganha coleção oficial na Rockstar Store
 
 Fonte: [Rockstar Store](https://store.rockstargames.com/)
 

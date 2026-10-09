@@ -5,6 +5,11 @@ image: "https://www.rockstargames.com/VI/_next/static/media/Lucia_Caminos_06.0fx
 source:
   name: Rockstar Games
   url: "https://www.rockstargames.com/VI/music"
+fontes:
+  - name: Rockstar Newswire
+    url: "https://www.rockstargames.com/newswire/article/o3982oa93a23k4/the-music-of-grand-theft-auto-vi-in-game-radio-stations"
+  - name: Kotaku
+    url: "https://kotaku.com/gta-6-has-some-very-famous-musicians-hosting-its-radio-stations-including-bad-bunny-2000742646"
 pt:
   kicker: RÁDIOS
   headline: "GTA VI revela suas primeiras *6 rádios* com *Bad Bunny* e *Lana Del Rey*"

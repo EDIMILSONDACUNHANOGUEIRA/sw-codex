@@ -4,7 +4,13 @@
 
 Cada post publicado no TikTok vira uma matéria no site, com a imagem oficial limpa no topo, o texto,
 a galeria (arte editada + imagem limpa + slides) e as fontes. Só entram notícias oficiais/confirmadas:
-posts com tag vazamento ou rumor (ou `site: false`) ficam de fora.
+posts com tag vazamento, rumor ou contagem (ou `site: false`) ficam de fora, e qualquer post que fale em
+vazamento/leak/rumor é barrado mesmo com outra tag.
+
+No post.yaml, além de `source`, dá para listar várias fontes:
+    fontes:
+      - {name: Rockstar Newswire, url: "https://www.rockstargames.com/newswire/..."}
+      - {name: IGN, url: "https://www.ign.com/..."}
 
 O site é estático (HTML + CSS + um pouco de JS para o contador) e fica em site/, versionado no git.
 A Vercel publica essa pasta (vercel.json).
@@ -22,11 +28,13 @@ from urllib.parse import quote
 
 from PIL import Image
 
-from .config import FONTS_DIR, OUT_DIR, POSTS_DIR, ROOT, brand, days_to_release
+from .config import OUT_DIR, POSTS_DIR, ROOT, brand, days_to_release
 
 SITE_DIR = ROOT / "site"
 ASSETS_SRC = Path(__file__).resolve().parent / "site_assets"
-EXCLUDE_TAGS = {"vazamento", "rumor"}
+EXCLUDE_TAGS = {"vazamento", "rumor", "contagem"}
+# trava extra: o site é só de notícia oficial, então nada que fale em vazamento/rumor entra
+LEAK_RE = re.compile(r"\b(vaz(a|ou|ad[oa]s?|amentos?)|leak\w*|rumou?r\w*|insiders?)\b", re.I)
 TAG_LABEL = {"oficial": "Oficial", "urgente": "Urgente", "viral": "Viralizou", "contagem": "Contagem",
              "analise": "Análise"}
 MONTHS = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro",
@@ -111,15 +119,39 @@ def md_to_html(md: str) -> str:
     return "\n".join(blocks)
 
 
-EMOJI_RE = re.compile("[\U0001F000-\U0001FAFF☀-➿️‍]+")
+EMOJI_RE = re.compile("[\U0001F000-\U0001FAFF⌀-⏿☀-➿⬀-⯿️‍⃣]+")
+KEYCAP_RE = re.compile("([0-9])️?⃣")                  # 1️⃣ -> "1."
+
+
+def clean_line(ln: str) -> str:
+    ln = KEYCAP_RE.sub(r"\1.", ln)
+    ln = EMOJI_RE.sub("", ln)
+    ln = re.sub(r"\s+([,.;:!?)])", r"\1", ln)              # emoji tirado não deixa espaço antes da pontuação
+    return re.sub(r"\s{2,}", " ", ln).strip()
 
 
 def caption_to_md(caption: str) -> str:
     """Legenda do TikTok -> texto de matéria: tira emojis e a pergunta final de engajamento."""
-    lines = [EMOJI_RE.sub("", ln).strip() for ln in (caption or "").strip().splitlines()]
+    lines = [clean_line(ln) for ln in (caption or "").strip().splitlines()]
     while lines and (not lines[-1] or lines[-1].endswith("?")):
         lines.pop()
     return "\n\n".join(ln for ln in lines if ln)          # cada linha da legenda vira um parágrafo
+
+
+def _norm(s: str) -> str:
+    return re.sub(r"[^0-9a-zà-ú]+", " ", strip_marks(s).lower()).strip()
+
+
+def _stems(s: str) -> set[str]:
+    return {w[:4] for w in _norm(s).split() if len(w) > 3}
+
+
+def _redundant(items: list[str], text: str) -> bool:
+    """A lista do slide só repete (mesmo com outras palavras) o que a legenda já disse? Aí ela não entra
+    de novo na matéria."""
+    body = _stems(text)
+    covered = sum(1 for i in items if _stems(i) and len(_stems(i) & body) >= 0.7 * len(_stems(i)))
+    return bool(items) and covered >= max(1, round(len(items) * 0.6))
 
 
 def fmt_date(d: str) -> str:
@@ -141,6 +173,12 @@ def load_articles() -> list[dict]:
             continue
         pt = p["pt"]
         site_cfg = p.get("site") if isinstance(p.get("site"), dict) else {}
+        alltext = " ".join([pt.get("kicker", ""), pt.get("headline", ""), pt.get("summary", ""),
+                            pt.get("caption", ""), str(site_cfg.get("texto", ""))]
+                           + [str(s) for s in pt.get("slides") or []])
+        if LEAK_RE.search(alltext):
+            print(f"  [site] fora do site (fala em vazamento/rumor): {p['id']}")
+            continue
         slug = re.sub(r"^\d{4}-\d{2}-\d{2}-", "", p["id"])
         date = str(p.get("date") or p["id"][:10])[:10]
         folder = next(iter(sorted(OUT_DIR.glob(f"*/{p['id']}"))), None)
@@ -148,6 +186,9 @@ def load_articles() -> list[dict]:
         extras = []
         for sl in pt.get("slides") or []:
             title = strip_marks(sl.get("title", ""))
+            labels = [i if isinstance(i, str) else i.get("label", "") for i in sl.get("items") or []]
+            if _redundant(labels, body_md):
+                continue
             if sl.get("type") == "list" and sl.get("items"):
                 extras.append(f"## {title}\n" + "\n".join(f"- {i}" for i in sl["items"]))
             elif sl.get("type") == "grid" and sl.get("items"):
@@ -161,12 +202,23 @@ def load_articles() -> list[dict]:
             "headline": pt.get("headline", ""), "title": strip_marks(pt.get("headline", "")),
             "summary": pt.get("summary", ""), "body_html": md_to_html(body_md),
             "hashtags": pt.get("hashtags") or [],
-            "source": p.get("source") or {}, "image": p.get("image"), "base_dir": f.parent,
-            "fotos_limpas": p.get("fotos_limpas") or [], "folder": folder,
+            "source": p.get("source") or {}, "fontes": p.get("fontes") or [],
+            "image": p.get("image"), "base_dir": f.parent,
+            "oficiais": official_refs(p), "folder": folder,
             "tiktok_url": site_cfg.get("tiktok"),
         })
     arts.sort(key=lambda a: (a["date"], _added_at(a["base_dir"] / "post.yaml"), a["id"]), reverse=True)
     return arts
+
+
+def official_refs(p: dict) -> list[str]:
+    """Imagens oficiais da Rockstar do post (as mesmas que viram 'imagem limpa' no TikTok)."""
+    from .render import is_official_image
+    refs = list(p.get("fotos_limpas") or [])
+    fl = p.get("foto_limpa", "auto")
+    if p.get("image") and (fl is True or (fl == "auto" and is_official_image(p.get("image")))):
+        refs.insert(0, p["image"])
+    return list(dict.fromkeys(refs))
 
 
 def _added_at(f: Path) -> int:
@@ -200,7 +252,7 @@ def build_images(a: dict, out: Path) -> dict:
     """Imagem limpa (hero 16:9), miniatura, og:image e galeria (arte editada + limpa + slides)."""
     from .media import load_image
     imgdir = out / "img" / a["slug"]
-    res = {"hero": None, "thumb": None, "og": None, "gallery": []}
+    res = {"hero": None, "thumb": None, "og": None, "gallery": [], "oficiais": []}
     src = None
     if a.get("image"):
         try:
@@ -216,6 +268,15 @@ def build_images(a: dict, out: Path) -> dict:
         res["thumb"] = ("img/%s/thumb.webp" % a["slug"], _save_web(crop, imgdir / "thumb.webp", 720, 78))
         og = crop.resize((1200, 675), Image.LANCZOS) if crop.width >= 1200 else crop
         res["og"] = ("img/%s/og.jpg" % a["slug"], _save_web(og, imgdir / "og.jpg", 1200, 85, "JPEG"))
+    # imagens oficiais inteiras (sem corte, sem texto) para a matéria e a página /imagens/
+    for i, ref in enumerate(a.get("oficiais") or [], 1):
+        try:
+            im = src if (ref == a.get("image") and src is not None) else load_image(ref, a["base_dir"])
+        except Exception as exc:  # noqa: BLE001
+            print(f"  [site] imagem oficial {i} de {a['id']} falhou: {exc}")
+            continue
+        rel = f"img/{a['slug']}/oficial-{i}.webp"
+        res["oficiais"].append((rel, _save_web(im, out / rel, 1920, 84)))
     folder = a.get("folder")
     if folder and (folder / "br").exists():
         for png in sorted((folder / "br").glob("*.png")):
@@ -239,12 +300,13 @@ def countdown_html() -> str:
             f'<b id="cd-days">{max(0, days)}</b><span><i>dias</i><i>para o GTA VI</i></span></a>')
 
 
-def page(title: str, body: str, *, desc: str, path: str, og_image: str | None = None,
+def page(title: str, body: str, *, desc: str, path: str, og_image: tuple | None = None,
          og_type: str = "website", extra_head: str = "", main_class: str = "") -> str:
     c = cfg()
     full_title = f"{title} | {c['nome']}" if title != c["nome"] else f"{c['nome']} — Notícias de GTA VI"
     url = c["url"] + path
-    og = f'{c["url"]}/{og_image}' if og_image else f'{c["url"]}/assets/og-default.jpg'
+    og_rel, og_size = og_image or _DEFAULT_OG or ("assets/og-default.jpg", (1200, 675))
+    og = f'{c["url"]}/{og_rel}'
     nav = [("/", "Início"), ("/noticias/", "Notícias"), ("/imagens/", "Imagens oficiais"), ("/sobre/", "Sobre")]
     cur = ' aria-current="page"'
     nav_html = "".join(f'<a href="{h}"{cur if (h == path or (h != "/" and path.startswith(h))) else ""}>{t}</a>'
@@ -265,10 +327,13 @@ def page(title: str, body: str, *, desc: str, path: str, og_image: str | None = 
 <meta property="og:description" content="{esc(desc)}">
 <meta property="og:url" content="{url}">
 <meta property="og:image" content="{og}">
+<meta property="og:image:width" content="{og_size[0]}">
+<meta property="og:image:height" content="{og_size[1]}">
+<meta property="og:image:alt" content="{esc(title if og_image else c['nome'])}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
 <link rel="alternate" type="application/rss+xml" title="{esc(c['nome'])}" href="/feed.xml">
-<link rel="preload" href="/assets/fonts/Anton-Regular.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="/assets/fonts/anton.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/style.css?v={asset_version()}">
 {extra_head}
 </head>
@@ -301,14 +366,16 @@ def page(title: str, body: str, *, desc: str, path: str, og_image: str | None = 
 
 
 _ASSET_V = None
+_DEFAULT_OG = None
 
 
 def asset_version() -> str:
     global _ASSET_V
     if _ASSET_V is None:
         h = hashlib.sha1()
-        for f in sorted(ASSETS_SRC.glob("*")):
-            h.update(f.read_bytes())
+        for f in sorted(ASSETS_SRC.rglob("*")):
+            if f.is_file():
+                h.update(f.read_bytes())
         _ASSET_V = h.hexdigest()[:8]
     return _ASSET_V
 
@@ -317,16 +384,17 @@ def tag_pill(tag: str) -> str:
     return f'<span class="tag tag-{esc(tag or "noticia")}">{esc(TAG_LABEL.get(tag, "Notícia"))}</span>'
 
 
-def card(a: dict, imgs: dict, big: bool = False) -> str:
+def card(a: dict, imgs: dict, big: bool = False, level: int | None = None) -> str:
     href = f"/noticias/{a['slug']}/"
+    hl = level or (2 if big else 3)
     thumb = imgs.get("hero" if big else "thumb")
     img = (f'<img src="/{thumb[0]}" width="{thumb[1][0]}" height="{thumb[1][1]}" alt="" '
            f'loading="{"eager" if big else "lazy"}" decoding="async">' if thumb else '<div class="noimg"></div>')
     return f"""<article class="card{' big' if big else ''}">
-  <a href="{href}" class="card-img">{img}</a>
+  <a href="{href}" class="card-img" tabindex="-1" aria-hidden="true">{img}</a>
   <div class="card-body">
     <div class="meta">{tag_pill(a['tag'])}<time datetime="{a['date']}">{fmt_date(a['date'])}</time></div>
-    <h{2 if big else 3}><a href="{href}">{marked_html(a['headline'])}</a></h{2 if big else 3}>
+    <h{hl}><a href="{href}">{marked_html(a['headline'])}</a></h{hl}>
     <p>{esc(a['summary'])}</p>
   </div>
 </article>"""
@@ -345,16 +413,28 @@ def article_page(a: dict, imgs: dict, related: list[tuple[dict, dict]]) -> str:
         for g in imgs.get("gallery", []))
     gallery_html = (f'<section class="gallery"><h2>Imagens do post</h2><p class="muted">Primeiro a arte do '
                     f'Leonida Wire, depois a imagem oficial limpa.</p><div class="gal">{gal}</div></section>') if gal else ""
-    src_html = (f'<p class="source">Fonte: <a href="{esc(src["url"])}" target="_blank" rel="noopener">'
-                f'{esc(src.get("name") or src["url"])}</a></p>') if src.get("url") else (
-        f'<p class="source">Fonte: {esc(src.get("name", ""))}</p>' if src.get("name") else "")
+    fontes = [f for f in (a.get("fontes") or [src]) if f and (f.get("url") or f.get("name"))]
+    links = [(f'<a href="{esc(f["url"])}" target="_blank" rel="noopener">{esc(f.get("name") or f["url"])}</a>'
+              if f.get("url") else esc(f["name"])) for f in fontes]
+    src_html = (f'<p class="source">{"Fontes" if len(links) > 1 else "Fonte"}: {" · ".join(links)}</p>'
+                if links else "")
+    ofs = imgs.get("oficiais") or []
+    of_html = ""
+    if len(ofs) > 1:
+        of_html = '<section class="gallery"><h2>Imagens oficiais</h2><p class="muted">Como a Rockstar divulgou, ' \
+                  'sem texto por cima. Toque para ver em tamanho cheio.</p><div class="gal wide">' + "".join(
+            f'<figure><a href="/{o[0]}" target="_blank" rel="noopener"><img src="/{o[0]}" width="{o[1][0]}" '
+            f'height="{o[1][1]}" alt="Imagem oficial {i} de GTA VI" loading="lazy" decoding="async"></a>'
+            f'<figcaption>Imagem oficial {i} · Rockstar Games</figcaption></figure>'
+            for i, o in enumerate(ofs, 1)) + "</div></section>"
     share_url = f"{c['url']}/noticias/{a['slug']}/"
     share_txt = f"{a['title']} {share_url}"
     tiktok = a.get("tiktok_url") or c["tiktok"]
     rel = "".join(card(r, ri) for r, ri in related)
     rel_html = f'<section class="related"><h2>Mais notícias</h2><div class="grid">{rel}</div></section>' if rel else ""
+    when = f"{a['date']}T12:00:00-03:00"
     ld = {"@context": "https://schema.org", "@type": "NewsArticle", "headline": a["title"][:110],
-          "datePublished": a["date"], "dateModified": a["date"], "inLanguage": "pt-BR",
+          "datePublished": when, "dateModified": when, "inLanguage": "pt-BR",
           "image": [f"{c['url']}/{imgs['og'][0]}"] if imgs.get("og") else [],
           "author": {"@type": "Organization", "name": c["nome"]},
           "publisher": {"@type": "Organization", "name": c["nome"]},
@@ -366,6 +446,7 @@ def article_page(a: dict, imgs: dict, related: list[tuple[dict, dict]]) -> str:
   {hero_html}
   <div class="content">{a['body_html']}</div>
   {src_html}
+  {of_html}
   <div class="share">
     <a class="btn" href="https://wa.me/?text={quote(share_txt)}" target="_blank" rel="noopener">Compartilhar no WhatsApp</a>
     <a class="btn ghost" href="{tiktok}" target="_blank" rel="noopener">Ver no TikTok</a>
@@ -374,7 +455,7 @@ def article_page(a: dict, imgs: dict, related: list[tuple[dict, dict]]) -> str:
 </article>
 <div class="wrap">{rel_html}</div>"""
     return page(a["title"], body, desc=a["summary"] or a["title"], path=f"/noticias/{a['slug']}/",
-                og_image=imgs["og"][0] if imgs.get("og") else None, og_type="article",
+                og_image=imgs.get("og"), og_type="article",
                 extra_head=f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>')
 
 
@@ -385,7 +466,8 @@ def home_page(arts, imgs) -> str:
     first, rest = arts[0], arts[1:13]
     grid = "".join(card(a, imgs[a["id"]]) for a in rest)
     days = days_to_release()
-    body = f"""<section class="wrap lead-story">{card(first, imgs[first['id']], big=True)}</section>
+    body = f"""<h1 class="sr-only">{esc(c['nome'])}: notícias oficiais de GTA VI em português</h1>
+<section class="wrap lead-story">{card(first, imgs[first['id']], big=True)}</section>
 <section class="wrap">
   <div class="section-head"><h2>Últimas notícias</h2><a href="/noticias/">Ver todas</a></div>
   <div class="grid">{grid}</div>
@@ -398,8 +480,7 @@ def home_page(arts, imgs) -> str:
   </div>
   <a class="btn tiktok" href="{c['tiktok']}" target="_blank" rel="noopener">Notícias todo dia no TikTok</a>
 </section>"""
-    return page(c["nome"], body, desc=c["descricao"], path="/", og_image=imgs[first["id"]]["og"][0]
-                if imgs[first["id"]].get("og") else None)
+    return page(c["nome"], body, desc=c["descricao"], path="/", og_image=imgs[first["id"]].get("og"))
 
 
 def list_page(arts, imgs) -> str:
@@ -407,7 +488,7 @@ def list_page(arts, imgs) -> str:
     chips = '<button class="chip" aria-pressed="true" data-tag="">Todas</button>' + "".join(
         f'<button class="chip" aria-pressed="false" data-tag="{esc(t)}">{esc(TAG_LABEL.get(t, t.title()))}</button>'
         for t in tags)
-    items = "".join(f'<div data-tag="{esc(a["tag"])}">{card(a, imgs[a["id"]])}</div>' for a in arts)
+    items = "".join(f'<div data-tag="{esc(a["tag"])}">{card(a, imgs[a["id"]], level=2)}</div>' for a in arts)
     body = f"""<section class="wrap">
   <h1 class="page-title">Notícias</h1>
   <p class="muted">Tudo o que é oficial sobre GTA VI, com fonte, da mais nova para a mais antiga.</p>
@@ -420,11 +501,11 @@ def list_page(arts, imgs) -> str:
 def images_page(arts, imgs) -> str:
     figs = []
     for a in arts:
-        im = imgs[a["id"]]
-        if im.get("hero"):
-            figs.append(f'<figure><a href="/noticias/{a["slug"]}/"><img src="/{im["thumb"][0]}" width="{im["thumb"][1][0]}" '
-                        f'height="{im["thumb"][1][1]}" alt="{esc(a["title"])}" loading="lazy" decoding="async"></a>'
-                        f'<figcaption>{esc(a["title"])}</figcaption></figure>')
+        for i, o in enumerate(imgs[a["id"]].get("oficiais") or [], 1):
+            figs.append(f'<figure><a href="/{o[0]}" target="_blank" rel="noopener"><img src="/{o[0]}" '
+                        f'width="{o[1][0]}" height="{o[1][1]}" alt="Imagem oficial de GTA VI: {esc(a["title"])}" '
+                        f'loading="lazy" decoding="async"></a><figcaption><a href="/noticias/{a["slug"]}/">'
+                        f'{esc(a["title"])}</a></figcaption></figure>')
     body = f"""<section class="wrap">
   <h1 class="page-title">Imagens oficiais</h1>
   <p class="muted">As imagens da Rockstar que aparecem nas nossas notícias, limpas, sem texto por cima.</p>
@@ -445,7 +526,7 @@ def about_page() -> str:
   <h2>Como checamos</h2>
   <ul>
     <li>Cada notícia é conferida na fonte oficial da Rockstar ou em pelo menos dois veículos confiáveis.</li>
-    <li>Sempre mostramos a fonte no fim da matéria.</li>
+    <li>O link das fontes fica sempre no fim da matéria.</li>
     <li>Não publicamos vazamentos nem material não oficial.</li>
   </ul>
   <h2 id="lancamento">Lançamento</h2>
@@ -493,19 +574,19 @@ def build(out: Path = SITE_DIR, log=print) -> Path:
     arts = load_articles()
     if out.exists():
         shutil.rmtree(out)
-    (out / "assets" / "fonts").mkdir(parents=True)
-    for f in ASSETS_SRC.glob("*"):
-        shutil.copy(f, out / "assets" / f.name)
-    for fn in ("Anton-Regular.ttf", "Inter-Medium.otf", "Inter-Bold.otf", "Inter-ExtraBold.otf"):
-        shutil.copy(FONTS_DIR / fn, out / "assets" / "fonts" / fn)
+    out.mkdir(parents=True)
+    shutil.copytree(ASSETS_SRC, out / "assets")
     imgs = {}
     for a in arts:
         log(f"  [site] {a['id']}")
         imgs[a["id"]] = build_images(a, out)
     # imagem padrão para compartilhamento
     first_og = next((imgs[a["id"]]["og"] for a in arts if imgs[a["id"]].get("og")), None)
+    global _DEFAULT_OG
+    _DEFAULT_OG = None
     if first_og:
         shutil.copy(out / first_og[0], out / "assets" / "og-default.jpg")
+        _DEFAULT_OG = ("assets/og-default.jpg", first_og[1])
 
     def write(rel: str, text: str):
         dst = out / rel
