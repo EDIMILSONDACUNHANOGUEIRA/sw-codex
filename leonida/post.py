@@ -164,7 +164,7 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
             clean.insert(0, post["image"])
         for ref in dict.fromkeys(clean):
             log(f"  [{lang}] imagem limpa…")
-            im = render.slide_foto(post, lang, ref, base_dir)
+            im = render.slide_foto(post, lang, ref, base_dir, credit=post.get("credito_imagem", "Rockstar Games"))
             fn = f"{n:02d}_{'imagem-limpa' if lang == 'pt' else 'clean-image'}.png"
             im.save(folder / fn, optimize=True)          # sem grão/filtro: é a imagem original
             files.append(fn)
@@ -177,6 +177,13 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
                 im = render.slide_list(post, lang, slide, base_dir, today)
             fn = f"{n:02d}_{slugify(slide.get('title', slide.get('type', 'slide')), 24)}.png"
             gfx.finish(im.convert("RGB")).save(folder / fn, optimize=True)
+            if post.get("estilo") == "dinamico" and slide.get("type") != "grid" and len(slide.get("items") or []) > 1:
+                # vídeo dinâmico: os itens da lista aparecem um a um (quadros só para o vídeo, fora do git)
+                rev = folder / ".reveal"
+                rev.mkdir(exist_ok=True)
+                for k in range(1, len(slide["items"])):
+                    part = render.slide_list(post, lang, slide, base_dir, today, upto=k)
+                    gfx.finish(part.convert("RGB")).save(rev / f"{Path(fn).stem}__{k}.png", optimize=True)
             files.append(fn)
             n += 1
         if (post[lang].get("slides") or clean) and post.get("cta", True):
@@ -202,7 +209,7 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
             intro = folder / names["video"] if (folder / names["video"]).exists() else None
             try:
                 postvideo.build(folder, seed=post["id"], intro=intro, log=log,
-                                target=post.get("video_segundos"))
+                                target=post.get("video_segundos"), estilo=post.get("estilo"))
             except postvideo.MusicMissing as exc:
                 log(f"  ⚠️  {exc}")
             except Exception as exc:  # noqa: BLE001 — artes já estão prontas; só o vídeo falhou

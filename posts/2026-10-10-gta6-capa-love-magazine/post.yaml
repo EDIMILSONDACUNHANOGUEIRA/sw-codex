@@ -1,0 +1,46 @@
+id: 2026-10-10-gta6-capa-love-magazine
+date: "2026-10-10"
+tag: oficial
+layout: card
+estilo: dinamico          # TESTE: vídeo dinâmico (itens um a um, zoom maior, loop)
+video_segundos: 22
+foto_limpa: true          # a capa é arte oficial, mas o arquivo vem do site da LOVE
+credito_imagem: "LOVE Magazine / Rockstar Games"
+image: "https://cdn.sanity.io/images/rryauvwh/production/0eed5d5171923dadad60f2df9df42b907e6b2a3d-9000x11250.jpg?w=2000&q=90&fm=jpg"
+source: { name: "LOVE Magazine", url: "https://lovemagazine.net/articles/gta-vi-the-american-dream" }
+fontes:
+  - { name: "LOVE Magazine", url: "https://lovemagazine.net/articles/gta-vi-the-american-dream" }
+  - { name: "GTA BOOM", url: "https://www.gtaboom.com/rockstar-gives-love-magazine-its-deepest-look-at-jason-and-lucia-of-gta-6-yet-e3ab" }
+pt:
+  kicker: CAPA
+  selo: "A Rockstar postou"
+  headline: "Jason e Lucia viram *capa de revista* de moda"
+  summary: "A LOVE Magazine estampou o casal com arte nova: \"America's Most Wanted\"."
+  caption: |
+    💘 Jason e Lucia viraram capa de revista de moda!
+
+    A Rockstar compartilhou a capa da LOVE Magazine, edição 27, com arte nova do casal e o título "America's Most Wanted" (os mais procurados da América).
+
+    Na entrevista, Rob Nelson, da Rockstar North, disse que espera que o público queira "se perder" nesses mundos e personagens. E Rupert Humphries contou que o sonho americano de GTA VI ficou mais modesto: "uma casa para a família e as dívidas pagas".
+
+    A edição com o casal esgotou em minutos na pré-venda.
+
+    GTA VI chega em 19/11.
+
+    Você compraria essa revista? 👇
+  hashtags: ["#lovemagazine", "#jasonelucia", "#gta6capa"]
+  slides:
+    - type: list
+      title: "O que tem na *revista*"
+      items:
+        - "Capa com arte nova de Jason e Lucia"
+        - "Entrevista com Rob Nelson e Rupert Humphries"
+        - "Imagens novas do jogo"
+        - "Esgotou em minutos na pré-venda"
+    - type: list
+      title: "O que a *Rockstar* disse"
+      items:
+        - "Nelson: o público vai querer se perder nesses mundos"
+        - "Humphries: o sonho americano ficou mais modesto"
+        - "Uma casa para a família e as dívidas pagas"
+        - "Miami virou uma panela de pressão de loucura"

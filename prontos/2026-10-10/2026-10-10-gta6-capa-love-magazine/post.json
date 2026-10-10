@@ -1,0 +1,19 @@
+{
+  "id": "2026-10-10-gta6-capa-love-magazine",
+  "date": "2026-10-10",
+  "tag": "oficial",
+  "source": {
+    "name": "LOVE Magazine",
+    "url": "https://lovemagazine.net/articles/gta-vi-the-american-dream"
+  },
+  "files": {
+    "br": [
+      "01_capa.png",
+      "02_imagem-limpa.png",
+      "03_o-que-tem-na-revista.png",
+      "04_o-que-a-rockstar-disse.png",
+      "05_siga.png",
+      "legenda.txt"
+    ]
+  }
+}

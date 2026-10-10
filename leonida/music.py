@@ -132,7 +132,8 @@ def _duration(video: Path) -> float:
         return 8.0
 
 
-def apply(video: Path, under_original: bool | None = None, seed: str | None = None) -> bool:
+def apply(video: Path, under_original: bool | None = None, seed: str | None = None,
+          fade_out: float = 1.2) -> bool:
     """Coloca a música tema no MP4 (substitui o arquivo). Retorna False se não houver música tema.
 
     - Vídeo sem áudio (posts de notícia): a música entra no volume `volume`.
@@ -145,12 +146,13 @@ def apply(video: Path, under_original: bool | None = None, seed: str | None = No
         return False
     cfg = _cfg()
     dur = _duration(video)
-    fade_out = max(0.0, dur - 1.2)
+    fade_len = max(0.1, float(fade_out))
+    fade_out = max(0.0, dur - fade_len)
     has_audio = _has_audio(video) if under_original is None else under_original
     vol = float(cfg.get("under_clip", 0.3) if has_audio else cfg.get("volume", 1.0))
     start = _ts(cfg.get("start", 0))
     music = (f"[1:a]atrim=0:{dur:.3f},asetpts=PTS-STARTPTS,volume={vol},"
-             f"afade=t=in:st=0:d=0.35,afade=t=out:st={fade_out:.3f}:d=1.2[m]")
+             f"afade=t=in:st=0:d=0.35,afade=t=out:st={fade_out:.3f}:d={fade_len:.2f}[m]")
     if has_audio:
         fc = music + ";[0:a][m]amix=inputs=2:duration=first:dropout_transition=0:normalize=0[a]"
     else:

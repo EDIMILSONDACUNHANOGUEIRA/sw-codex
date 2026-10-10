@@ -29,6 +29,11 @@ SLIDE_SECONDS = 4.5      # slides com texto: tempo para ler
 LAST_SECONDS = 3.0       # último slide ("siga")
 XFADE = 0.4              # transição entre slides
 OUT_NAME = "post.mp4"
+# estilo "dinamico" (post.yaml: estilo: dinamico) — em teste:
+DYN_COVER_ZOOM = 1.08    # zoom da capa (Ken Burns 1.0 -> 1.08) para prender nos primeiros segundos
+DYN_LAST_SECONDS = 2.2   # "siga" mais curto
+DYN_LOOP_SECONDS = 0.9   # termina na capa: o último quadro emenda no primeiro (loop)
+DYN_TRANSITION = "smoothleft"
 
 
 class MusicMissing(RuntimeError):
@@ -67,13 +72,42 @@ def _still_segment(img: Path, out: Path, seconds: float, zoom_to: float = 1.06) 
                     "-an", str(out)], check=True, capture_output=True)
 
 
+def _reveal_segment(frames: list[Path], out: Path, seconds: float, zoom_to: float = 1.02) -> None:
+    """Slide de lista com os itens aparecendo um a um: cada estado fica um pouco na tela e o último
+    (lista inteira) fica mais tempo para ler. O zoom lento continua sem pular entre os estados."""
+    n = len(frames)
+    base = seconds / (n + 0.6)
+    durs = [base] * (n - 1) + [seconds - base * (n - 1)]
+    lst = out.with_suffix(".txt")
+    lines = []
+    for f, d in zip(frames, durs):
+        lines += [f"file '{f.resolve()}'", f"duration {d:.3f}"]
+    lines.append(f"file '{frames[-1].resolve()}'")
+    lst.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    total = max(1, int(round(seconds * FPS)))
+    vf = (f"fps={FPS},scale={W * 2}:{H * 2}:flags=lanczos,"
+          f"zoompan=z='1+{zoom_to - 1:.4f}*on/{total}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'"
+          f":d=1:s={W}x{H}:fps={FPS},format=yuv420p")
+    subprocess.run([_ff(), "-y", "-f", "concat", "-safe", "0", "-i", str(lst), "-vf", vf, "-frames:v", str(total),
+                    "-c:v", "libx264", "-preset", "medium", "-crf", "16", "-an", str(out)],
+                   check=True, capture_output=True)
+    lst.unlink(missing_ok=True)
+
+
+def _reveal_frames(img: Path) -> list[Path]:
+    """Quadros parciais gerados pelo build (pasta .reveal/) para um slide de lista, mais o slide inteiro."""
+    parts = sorted(img.parent.glob(f".reveal/{img.stem}__*.png"), key=lambda p: int(p.stem.rsplit("__", 1)[1]))
+    return parts + [img] if parts else []
+
+
 def _normalize_intro(src: Path, out: Path) -> None:
     subprocess.run([_ff(), "-y", "-i", str(src), "-vf", f"scale={W}:{H},fps={FPS},format=yuv420p",
                     "-c:v", "libx264", "-preset", "medium", "-crf", "16", "-an", str(out)],
                    check=True, capture_output=True)
 
 
-def build(folder: Path, seed: str, intro: Path | None = None, log=print, target: float | None = None) -> Path:
+def build(folder: Path, seed: str, intro: Path | None = None, log=print, target: float | None = None,
+          estilo: str | None = None) -> Path:
     """Gera <folder>/tiktok/post.mp4 com a música tema. Lança MusicMissing se não houver música tema.
 
     target: duração total desejada em segundos (ex.: 30). Os slides do meio esticam ou encolhem para caber;
@@ -94,19 +128,33 @@ def build(folder: Path, seed: str, intro: Path | None = None, log=print, target:
         rest = slides[1:]                      # a capa já está no vídeo animado
     else:
         rest = slides
+    dyn = estilo == "dinamico"
+    last_secs = DYN_LAST_SECONDS if dyn else LAST_SECONDS
+    loop = dyn and len(slides) > 1 and not segs      # termina voltando à capa estática
     slide_secs = SLIDE_SECONDS
     n_mid = len(slides) - 2                  # slides entre a capa e o último
     if target and n_mid > 0:
         head = _duration(segs[0]) if segs else COVER_SECONDS
-        # total = capa + n_mid*s + último - XFADE*(transições)
-        slide_secs = (float(target) - head - LAST_SECONDS + XFADE * (len(slides) - 1)) / n_mid
+        n_segs = len(slides) + (1 if loop else 0)
+        # total = capa + n_mid*s + último (+ loop) - XFADE*(transições)
+        slide_secs = (float(target) - head - last_secs - (DYN_LOOP_SECONDS if loop else 0)
+                      + XFADE * (n_segs - 1)) / n_mid
         slide_secs = max(3.0, min(9.0, slide_secs))
     for i, img in enumerate(rest):
         is_cover = not segs and i == 0
         is_last = i == len(rest) - 1 and len(slides) > 1
-        secs = COVER_SECONDS if is_cover else (LAST_SECONDS if is_last else slide_secs)
+        secs = COVER_SECONDS if is_cover else (last_secs if is_last else slide_secs)
         seg = work / f"s{len(segs):02d}.mp4"
-        _still_segment(img, seg, secs, 1.045 if is_cover else 1.02)   # zoom leve: não corta margens
+        frames = _reveal_frames(img) if dyn and not is_cover and not is_last else []
+        if frames:
+            _reveal_segment(frames, seg, secs)
+        else:
+            zoom = (DYN_COVER_ZOOM if dyn else 1.045) if is_cover else 1.02   # zoom leve: não corta margens
+            _still_segment(img, seg, secs, zoom)
+        segs.append(seg)
+    if loop:
+        seg = work / f"s{len(segs):02d}.mp4"
+        _still_segment(slides[0], seg, DYN_LOOP_SECONDS, 1.0)   # igual ao 1º quadro do vídeo
         segs.append(seg)
     final = folder / "tiktok" / OUT_NAME
     final.unlink(missing_ok=True)            # nunca deixar um post.mp4 antigo/mudo para trás
@@ -122,14 +170,17 @@ def build(folder: Path, seed: str, intro: Path | None = None, log=print, target:
         for k in range(1, len(segs)):
             offset += durs[k - 1] - XFADE
             label = f"v{k}"
-            chain.append(f"[{last}][{k}:v]xfade=transition=fade:duration={XFADE}:offset={offset:.3f}[{label}]")
+            trans = "fade"
+            if dyn and 1 < k < len(segs) - (1 if loop else 0):
+                trans = DYN_TRANSITION                       # desliza entre os slides do meio
+            chain.append(f"[{last}][{k}:v]xfade=transition={trans}:duration={XFADE}:offset={offset:.3f}[{label}]")
             last = label
         subprocess.run([_ff(), "-y", *inputs, "-filter_complex", ";".join(chain), "-map", f"[{last}]",
-                        "-r", str(FPS), "-c:v", "libx264", "-preset", "slow", "-crf", "19", "-maxrate", "10M",
+                        "-r", str(FPS), "-c:v", "libx264", "-profile:v", "high", "-preset", "slow", "-crf", "19", "-maxrate", "10M",
                         "-bufsize", "20M", "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(out)],
                        check=True, capture_output=True)
     try:
-        ok = music.apply(out, under_original=False, seed=seed)
+        ok = music.apply(out, under_original=False, seed=seed, fade_out=0.5 if dyn else 1.2)
     except (subprocess.CalledProcessError, OSError) as exc:
         ok = False
         log(f"  ⚠️  falha ao colocar a música tema ({exc})")

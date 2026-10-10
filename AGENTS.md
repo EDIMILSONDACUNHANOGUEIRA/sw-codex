@@ -85,9 +85,17 @@ image: "https://www.rockstargames.com/VI/_next/static/media/Lucia_Caminos_06....
 # layout: card          # use 'card' para cenários/prints sem personagem em destaque
 # zoom: 0.85            # recua o enquadramento (o recuo automático costuma acertar)
 # focus: [0.6, 0.5]     # ponto de foco do recorte 9:16
+# video_segundos: 30    # duração do vídeo do TikTok (padrão ~16 s); os slides esticam para caber
+# estilo: dinamico      # EM TESTE: itens da lista aparecem um a um, zoom maior na capa, transição
+#                       # deslizando e final que volta para a capa (loop). Sem isso, o vídeo é o padrão.
+# foto_limpa: true      # força o slide da imagem limpa (ex.: arte oficial hospedada fora da Rockstar)
+# credito_imagem: "LOVE Magazine / Rockstar Games"   # crédito no slide da imagem limpa
+# site: false           # não vira matéria no site (use para análise/especulação)
+# fontes: [{name: ..., url: ...}]                    # várias fontes (aparecem no fim da matéria)
 source: { name: "Rockstar Games", url: "https://www.rockstargames.com/VI/music" }
 pt:
   kicker: RÁDIOS        # 1 palavra (até ~9 letras) que fica gigante atrás do personagem
+  # selo: "A Rockstar confirmou"   # troca o texto do selo da capa por um gancho (só se for verdade)
   headline: "GTA VI revela suas primeiras *6 rádios* com *Bad Bunny*"   # *x* = destaque
   summary: "Uma frase de contexto, até ~115 caracteres."
   caption: |

@@ -384,6 +384,8 @@ def cover(post: dict, lang: str, base_dir: Path | None = None, today: dt.date | 
     line_h = int(fh.size * 1.06)
     head_y = sum_y - 26 - len(hl_lines) * line_h
     tag_text, tag_color = _tag_info(post.get("tag", ""), lang)
+    if loc.get("selo"):                     # gancho no selo, ex.: "A ROCKSTAR POSTOU" (só se for verdade)
+        tag_text = str(loc["selo"]).upper()
     pill_h = 58
     pill_y = head_y - 24 - pill_h
 
@@ -413,6 +415,13 @@ def cover(post: dict, lang: str, base_dir: Path | None = None, today: dt.date | 
                 best = (score, z, raw_z, mask_z)
         _, zoom, raw, mask = best
         bg = gfx.vice_grade(upscale.sharpen(raw), float(post.get("grade", 1.0))).convert("RGBA")
+        if mask is None:
+            # sem recorte (ex.: personagem atrás de grade): clareia a foto se a área do rosto estiver escura
+            fx = float(focus[0])
+            face = Image.new("L", size, 0)
+            ImageDraw.Draw(face).rectangle([int(W * max(0.0, fx - 0.25)), int(H * 0.18),
+                                            int(W * min(1.0, fx + 0.25)), int(H * 0.55)], fill=255)
+            bg = lift_dark_subject(bg, face)
         subj_src = bg
         if zoom < 0.999 and mask is not None:
             # personagem vem da foto nítida, sem a mistura com o fundo desfocado
@@ -433,6 +442,7 @@ def cover(post: dict, lang: str, base_dir: Path | None = None, today: dt.date | 
         fin = gfx.look()
         subj = _blank(size)
         subj.paste(subj_src, (0, 0), mask)
+        subj = lift_dark_subject(subj, mask)      # rosto escuro some no feed: clareia só o personagem
         if fin["neon"]:   # visual antigo: contorno rosa em volta do personagem
             glow_l = gfx.glow(mask, "#FF2E88", 26, 1.15, spread=4)
             gmask = np.asarray(glow_l.split()[-1]).astype(np.int16) - np.asarray(mask).astype(np.int16)
@@ -534,6 +544,34 @@ def _slide_title(img: Image.Image, title: str, y: int) -> int:
     for ln in headline_lines(img.size, lines, f, s_left, y, lh):
         img.alpha_composite(ln)
     return y + len(lines) * lh
+
+
+def lift_dark_subject(subj: Image.Image, mask: Image.Image, floor: float = 0.30,
+                      target: float = 0.45) -> Image.Image:
+    """Se a cabeça do recorte (terço de cima) estiver escura demais, clareia só o personagem (curva gama),
+    para o rosto não sumir no feed. Personagem bem iluminado passa sem mudança."""
+    m = np.asarray(mask, dtype=np.float32) / 255.0
+    rows = np.where(m.max(axis=1) > 0.5)[0]
+    if not len(rows):
+        return subj
+    top, bot = int(rows[0]), int(rows[-1])
+    band = slice(top, top + max(1, int((bot - top) * 0.35)))
+    w = m[band]
+    if w.sum() < 2000:
+        return subj
+    rgb = np.asarray(subj.convert("RGB"), dtype=np.float32)[band] / 255.0
+    lum = rgb @ np.array([0.299, 0.587, 0.114], dtype=np.float32)
+    mean = float((lum * w).sum() / w.sum())
+    if mean >= floor:
+        return subj
+    # ganho de exposição (mantém o preto preto, ao contrário de uma curva gama) com ombro suave nas luzes
+    gain = min(2.2, target / max(mean, 0.05))
+    arr = np.asarray(subj, dtype=np.float32).copy()
+    y = arr[..., :3] / 255.0 * gain
+    knee = 0.8
+    y = np.where(y > knee, knee + (1 - np.exp(-(y - knee) / (1 - knee))) * (1 - knee), y)
+    arr[..., :3] = 255.0 * y
+    return Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8), subj.mode)
 
 
 def is_official_image(ref: str | None) -> bool:
@@ -664,7 +702,10 @@ def slide_grid(post: dict, lang: str, slide: dict, base_dir: Path | None = None,
     return img.convert("RGB")
 
 
-def slide_list(post: dict, lang: str, slide: dict, base_dir: Path | None = None, today=None) -> Image.Image:
+def slide_list(post: dict, lang: str, slide: dict, base_dir: Path | None = None, today=None,
+               upto: int | None = None) -> Image.Image:
+    """Slide de lista. `upto` desenha só os primeiros itens (o layout é o da lista inteira, então os itens
+    não mudam de lugar): é o que o vídeo usa para os itens aparecerem um a um."""
     W, H = _canvas()
     s_top, s_bottom, s_left, s_right = _safe()
     img = _slide_bg(post, base_dir, slide.get("background"))
@@ -685,6 +726,8 @@ def slide_list(post: dict, lang: str, slide: dict, base_dir: Path | None = None,
     fn = gfx.font("display", 48)
     lh = int(fsz * 1.3)
     for i, block in enumerate(blocks, 1):
+        if upto is not None and i > upto:
+            break
         badge = _blank((72, 72))
         badge.paste(gfx.sunset((72, 72), 135), (0, 0), gfx.rounded_mask((72, 72), 18))
         num = str(i)
