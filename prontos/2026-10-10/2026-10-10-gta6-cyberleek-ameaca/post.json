@@ -3,14 +3,14 @@
   "date": "2026-10-10",
   "tag": "vazamento",
   "source": {
-    "name": "Dexerto",
-    "url": "https://www.dexerto.com/gta/gta-6-leaker-cyberleek-threatens-to-release-playable-build-from-start-to-finish-3417786/"
+    "name": "Kotaku / Insider Gaming",
+    "url": "https://insider-gaming.com/gta-6-playable-leak/"
   },
   "files": {
     "br": [
       "01_capa.png",
       "02_imagem-limpa.png",
-      "03_o-que-se-sabe.png",
+      "03_o-que-dizem.png",
       "04_calma.png",
       "05_siga.png",
       "legenda.txt"

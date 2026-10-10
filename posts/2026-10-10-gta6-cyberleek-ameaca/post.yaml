@@ -5,40 +5,42 @@ site: false               # o site é só de notícia oficial
 estilo: dinamico
 video_segundos: 22
 image: "https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_04.0m7i~huzhskdw.jpg"
-source: { name: "Dexerto", url: "https://www.dexerto.com/gta/gta-6-leaker-cyberleek-threatens-to-release-playable-build-from-start-to-finish-3417786/" }
+source: { name: "Kotaku / Insider Gaming", url: "https://insider-gaming.com/gta-6-playable-leak/" }
 fontes:
+  - { name: "Kotaku", url: "https://kotaku.com/gta-6-leaker-threatens-rockstar-with-doomsday-scenario-if-meme-coin-hits-30-million-2000743779" }
+  - { name: "Insider Gaming", url: "https://insider-gaming.com/gta-6-playable-leak/" }
   - { name: "Dexerto", url: "https://www.dexerto.com/gta/gta-6-leaker-cyberleek-threatens-to-release-playable-build-from-start-to-finish-3417786/" }
   - { name: "Malwarebytes", url: "https://www.malwarebytes.com/?p=456116" }
   - { name: "Canaltech", url: "https://canaltech.com.br/games/cuidado-falso-gta-6-para-pc-espalha-virus-e-pode-roubar-seu-dinheiro/" }
 pt:
   kicker: AMEAÇA
-  headline: "Leaker ameaça soltar *GTA VI completo* antes do lançamento"
-  summary: "Ninguém confirmou que ele tem o jogo inteiro. A Rockstar não comentou."
+  headline: "Leaker diz que vai soltar *GTA VI completo*, *sem provas*"
+  summary: "Ninguém provou que ele tem o jogo inteiro. Rockstar não comentou a ameaça."
   caption: |
-    🚨 O leaker Cyberleek estaria ameaçando soltar GTA VI completo, jogável do começo ao fim, antes do lançamento.
+    🚨 O leaker Cyberleek voltou a ameaçar soltar GTA VI completo, jogável do começo ao fim.
 
-    A informação é de um criador de conteúdo no X e foi repercutida pelo Dexerto. As condições seriam a Take-Two lançar o jogo em disco físico e pedir desculpas publicamente, ou a volta de uma criptomoeda ligada ao leaker.
+    A ameaça apareceu no site do próprio leaker e foi repercutida por Kotaku, Insider Gaming e Dexerto. Ele diz que solta o jogo se uma criptomoeda ligada a ele bater uma meta de valor de mercado. A "saída" para a Take-Two, segundo ele, seria lançar GTA VI em disco físico e pedir desculpas publicamente.
 
-    ⚠️ Nada disso foi confirmado: ninguém provou que ele tem o jogo inteiro, e a Rockstar não comentou.
+    ⚠️ Nada disso foi confirmado: ninguém provou que ele tem o jogo inteiro, e a Rockstar não comentou a ameaça.
 
-    Cuidado: já circulam downloads falsos de "GTA 6 completo" com vírus que roubam senhas. Não baixe nada.
+    Cuidado: já circulam sites falsos com "demo" e versão de PC de GTA 6 que instalam vírus para roubar senhas. Não baixe nada e não invista em moeda de leaker.
 
     GTA VI chega oficialmente em 19/11.
 
     Você acha que é blefe? 👇
-  hashtags: ["#gta6leak", "#cyberleek", "#golpe"]
+  hashtags: ["#gta6noticias", "#golpe", "#segurancadigital"]
   slides:
     - type: list
-      title: "O que *se sabe*"
+      title: "O que *dizem*"
       items:
-        - "Leaker ameaça soltar o jogo do começo ao fim"
-        - "Quer GTA VI em disco físico e um pedido de desculpas"
-        - "Ou a volta de uma criptomoeda ligada a ele"
-        - "A ameaça foi divulgada por um criador no X"
+        - "Diz que solta o jogo do começo ao fim"
+        - "Gatilho: uma cripto ligada a ele bater uma meta de valor"
+        - "Saída para a Take-Two: disco físico e pedido de desculpas"
+        - "A ameaça saiu no site do próprio leaker"
     - type: list
       title: "*Calma*"
       items:
         - "Ninguém provou que ele tem o jogo inteiro"
-        - "Rockstar e Take-Two não comentaram"
-        - "\"GTA 6 completo\" para baixar é golpe com vírus"
+        - "A Rockstar não comentou a ameaça"
+        - "\"GTA 6 para baixar\" hoje é golpe com vírus"
         - "Lançamento oficial segue em 19/11"

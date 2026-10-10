@@ -1,0 +1,17 @@
+{
+  "id": "2026-10-10-contagem-40-dias",
+  "date": "2026-10-10",
+  "tag": "contagem",
+  "source": {
+    "name": "Rockstar Games",
+    "url": "https://www.rockstargames.com/VI"
+  },
+  "files": {
+    "br": [
+      "01_capa.png",
+      "02_imagem-limpa.png",
+      "03_siga.png",
+      "legenda.txt"
+    ]
+  }
+}
