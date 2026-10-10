@@ -20,7 +20,8 @@ Status: ✅ feito · 🧪 em teste (só com `estilo: dinamico` no post.yaml) · 
 
 - ✅ **Gancho no selo da capa**: `selo: "A Rockstar postou"` troca o texto do selo (só quando for verdade).
 - ✅ **Rosto escuro**: se a cabeça do personagem recortado estiver escura, o gerador clareia só o personagem
-  (ganho de exposição, sem lavar o preto). Sem recorte, clareia a área do rosto.
+  (ganho de exposição, sem lavar o preto e sem salto). Sem recorte, só clareia se um rosto for detectado
+  (precisa do OpenCV instalado; sem ele, a foto fica como está, para não clarear cenário noturno).
 - ✅ **Camadas**: fundo, palavra gigante, personagem recortado, acabamento (grão, halação) — já era assim.
 - ✅ **JPEG para o TikTok** e área segura (texto fora dos 20% de baixo e dos botões da direita).
 

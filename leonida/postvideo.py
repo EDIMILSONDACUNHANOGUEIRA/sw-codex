@@ -79,10 +79,14 @@ def _reveal_segment(frames: list[Path], out: Path, seconds: float, zoom_to: floa
     base = seconds / (n + 0.6)
     durs = [base] * (n - 1) + [seconds - base * (n - 1)]
     lst = out.with_suffix(".txt")
+
+    def entry(f: Path) -> str:              # aspas simples no caminho (ex.: pasta D'Souza) precisam de escape
+        return "file '" + str(f.resolve()).replace("'", "'\\''") + "'"
+
     lines = []
     for f, d in zip(frames, durs):
-        lines += [f"file '{f.resolve()}'", f"duration {d:.3f}"]
-    lines.append(f"file '{frames[-1].resolve()}'")
+        lines += [entry(f), f"duration {d:.3f}"]
+    lines.append(entry(frames[-1]))
     lst.write_text("\n".join(lines) + "\n", encoding="utf-8")
     total = max(1, int(round(seconds * FPS)))
     vf = (f"fps={FPS},scale={W * 2}:{H * 2}:flags=lanczos,"

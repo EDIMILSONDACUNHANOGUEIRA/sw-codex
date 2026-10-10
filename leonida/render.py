@@ -415,13 +415,22 @@ def cover(post: dict, lang: str, base_dir: Path | None = None, today: dt.date | 
                 best = (score, z, raw_z, mask_z)
         _, zoom, raw, mask = best
         bg = gfx.vice_grade(upscale.sharpen(raw), float(post.get("grade", 1.0))).convert("RGBA")
-        if mask is None:
-            # sem recorte (ex.: personagem atrás de grade): clareia a foto se a área do rosto estiver escura
-            fx = float(focus[0])
-            face = Image.new("L", size, 0)
-            ImageDraw.Draw(face).rectangle([int(W * max(0.0, fx - 0.25)), int(H * 0.18),
-                                            int(W * min(1.0, fx + 0.25)), int(H * 0.55)], fill=255)
-            bg = lift_dark_subject(bg, face)
+        if mask is None and zoom >= 0.999:
+            # sem recorte: só clareia se um ROSTO foi detectado de verdade (cenário/noite fica como está),
+            # e só na área do rosto, com borda suave
+            face_pt = cut.face_focus(src)
+            if face_pt:
+                sw, sh = src.size
+                sc = max(W / sw, H / sh)
+                nw, nh = sw * sc, sh * sc
+                left = min(max(focus[0] * nw - W / 2, 0), nw - W)
+                top = min(max(focus[1] * nh - H / 2, 0), nh - H)
+                cx, cy = face_pt[0] * nw - left, face_pt[1] * nh - top
+                r = W * 0.16
+                face = Image.new("L", size, 0)
+                ImageDraw.Draw(face).ellipse([cx - r, cy - r * 1.3, cx + r, cy + r * 1.3], fill=255)
+                lifted = lift_dark_subject(bg, face, whole=True)
+                bg = Image.composite(lifted, bg, face.filter(ImageFilter.GaussianBlur(60)))
         subj_src = bg
         if zoom < 0.999 and mask is not None:
             # personagem vem da foto nítida, sem a mistura com o fundo desfocado
@@ -547,7 +556,7 @@ def _slide_title(img: Image.Image, title: str, y: int) -> int:
 
 
 def lift_dark_subject(subj: Image.Image, mask: Image.Image, floor: float = 0.30,
-                      target: float = 0.45) -> Image.Image:
+                      target: float = 0.45, whole: bool = False) -> Image.Image:
     """Se a cabeça do recorte (terço de cima) estiver escura demais, clareia só o personagem (curva gama),
     para o rosto não sumir no feed. Personagem bem iluminado passa sem mudança."""
     m = np.asarray(mask, dtype=np.float32) / 255.0
@@ -555,7 +564,7 @@ def lift_dark_subject(subj: Image.Image, mask: Image.Image, floor: float = 0.30,
     if not len(rows):
         return subj
     top, bot = int(rows[0]), int(rows[-1])
-    band = slice(top, top + max(1, int((bot - top) * 0.35)))
+    band = slice(top, bot + 1) if whole else slice(top, top + max(1, int((bot - top) * 0.35)))
     w = m[band]
     if w.sum() < 2000:
         return subj
@@ -565,7 +574,9 @@ def lift_dark_subject(subj: Image.Image, mask: Image.Image, floor: float = 0.30,
     if mean >= floor:
         return subj
     # ganho de exposição (mantém o preto preto, ao contrário de uma curva gama) com ombro suave nas luzes
-    gain = min(2.2, target / max(mean, 0.05))
+    # sem salto no limite: logo abaixo de `floor` o ganho é quase 1; bem escuro vai até `target`
+    t_eff = mean + (target - mean) * min(1.0, (floor - mean) / 0.08)
+    gain = min(2.2, max(1.0, t_eff / max(mean, 0.05)))
     arr = np.asarray(subj, dtype=np.float32).copy()
     y = arr[..., :3] / 255.0 * gain
     knee = 0.8
