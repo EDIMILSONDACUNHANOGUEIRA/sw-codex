@@ -401,5 +401,43 @@
  "1fc642c7af": {
   "status": "published",
   "at": "2026-10-10T20:52:26.494185+00:00"
+ },
+ "61f9881269": {
+  "status": "published",
+  "at": "2026-10-10T21:37:49.986846+00:00",
+  "title": "GTA 6 no Nintendo Switch 2? Executivo da Nintendo se pronuncia pela primeira vez",
+  "tokens": [
+   "cita",
+   "executivo",
+   "first",
+   "nintendo",
+   "pela",
+   "pronuncia",
+   "responde",
+   "switch",
+   "vez"
+  ]
+ },
+ "508a5b7b9f": {
+  "status": "published",
+  "at": "2026-10-10T21:37:49.986952+00:00",
+  "title": "Nintendo comenta GTA 6 no Switch 2, mas decisão está nas mãos da Rockstar",
+  "tokens": [
+   "comenta",
+   "decisao",
+   "esta",
+   "maos",
+   "mas",
+   "nintendo",
+   "switch"
+  ]
+ },
+ "ecde8da785": {
+  "status": "published",
+  "at": "2026-10-10T21:37:49.986971+00:00"
+ },
+ "fede12d1cc": {
+  "status": "published",
+  "at": "2026-10-10T21:37:49.986973+00:00"
  }
 }
