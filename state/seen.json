@@ -510,5 +510,32 @@
    "today",
    "what"
   ]
+ },
+ "eab398f0da": {
+  "status": "descartado",
+  "at": "2026-10-11T09:22:22.798138+00:00",
+  "title": "Guys new GTA 6 trailer",
+  "tokens": [
+   "guys",
+   "trailer"
+  ]
+ },
+ "815d82db0d": {
+  "status": "descartado",
+  "at": "2026-10-11T09:22:22.798245+00:00",
+  "title": "GTA VI terá cenas de sexo e nudez: confira outros jogos que também tiveram momentos picantes",
+  "tokens": [
+   "cenas",
+   "confira",
+   "jogos",
+   "momentos",
+   "nudez",
+   "outros",
+   "picantes",
+   "sexo",
+   "tambem",
+   "tera",
+   "tiveram"
+  ]
  }
 }
