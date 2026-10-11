@@ -43,6 +43,8 @@ class Layer:
     image: Image.Image          # RGBA, tamanho do canvas
     anim: str = "fade"          # dica de animação para o vídeo
     order: int = 0
+    step: int | None = None     # ordem de entrada dentro do slide (itens de lista, quadros da grade)
+    extra: dict = field(default_factory=dict)   # ex.: {"hot": máscara das palavras em destaque}
 
 
 @dataclass
@@ -90,7 +92,112 @@ def _is_light(hex_color: str) -> bool:
 
 # ============================================================ blocos reutilizáveis
 
+def _logo_cfg() -> dict:
+    return {"versao": "v2", "arquivo": "assets/brand/logo.png", **(brand().get("logo") or {})}
+
+
+def _vice_sun(d: int) -> Image.Image:
+    """Emblema "sol de Vice": círculo pôr-do-sol com as faixas synthwave na metade de baixo.
+    Desenhado em 4x e reduzido, para a borda sair lisa."""
+    s = d * 4
+    circle = Image.new("L", (s, s), 0)
+    ImageDraw.Draw(circle).ellipse([0, 0, s - 1, s - 1], fill=255)
+    cut = ImageDraw.Draw(circle)
+    for top, thick in ((0.555, 0.030), (0.655, 0.045), (0.760, 0.060), (0.870, 0.075)):
+        cut.rectangle([0, int(s * top), s, int(s * (top + thick))], fill=0)
+    grad = gfx.linear_gradient((s, s), [(0.0, "#FFD27A"), (0.38, "#FF8A3D"), (0.70, "#FF2E88"),
+                                        (1.0, "#7B2FF7")], 90)
+    sun = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    sun.paste(grad, (0, 0), circle)
+    ring = Image.new("L", (s, s), 0)
+    ImageDraw.Draw(ring).ellipse([2, 2, s - 3, s - 3], outline=255, width=7)
+    ring = Image.fromarray(np.minimum(np.asarray(ring), np.asarray(circle)))
+    sun.alpha_composite(gfx.fill_with(ring, gfx.rgba("#FFFFFF", 70)))
+    return sun.resize((d, d), Image.LANCZOS)
+
+
+def _custom_logo(d: int) -> Image.Image | None:
+    """assets/brand/logo.png (ex.: a foto de perfil escolhida), recortada em círculo."""
+    from .config import ROOT
+    p = ROOT / _logo_cfg()["arquivo"]
+    if not p.exists():
+        return None
+    im = gfx.cover_fit(Image.open(p).convert("RGB"), (d * 4, d * 4)).convert("RGBA")
+    m = Image.new("L", (d * 4, d * 4), 0)
+    ImageDraw.Draw(m).ellipse([0, 0, d * 4 - 1, d * 4 - 1], fill=255)
+    im.putalpha(m)
+    return im.resize((d, d), Image.LANCZOS)
+
+
+def brand_layers(size, lang: str, y: int) -> tuple[Image.Image, Image.Image | None]:
+    """Logo do topo em duas camadas: (marca, ponto "ao vivo"). O vídeo faz o ponto piscar."""
+    if _logo_cfg()["versao"] != "v2":
+        return _brand_bar_v1(size, lang, y), None
+    _, _, left, _ = _safe()
+    b = brand()
+    layer, live = _blank(size), _blank(size)
+    d = 88
+    emblem = _custom_logo(d) or _vice_sun(d)
+    em = Image.new("L", size, 0)
+    em.paste(emblem.split()[-1], (left, y))
+    layer.alpha_composite(gfx.drop_shadow(em, (0, 6), 12, 150))
+    layer.alpha_composite(emblem, (left, y))
+    # wordmark: 1ª palavra branca, o resto no gradiente do pôr do sol
+    words = b["name"].split()
+    first, rest = words[0], " ".join(words[1:])
+    fn = gfx.font("display", 52)
+    tx, ty = left + d + 20, y - 8
+    m1 = gfx.text_mask(size, (tx, ty), first, fn, tracking=2)
+    w1 = gfx.text_width(first, fn, 2) + fn.getlength(" ") * 0.9
+    m2 = gfx.text_mask(size, (tx + w1, ty), rest, fn, tracking=2) if rest else Image.new("L", size, 0)
+    both = Image.fromarray(np.maximum(np.asarray(m1), np.asarray(m2)))
+    layer.alpha_composite(gfx.drop_shadow(both, (0, 3), 7, 160))
+    layer.alpha_composite(gfx.fill_with(m1, "#FFFFFF"))
+    if rest:
+        band = gfx.linear_gradient((size[0], 64), [(0.0, "#FFD27A"), (0.5, "#FF8A3D"), (1.0, "#FF2E88")], 90)
+        grad = _blank(size)
+        grad.paste(band, (0, ty + 6))
+        layer.alpha_composite(gfx.fill_with(m2, grad))
+    # linha de baixo: ● NOTÍCIAS DE GTA VI
+    ft = gfx.font("heavy", 19)
+    dot_r, dot_y = 6, y + 77
+    dm = Image.new("L", size, 0)
+    ImageDraw.Draw(dm).ellipse([tx + 2, dot_y - dot_r, tx + 2 + 2 * dot_r, dot_y + dot_r], fill=255)
+    live.alpha_composite(gfx.glow(dm, "#FF3B3B", 8, 0.8))
+    live.alpha_composite(gfx.fill_with(dm, "#FF3B3B"))
+    tm = gfx.text_mask(size, (tx + 2 * dot_r + 14, dot_y - 13), b["tagline"][lang], ft, tracking=4)
+    layer.alpha_composite(gfx.drop_shadow(tm, (0, 2), 4, 150))
+    layer.alpha_composite(gfx.fill_with(tm, gfx.rgba("#E9E3F5", 235)))
+    return layer, live
+
+
+def top_layers(size, lang: str, y_brand: int, y_count: int, today: dt.date | None = None) -> list["Layer"]:
+    """Topo de todas as artes: logo (+ ponto "ao vivo") e contador de dias."""
+    logo, live = brand_layers(size, lang, y_brand)
+    out = [Layer("brand", logo, "brand", 5)]
+    if live is not None:
+        out.append(Layer("live", live, "live", 5))
+    out.append(Layer("countdown", countdown_chip(size, lang, y_count, today), "pop", 6))
+    return out
+
+
+def compose(layers: list["Layer"], size=None) -> Image.Image:
+    size = size or layers[0].image.size
+    img = _blank(size)
+    for ly in sorted(layers, key=lambda L: L.order):
+        img.alpha_composite(ly.image)
+    return img
+
+
 def brand_bar(size, lang: str, y: int) -> Image.Image:
+    layer, live = brand_layers(size, lang, y)
+    if live is not None:
+        layer = layer.copy()
+        layer.alpha_composite(live)
+    return layer
+
+
+def _brand_bar_v1(size, lang: str, y: int) -> Image.Image:
     W, H = size
     _, _, left, _ = _safe()
     b = brand()
@@ -205,8 +312,9 @@ def tag_pill(size, text: str, color: str, x: int, y: int) -> tuple[Image.Image, 
     return layer, h
 
 
-def headline_lines(size, words_lines, fnt, x: int, y: int, line_h: int) -> list[Image.Image]:
-    """Uma camada por linha; palavras marcadas com *...* recebem o gradiente pôr-do-sol."""
+def headline_lines(size, words_lines, fnt, x: int, y: int, line_h: int, masks: bool = False) -> list:
+    """Uma camada por linha; palavras marcadas com *...* recebem o gradiente pôr-do-sol.
+    masks=True devolve (camada, máscara das palavras em destaque) — o vídeo passa um brilho nelas."""
     W, H = size
     out = []
     space = fnt.getlength(" ")
@@ -231,7 +339,7 @@ def headline_lines(size, words_lines, fnt, x: int, y: int, line_h: int) -> list[
             grad = _blank(size)
             grad.paste(band, (0, ly + asc))
             layer.alpha_composite(gfx.fill_with(hot, grad))
-        out.append(layer)
+        out.append((layer, hot if np.asarray(hot).any() else None) if masks else layer)
     return out
 
 
@@ -499,14 +607,13 @@ def cover(post: dict, lang: str, base_dir: Path | None = None, today: dt.date | 
     layers.append(Layer("shade", shade, "fade", 4))
 
     # ---------- topo
-    layers.append(Layer("brand", brand_bar(size, lang, s_top), "down", 5))
-    layers.append(Layer("countdown", countdown_chip(size, lang, s_top + 4, today), "pop", 6))
+    layers += top_layers(size, lang, s_top, s_top + 4, today)
 
     # ---------- textos
     pill, _ = tag_pill(size, tag_text, tag_color, s_left, pill_y)
     layers.append(Layer("tag", pill, "pop", 7))
-    for i, ln in enumerate(headline_lines(size, hl_lines, fh, s_left, head_y, line_h)):
-        layers.append(Layer(f"headline_{i}", ln, "line", 8 + i))
+    for i, (ln, hot) in enumerate(headline_lines(size, hl_lines, fh, s_left, head_y, line_h, masks=True)):
+        layers.append(Layer(f"headline_{i}", ln, "line", 8 + i, extra={"hot": hot} if hot else {}))
     if summary_lines:
         layers.append(Layer("summary", text_block(size, summary_lines, fsum, s_left, sum_y, sum_lh,
                                                   gfx.rgba(pal["mist"], 245)), "up", 20))
@@ -545,14 +652,23 @@ def _slide_bg(post: dict, base_dir: Path | None, img_ref: str | None = None) -> 
 
 
 def _slide_title(img: Image.Image, title: str, y: int) -> int:
-    W, H = img.size
+    lys, y_end = _title_layers(img.size, title, y)
+    for L in lys:
+        img.alpha_composite(L.image)
+    return y_end
+
+
+def _title_layers(size, title: str, y: int, order: int = 10) -> tuple[list[Layer], int]:
+    """Título do slide (Anton, destaque em gradiente), uma camada por linha."""
+    W, H = size
     s_top, s_bottom, s_left, s_right = _safe()
     words = gfx.parse_marked(title)
     f, lines = gfx.fit_font("display", lambda f: gfx.wrap_words(words, f, W - s_left - s_right), 2, 104, 64, 4)
     lh = int(f.size * 1.06)
-    for ln in headline_lines(img.size, lines, f, s_left, y, lh):
-        img.alpha_composite(ln)
-    return y + len(lines) * lh
+    out = []
+    for i, (ln, hot) in enumerate(headline_lines(size, lines, f, s_left, y, lh, masks=True)):
+        out.append(Layer(f"title_{i}", ln, "line", order + i, extra={"hot": hot} if hot else {}))
+    return out, y + len(lines) * lh
 
 
 def lift_dark_subject(subj: Image.Image, mask: Image.Image, floor: float = 0.30,
@@ -592,10 +708,11 @@ def is_official_image(ref: str | None) -> bool:
 
 
 def slide_foto(post: dict, lang: str, img_ref: str | None = None, base_dir: Path | None = None,
-               credit: str = "Rockstar Games") -> Image.Image:
+               credit: str = "Rockstar Games", with_layers: bool = False):
     """Imagem LIMPA: a foto oficial inteira, sem texto por cima, sem recorte e sem filtro.
     Fundo = a própria foto desfocada; só um selo discreto "IMAGEM OFICIAL" e o crédito."""
     W, H = _canvas()
+    size = (W, H)
     s_top, s_bottom, s_left, s_right = _safe()
     src = load_image(img_ref or post["image"], base_dir).convert("RGB")
     src = upscale.ensure_min(src, W, 0)
@@ -610,30 +727,42 @@ def slide_foto(post: dict, lang: str, img_ref: str | None = None, base_dir: Path
         fh = int(round(fw * ratio))
     fg = upscale.sharpen(src.resize((fw, fh), Image.LANCZOS), 40).convert("RGBA")
     x, y = (W - fw) // 2, max(s_top + 140, (H - fh) // 2 - 60)
+    layers = [Layer("bg", bg, "kenburns", 0)]
     sm = Image.new("L", (W, H), 0)
     sm.paste(255, (x, y, x + fw, y + fh))
-    bg.alpha_composite(gfx.drop_shadow(sm, (0, 14), 30, 160))
-    bg.alpha_composite(fg, (x, y))
+    photo = gfx.drop_shadow(sm, (0, 14), 30, 160)
+    photo.alpha_composite(fg, (x, y))
+    layers.append(Layer("photo", photo, "photo", 1))
     # selo e crédito discretos, FORA da foto
-    pill, _ = tag_pill((W, H), "IMAGEM OFICIAL" if lang == "pt" else "OFFICIAL IMAGE", "#22D3EE", s_left, y - 58 - 24)
-    bg.alpha_composite(pill)
+    pill, _ = tag_pill(size, "IMAGEM OFICIAL" if lang == "pt" else "OFFICIAL IMAGE", "#22D3EE", s_left, y - 58 - 24)
+    layers.append(Layer("tag", pill, "pop", 2))
     fc = gfx.font("bold", 26)
     cred = f"{'Imagem' if lang == 'pt' else 'Image'}: {credit}"
-    bg.alpha_composite(text_block((W, H), [cred], fc, s_left, y + fh + 24, 0, gfx.rgba("#E9E3F5", 220)))
+    layers.append(Layer("credit", text_block(size, [cred], fc, s_left, y + fh + 24, 0, gfx.rgba("#E9E3F5", 220)),
+                        "up", 3))
+    layers.append(Layer("handle", _handle_layer(size, lang), "static", 30))
+    img = compose(layers, size).convert("RGB")
+    return Render(img, layers, {"kind": "foto"}) if with_layers else img
+
+
+def _handle_layer(size, lang: str) -> Image.Image:
+    W, H = size
     fw2 = gfx.font("heavy", 26)
     handle = brand()["handle"][lang]
-    wm = gfx.text_mask((W, H), ((W - gfx.text_width(handle, fw2, 3)) / 2, H - 92), handle, fw2, 3)
-    bg.alpha_composite(gfx.fill_with(wm, gfx.rgba("#FFFFFF", 150)))
-    return bg.convert("RGB")
+    wm = gfx.text_mask(size, ((W - gfx.text_width(handle, fw2, 3)) / 2, H - 92), handle, fw2, 3)
+    return gfx.fill_with(wm, gfx.rgba("#FFFFFF", 150))
 
 
-def slide_grid(post: dict, lang: str, slide: dict, base_dir: Path | None = None, today=None) -> Image.Image:
+def slide_grid(post: dict, lang: str, slide: dict, base_dir: Path | None = None, today=None,
+               with_layers: bool = False):
     W, H = _canvas()
+    size = (W, H)
     s_top, s_bottom, s_left, s_right = _safe()
-    img = _slide_bg(post, base_dir, slide.get("background"))
-    img.alpha_composite(brand_bar((W, H), lang, s_top - 20))
-    img.alpha_composite(countdown_chip((W, H), lang, s_top - 16, today))
-    y = _slide_title(img, slide["title"], s_top + 130) + 40
+    layers = [Layer("bg", _slide_bg(post, base_dir, slide.get("background")), "kenburns", 0)]
+    layers += top_layers(size, lang, s_top, s_top + 4, today)
+    tl, y = _title_layers(size, slide["title"], s_top + 130)
+    layers += tl
+    y += 40
     items = slide["items"]
     cols = int(slide.get("cols", 3 if len(items) > 4 else 2))
     ratio = float(slide.get("tile_ratio", 1.0))
@@ -673,56 +802,63 @@ def slide_grid(post: dict, lang: str, slide: dict, base_dir: Path | None = None,
         th = int(tile * ratio)
     grid_w = cols * tile + (cols - 1) * gap
     x0 = s_left + (area_w - grid_w) // 2
+    k = 0
     for r, row in enumerate(rows):
         for c, it in enumerate(row):
             x = x0 + c * (tile + gap)
+            cell = _blank(size)
             pic = upscale.sharpen(gfx.cover_fit(load_image(it["image"], base_dir), (tile, th)), 50).convert("RGBA")
             if inside:
                 pic.alpha_composite(gfx.vertical_fade((tile, th), "#0B0614", 0.35, 1.0, 0, 230))
             rm = gfx.rounded_mask((tile, th), 22)
             gm = Image.new("L", (W, H), 0)
             gm.paste(rm, (x, y))
-            img.alpha_composite(gfx.glow(gm, "#FF2E88", 18, 0.6, spread=2))
-            img.paste(pic, (x, y), rm)
+            cell.alpha_composite(gfx.glow(gm, "#FF2E88", 18, 0.6, spread=2))
+            cell.paste(pic, (x, y), rm)
             ring = Image.new("L", (W, H), 0)
             ImageDraw.Draw(ring).rounded_rectangle([x, y, x + tile - 1, y + th - 1], radius=22, outline=255, width=3)
-            img.alpha_composite(gfx.fill_with(ring, gfx.neon((W, H), 45)))
+            cell.alpha_composite(gfx.fill_with(ring, gfx.neon((W, H), 45)))
             if inside:
                 sub_h = int(fs.size * 1.4) if it.get("sub") else 0
                 ty = y + th - 26 - sub_h - int(fl.size * 1.25)
-                img.alpha_composite(text_block((W, H), [it.get("label", "").upper()], fl, x + 26, ty, 0, "#FFFFFF"))
+                cell.alpha_composite(text_block(size, [it.get("label", "").upper()], fl, x + 26, ty, 0, "#FFFFFF"))
                 if it.get("sub"):
-                    img.alpha_composite(text_block((W, H), [it["sub"]], fs, x + 26, ty + int(fl.size * 1.28), 0,
-                                                   gfx.rgba("#FFC857", 245)))
-                continue
-            ty = y + th + 14
-            for ln in gfx.wrap_text(it.get("label", "").upper(), fl, tile):
-                img.alpha_composite(text_block((W, H), [ln], fl, x, ty, 0, "#FFFFFF"))
-                ty += int(fl.size * 1.08)
-            if it.get("sub"):
-                sl = gfx.wrap_text(it["sub"], fs, tile)
-                img.alpha_composite(text_block((W, H), sl, fs, x, ty + 8, int(fs.size * 1.3),
-                                               gfx.rgba("#FFC857", 240)))
+                    cell.alpha_composite(text_block(size, [it["sub"]], fs, x + 26, ty + int(fl.size * 1.28), 0,
+                                                    gfx.rgba("#FFC857", 245)))
+            else:
+                ty = y + th + 14
+                for ln in gfx.wrap_text(it.get("label", "").upper(), fl, tile):
+                    cell.alpha_composite(text_block(size, [ln], fl, x, ty, 0, "#FFFFFF"))
+                    ty += int(fl.size * 1.08)
+                if it.get("sub"):
+                    sl = gfx.wrap_text(it["sub"], fs, tile)
+                    cell.alpha_composite(text_block(size, sl, fs, x, ty + 8, int(fs.size * 1.3),
+                                                    gfx.rgba("#FFC857", 240)))
+            k += 1
+            layers.append(Layer(f"tile_{k}", cell, "pop", 30 + k, step=k))
         y += th + lab_h + (26 if inside else 30)
     if slide.get("note"):
         fn = gfx.font("body", 30)
         nl = gfx.wrap_text(slide["note"], fn, area_w)
         ny = min(y + 6, H - s_bottom - len(nl) * 40)
-        img.alpha_composite(text_block((W, H), nl, fn, s_left, ny, 40, gfx.rgba("#E9E3F5", 235)))
-    img.alpha_composite(corner_brackets((W, H)))
-    return img.convert("RGB")
+        layers.append(Layer("note", text_block(size, nl, fn, s_left, ny, 40, gfx.rgba("#E9E3F5", 235)), "up", 80))
+    layers.append(Layer("frame", corner_brackets(size), "static", 90))
+    img = compose(layers, size).convert("RGB")
+    return Render(img, layers, {"kind": "grid", "steps": k}) if with_layers else img
 
 
 def slide_list(post: dict, lang: str, slide: dict, base_dir: Path | None = None, today=None,
-               upto: int | None = None) -> Image.Image:
+               upto: int | None = None, with_layers: bool = False):
     """Slide de lista. `upto` desenha só os primeiros itens (o layout é o da lista inteira, então os itens
-    não mudam de lugar): é o que o vídeo usa para os itens aparecerem um a um."""
+    não mudam de lugar): é o que o vídeo clássico usa para os itens aparecerem um a um."""
     W, H = _canvas()
+    size = (W, H)
     s_top, s_bottom, s_left, s_right = _safe()
-    img = _slide_bg(post, base_dir, slide.get("background"))
-    img.alpha_composite(brand_bar((W, H), lang, s_top - 20))
-    img.alpha_composite(countdown_chip((W, H), lang, s_top - 16, today))
-    y = _slide_title(img, slide["title"], s_top + 140) + 50
+    layers = [Layer("bg", _slide_bg(post, base_dir, slide.get("background")), "kenburns", 0)]
+    layers += top_layers(size, lang, s_top, s_top + 4, today)
+    tl, y = _title_layers(size, slide["title"], s_top + 140)
+    layers += tl
+    y += 50
     area_w = W - s_left - s_right - 96
     items = slide["items"]
     fsz = 52 if len(items) <= 4 else 42
@@ -743,44 +879,82 @@ def slide_list(post: dict, lang: str, slide: dict, base_dir: Path | None = None,
         badge.paste(gfx.sunset((72, 72), 135), (0, 0), gfx.rounded_mask((72, 72), 18))
         num = str(i)
         ImageDraw.Draw(badge).text(((72 - fn.getlength(num)) / 2, 2), num, font=fn, fill=gfx.rgba("#0B0614"))
-        img.alpha_composite(badge, (s_left, y - 4))
-        img.alpha_composite(text_block((W, H), block, f, s_left + 96, y, lh, "#FFFFFF"))
+        bl = _blank(size)
+        bl.alpha_composite(badge, (s_left, y - 4))
+        layers.append(Layer(f"badge_{i}", bl, "pop", 30 + 2 * i, step=i))
+        layers.append(Layer(f"item_{i}", text_block(size, block, f, s_left + 96, y, lh, "#FFFFFF"),
+                            "slide", 31 + 2 * i, step=i))
         y += len(block) * lh + 48
-    img.alpha_composite(corner_brackets((W, H)))
-    return img.convert("RGB")
+    layers.append(Layer("frame", corner_brackets(size), "static", 90))
+    img = compose(layers, size).convert("RGB")
+    return Render(img, layers, {"kind": "list", "steps": len(blocks)}) if with_layers else img
 
 
-def slide_cta(post: dict, lang: str, base_dir: Path | None = None, today=None) -> Image.Image:
+def slide_cta(post: dict, lang: str, base_dir: Path | None = None, today=None, with_layers: bool = False):
     W, H = _canvas()
+    size = (W, H)
     s_top, s_bottom, s_left, s_right = _safe()
     ui = UI[lang]
     b = brand()
-    img = _slide_bg(post, base_dir)
-    img.alpha_composite(countdown_chip((W, H), lang, s_top - 16, today))
-    fs = gfx.font("script", 150)
-    name = b["name"].title()
-    m = gfx.text_mask((W, H), ((W - fs.getlength(name)) / 2, 520), name, fs)
-    img.alpha_composite(gfx.glow(m, "#FF2E88", 30, 1.0))
-    img.alpha_composite(gfx.fill_with(m, gfx.sunset((W, H), 90)))
+    layers = [Layer("bg", _slide_bg(post, base_dir), "kenburns", 0),
+              Layer("countdown", countdown_chip(size, lang, s_top + 4, today), "pop", 6)]
+    if _logo_cfg()["versao"] == "v2":
+        # logo grande: sol de Vice + LEONIDA WIRE (a mesma marca do topo)
+        d = 250
+        emblem = _custom_logo(d) or _vice_sun(d)
+        el = _blank(size)
+        em = Image.new("L", size, 0)
+        ex, ey = (W - d) // 2, 330
+        em.paste(emblem.split()[-1], (ex, ey))
+        el.alpha_composite(gfx.glow(em, "#FF2E88", 40, 0.55))
+        el.alpha_composite(gfx.drop_shadow(em, (0, 14), 26, 170))
+        el.alpha_composite(emblem, (ex, ey))
+        layers.append(Layer("emblem", el, "pop", 9))
+        words = b["name"].split()
+        first, rest = words[0], " ".join(words[1:])
+        fw = gfx.font("display", 112)
+        sp = fw.getlength(" ") * 0.9
+        w1, w2 = gfx.text_width(first, fw, 3), gfx.text_width(rest, fw, 3) if rest else 0
+        x0, wy = (W - (w1 + (sp + w2 if rest else 0))) / 2, ey + d + 34
+        m1 = gfx.text_mask(size, (x0, wy), first, fw, 3)
+        m2 = gfx.text_mask(size, (x0 + w1 + sp, wy), rest, fw, 3) if rest else Image.new("L", size, 0)
+        wl = _blank(size)
+        wl.alpha_composite(gfx.drop_shadow(Image.fromarray(np.maximum(np.asarray(m1), np.asarray(m2))), (0, 6), 12, 180))
+        wl.alpha_composite(gfx.fill_with(m1, "#FFFFFF"))
+        if rest:
+            band = gfx.linear_gradient((W, 140), [(0.0, "#FFD27A"), (0.5, "#FF8A3D"), (1.0, "#FF2E88")], 90)
+            grad = _blank(size)
+            grad.paste(band, (0, wy + 10))
+            wl.alpha_composite(gfx.fill_with(m2, grad))
+        layers.append(Layer("wordmark", wl, "line", 10))
+    else:
+        fs = gfx.font("script", 150)
+        name = b["name"].title()
+        m = gfx.text_mask(size, ((W - fs.getlength(name)) / 2, 520), name, fs)
+        sig = gfx.glow(m, "#FF2E88", 30, 1.0)
+        sig.alpha_composite(gfx.fill_with(m, gfx.sunset(size, 90)))
+        layers.append(Layer("signature", sig, "wipe", 10))
     fh = gfx.font("display", 84)
     hl = gfx.wrap_text(ui["follow"], fh, W - 2 * s_left - 40)
     y = 800
-    for ln in hl:
+    for i, ln in enumerate(hl):
         x = (W - fh.getlength(ln)) / 2
-        img.alpha_composite(text_block((W, H), [ln], fh, int(x), y, 0, "#FFFFFF"))
+        layers.append(Layer(f"follow_{i}", text_block(size, [ln], fh, int(x), y, 0, "#FFFFFF"), "line", 11 + i))
         y += int(fh.size * 1.08)
     f2 = gfx.font("display", 70)
     handle = b["handle"][lang]
-    hm = gfx.text_mask((W, H), ((W - f2.getlength(handle)) / 2, y + 40), handle, f2)
-    img.alpha_composite(gfx.glow(hm, "#22D3EE", 20, 0.8))
-    img.alpha_composite(gfx.fill_with(hm, "#22D3EE"))
+    hm = gfx.text_mask(size, ((W - f2.getlength(handle)) / 2, y + 40), handle, f2)
+    hlayer = gfx.glow(hm, "#22D3EE", 20, 0.8)
+    hlayer.alpha_composite(gfx.fill_with(hm, "#22D3EE"))
+    layers.append(Layer("cta_handle", hlayer, "pop", 20))
     fb = gfx.font("body", 36)
     sub = ui["follow_sub"]
-    img.alpha_composite(text_block((W, H), [sub], fb, int((W - fb.getlength(sub)) / 2), y + 150, 0,
-                                   gfx.rgba("#E9E3F5", 240)))
+    layers.append(Layer("sub", text_block(size, [sub], fb, int((W - fb.getlength(sub)) / 2), y + 150, 0,
+                                          gfx.rgba("#E9E3F5", 240)), "up", 21))
     fsv = gfx.font("heavy", 30)
     sv = ui["save"]
-    img.alpha_composite(text_block((W, H), [sv], fsv, int((W - gfx.text_width(sv, fsv)) / 2), y + 240, 0,
-                                   gfx.rgba("#FFC857", 240)))
-    img.alpha_composite(corner_brackets((W, H)))
-    return img.convert("RGB")
+    layers.append(Layer("save", text_block(size, [sv], fsv, int((W - gfx.text_width(sv, fsv)) / 2), y + 240, 0,
+                                           gfx.rgba("#FFC857", 240)), "up", 22))
+    layers.append(Layer("frame", corner_brackets(size), "static", 90))
+    img = compose(layers, size).convert("RGB")
+    return Render(img, layers, {"kind": "cta"}) if with_layers else img

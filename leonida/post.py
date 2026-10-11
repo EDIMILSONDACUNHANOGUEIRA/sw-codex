@@ -10,7 +10,7 @@ from pathlib import Path
 
 import yaml
 
-from . import gfx, render
+from . import gfx, motion, render
 from .config import LANG_FOLDER, LANGS, OUT_DIR, POSTS_DIR, brand
 
 FILE_NAMES = {
@@ -146,7 +146,10 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
     out = OUT_DIR / date / post["id"]
     manifest = {"id": post["id"], "date": date, "tag": post.get("tag"),
                 "source": post.get("source"), "files": {}}
+    estilo = post.get("estilo") or (brand().get("video") or {}).get("estilo_padrao", "v2")
+    v2 = estilo == "v2"
     for lang in langs:
+        scenes = []                          # estilo v2: cada arte em camadas, para o vídeo animado
         folder = out / LANG_FOLDER[lang]
         if folder.exists():
             shutil.rmtree(folder)
@@ -155,6 +158,8 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
         log(f"  [{lang}] capa…")
         r = render.cover(post, lang, base_dir, today=today)
         r.image.save(folder / names["cover"], optimize=True)
+        if v2:
+            scenes.append(motion.scene_from(r, "cover"))
         files = [names["cover"]]
         n = 2
         # imagem nova da Rockstar: primeiro a arte editada (capa), depois a IMAGEM LIMPA (original)
@@ -164,20 +169,28 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
             clean.insert(0, post["image"])
         for ref in dict.fromkeys(clean):
             log(f"  [{lang}] imagem limpa…")
-            im = render.slide_foto(post, lang, ref, base_dir, credit=post.get("credito_imagem", "Rockstar Games"))
+            im = render.slide_foto(post, lang, ref, base_dir, credit=post.get("credito_imagem", "Rockstar Games"),
+                                   with_layers=v2)
+            if v2:
+                scenes.append(motion.scene_from(im, "foto"))
+                im = im.image
             fn = f"{n:02d}_{'imagem-limpa' if lang == 'pt' else 'clean-image'}.png"
             im.save(folder / fn, optimize=True)          # sem grão/filtro: é a imagem original
             files.append(fn)
             n += 1
         for slide in (post[lang].get("slides") or []):
             log(f"  [{lang}] slide {slide.get('type')}…")
-            if slide.get("type") == "grid":
-                im = render.slide_grid(post, lang, slide, base_dir, today)
+            kind = "grid" if slide.get("type") == "grid" else "list"
+            if kind == "grid":
+                im = render.slide_grid(post, lang, slide, base_dir, today, with_layers=v2)
             else:
-                im = render.slide_list(post, lang, slide, base_dir, today)
+                im = render.slide_list(post, lang, slide, base_dir, today, with_layers=v2)
+            if v2:
+                scenes.append(motion.scene_from(im, kind))
+                im = im.image
             fn = f"{n:02d}_{slugify(slide.get('title', slide.get('type', 'slide')), 24)}.png"
             gfx.finish(im.convert("RGB")).save(folder / fn, optimize=True)
-            if post.get("estilo") == "dinamico" and slide.get("type") != "grid" and len(slide.get("items") or []) > 1:
+            if estilo == "dinamico" and slide.get("type") != "grid" and len(slide.get("items") or []) > 1:
                 # vídeo dinâmico: os itens da lista aparecem um a um (quadros só para o vídeo, fora do git)
                 rev = folder / ".reveal"
                 rev.mkdir(exist_ok=True)
@@ -188,7 +201,11 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
             n += 1
         if (post[lang].get("slides") or clean) and post.get("cta", True):
             fn = f"{n:02d}_{'siga' if lang == 'pt' else 'follow'}.png"
-            gfx.finish(render.slide_cta(post, lang, base_dir, today).convert("RGB")).save(folder / fn, optimize=True)
+            cta = render.slide_cta(post, lang, base_dir, today, with_layers=v2)
+            if v2:
+                scenes.append(motion.scene_from(cta, "cta"))
+                cta = cta.image
+            gfx.finish(cta.convert("RGB")).save(folder / fn, optimize=True)
             files.append(fn)
         (folder / names["caption"]).write_text(caption_text(post, lang), encoding="utf-8")
         files.append(names["caption"])
@@ -208,8 +225,12 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
             from . import postvideo
             intro = folder / names["video"] if (folder / names["video"]).exists() else None
             try:
-                postvideo.build(folder, seed=post["id"], intro=intro, log=log,
-                                target=post.get("video_segundos"), estilo=post.get("estilo"))
+                if v2:
+                    motion.build(scenes, folder / "tiktok" / postvideo.OUT_NAME, seed=post["id"],
+                                 target=post.get("video_segundos") or 20, log=log)
+                else:
+                    postvideo.build(folder, seed=post["id"], intro=intro, log=log,
+                                    target=post.get("video_segundos"), estilo=estilo)
             except postvideo.MusicMissing as exc:
                 log(f"  ⚠️  {exc}")
             except Exception as exc:  # noqa: BLE001 — artes já estão prontas; só o vídeo falhou
