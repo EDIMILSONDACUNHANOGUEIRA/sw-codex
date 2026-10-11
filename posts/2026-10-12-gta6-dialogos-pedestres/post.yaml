@@ -1,0 +1,49 @@
+id: 2026-10-12-gta6-dialogos-pedestres
+date: "2026-10-12"
+tag: oficial
+estilo: v2
+video_segundos: 22
+image: "https://www.rockstargames.com/VI/_next/static/media/Brian_Heder_04.0z3o0t88jw54l.jpg"
+focus: [0.33, 0.5]
+zoom: 0.88
+source: { name: "LOVE Magazine", url: "https://lovemagazine.net/articles/gta-vi-the-american-dream" }
+fontes:
+  - { name: "LOVE Magazine", url: "https://lovemagazine.net/articles/gta-vi-the-american-dream" }
+  - { name: "GamesRadar+", url: "https://www.gamesradar.com/games/grand-theft-auto/rockstar-has-a-whole-team-of-gta-6-writers-dedicated-to-pedestrian-dialogue-there-are-no-shortcuts-when-it-comes-to-building-a-world-like-this/" }
+  - { name: "Kotaku", url: "https://kotaku.com/rockstar-explains-how-it-actually-makes-a-game-like-gta-6-2000739955" }
+  - { name: "GTAVice", url: "https://www.gtavice.net/news/love-magazine-new-gta-6-details-on-jason-lucia-raul-npcs-satire-and-the-making-of-leonida" }
+pt:
+  kicker: FIGURANTE
+  selo: "A Rockstar contou"
+  headline: "GTA VI tem *time de roteiristas* só para os *pedestres*"
+  summary: "Rupert Humphries e James Horton, da Rockstar, explicaram o papo da rua à LOVE Magazine."
+  caption: |
+    🗣️ GTA VI tem um time de roteiristas só para o que os pedestres falam.
+
+    Em entrevista à LOVE Magazine, Rupert Humphries, vice-presidente sênior de narrativa da Rockstar, contou que existe uma equipe específica de roteiristas de diálogos de pedestres em Los Angeles.
+
+    E mais um time de redatores de publicidade e comédia em Nova York, Los Angeles e Londres. "E nenhum de nós vê isso como pano de fundo!", disse ele.
+
+    James Horton, diretor de roteiro do mundo aberto, disse que "não existem atalhos" para criar um mundo assim: correndo pela rua mais movimentada, você ouve trechos de cem conversas diferentes. Se parar para escutar uma delas, ela tem que convencer.
+
+    "Ninguém que você encontra é figurante", disse Horton. "Todo mundo que você encontra é o protagonista da própria história."
+
+    GTA VI chega em 19/11.
+
+    Você vai parar para ouvir a conversa dos NPCs? 👇
+  hashtags: ["#gta6npc", "#gta6curiosidades", "#rockstargames"]
+  slides:
+    - type: list
+      title: "O time *dos pedestres*"
+      items:
+        - "Um time só para a fala dos pedestres, em Los Angeles"
+        - "Redatores de publicidade e comédia em NY, LA e Londres"
+        - "Correndo na rua, você ouve trechos de cem conversas"
+        - "Parou para ouvir? A conversa tem que convencer"
+    - type: list
+      title: "Nas palavras de *Horton*"
+      items:
+        - "\"Não existem atalhos\" para um mundo assim"
+        - "Não existe fundo, só o que você não está reparando"
+        - "Ninguém que você encontra é figurante"
+        - "Cada um é o protagonista da própria história"

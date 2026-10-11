@@ -1,0 +1,22 @@
+{
+  "id": "2026-10-12-gta6-dialogos-pedestres",
+  "date": "2026-10-12",
+  "tag": "oficial",
+  "source": {
+    "name": "LOVE Magazine",
+    "url": "https://lovemagazine.net/articles/gta-vi-the-american-dream"
+  },
+  "files": {
+    "br": [
+      "01_capa.png",
+      "02_imagem-limpa.png",
+      "03_o-time-dos-pedestres.png",
+      "04_nas-palavras-de-horton.png",
+      "05_siga.png",
+      "legenda.txt",
+      "tiktok/post.mp4"
+    ]
+  },
+  "music": true,
+  "publication_video_engine": "v2"
+}
