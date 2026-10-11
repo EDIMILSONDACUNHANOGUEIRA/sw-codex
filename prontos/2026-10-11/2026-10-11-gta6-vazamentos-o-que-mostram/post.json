@@ -1,0 +1,22 @@
+{
+  "id": "2026-10-11-gta6-vazamentos-o-que-mostram",
+  "date": "2026-10-11",
+  "tag": "vazamento",
+  "source": {
+    "name": "Dexerto / TecMundo / Insider Gaming",
+    "url": "https://insider-gaming.com/gta-6-first-person-seemingly-revealed-new-leak/"
+  },
+  "files": {
+    "br": [
+      "01_capa.png",
+      "02_video-de-domingo.png",
+      "03_video-de-quinta.png",
+      "04_cuidado.png",
+      "05_siga.png",
+      "legenda.txt",
+      "tiktok/post.mp4"
+    ]
+  },
+  "music": true,
+  "publication_video_engine": "v2"
+}

@@ -1,0 +1,75 @@
+id: 2026-10-11-gta6-vazamentos-o-que-mostram
+date: "2026-10-11"
+tag: vazamento
+site: false               # o site é só de notícia oficial
+estilo: v2
+foto_limpa: false        # imagem antiga da biblioteca (não é nova): sem slide de imagem limpa
+video_segundos: 24       # 20 s não cabe: o build pediu no mínimo 22,7 s (três listas)
+zoom: 0.81              # rosto da Lucia inteiro (até o queixo) acima do selo
+focus: [0.54, 0.5]      # Lucia à esquerda; topo do "P" e do "I" de PISTAS visível
+# imagem OFICIAL da Rockstar (nunca usar imagem dos vídeos vazados): Lucia no túnel, de roupa
+image: "https://www.rockstargames.com/VI/_next/static/media/Lucia_Caminos_07.0.c7un8ro7_p2.jpg"
+source: { name: "Dexerto / TecMundo / Insider Gaming", url: "https://insider-gaming.com/gta-6-first-person-seemingly-revealed-new-leak/" }
+fontes:
+  - { name: "TheGamer (vídeo de 11/10)", url: "https://www.thegamer.com/gta-6-naked-lucia-leak/" }
+  - { name: "TecMundo / Voxel (vídeo de 11/10)", url: "https://www.estadao.com.br/tecmundo/voxel/cyberleek-vaza-gameplay-de-gta-6-com-lucia-nua-e-ameaca-liberar-build-completa-do-jogo/" }
+  - { name: "Dexerto (vídeo de 11/10)", url: "https://www.dexerto.com/gta/gta-6-leak-shows-lucia-skydiving-completely-naked-in-a-rooftop-stunt-mission-3417940/" }
+  - { name: "Sportskeeda (vídeo de 11/10)", url: "https://www.sportskeeda.com/gta/new-gta-6-leak-shows-lucia-gameplay-melee-combat-activities" }
+  - { name: "Insider Gaming (vídeo de 8/10)", url: "https://insider-gaming.com/gta-6-first-person-seemingly-revealed-new-leak/" }
+  - { name: "Dexerto (vídeo de 8/10)", url: "https://www.dexerto.com/gta/huge-gta-6-leak-shows-first-person-gameplay-despite-rockstar-ruling-it-out-at-launch-3416673/" }
+  - { name: "Push Square (vídeo de 8/10)", url: "https://www.pushsquare.com/news/2026/10/gta-6-gameplay-leaks-are-back-with-potentially-big-spoilers" }
+  - { name: "MP1st (vídeo de 8/10)", url: "https://mp1st.com/?p=316307" }
+  - { name: "Notebookcheck (vídeo de 8/10)", url: "https://www.notebookcheck.net/GTA-6-new-leaked-footage-shows-racing-first-person-mode-and-nudity.1419343.0.html" }
+  - { name: "Malwarebytes (golpe)", url: "https://www.malwarebytes.com/blog/threat-intel/2026/08/fake-gta-6-extended-look-and-demo-sites-deliver-an-infostealer" }
+pt:
+  kicker: PISTAS
+  selo: "Vazamento · Não oficial"
+  headline: "*Vazamentos* de GTA VI: *o resumo*"   # 2 linhas: com 3 linhas o selo cobria nariz e boca
+  summary: "Nada confirmado pela Rockstar. Pode ser uma versão em desenvolvimento."
+  caption: |
+    O que os vídeos vazados de GTA VI desta semana mostram de gameplay, segundo a imprensa de games 👀
+
+    Nada disso foi confirmado pela Rockstar. Pode ser uma versão em desenvolvimento, diferente do jogo final.
+
+    Vídeo de domingo (11), com cerca de 5 minutos:
+    • Lucia dirige um carro que parece ser um Vapid Hustler, em Vice City (TheGamer e TecMundo)
+    • Luta corpo a corpo com uma pedestre (TheGamer e TecMundo)
+    • A tela de um caixa eletrônico mostra a BuckMe, app de pagamento fictício do jogo, e um limite de US$ 15 mil (TheGamer e TecMundo)
+    • Salto de paraquedas de uma rampa da AudaCity, no alto de um prédio (Dexerto, TheGamer e TecMundo)
+    • O vídeo termina com um comercial da BuckMe (Dexerto e TecMundo)
+
+    Vídeo de quinta (8), com cerca de 25 minutos:
+    • Jason dirige e anda em primeira pessoa (Insider Gaming e Dexerto)
+    • Uma corrida off-road (Insider Gaming, MP1st e Notebookcheck)
+    • Antes da corrida, ele compra roupa numa loja (MP1st e Notebookcheck)
+    • Oficina para modificar o carro (MP1st e Notebookcheck)
+
+    A Rockstar não confirmou modo em primeira pessoa para o lançamento.
+
+    🛑 Cuidado: não existe GTA VI para baixar. Sites falsos de "download" espalham vírus que rouba senhas.
+
+    GTA VI chega oficialmente em 19/11 para PS5 e Xbox Series X|S.
+
+    Qual desses detalhes você quer ver no jogo final? 👇
+  hashtags: ["#gta6noticias", "#rockstargames", "#vicecity", "#golpe"]
+  slides:
+    - type: list
+      title: "Vídeo de *domingo*"
+      items:
+        - "Lucia dirige um carro parecido com o Vapid Hustler"
+        - "Luta corpo a corpo com uma pedestre"
+        - "BuckMe no caixa eletrônico, com limite de US$ 15 mil"
+        - "Salto de paraquedas de uma rampa da AudaCity"
+    - type: list
+      title: "Vídeo de *quinta*"
+      items:
+        - "Jason dirige e anda em primeira pessoa"
+        - "Loja de roupas antes de uma corrida off-road"
+        - "Oficina para modificar o carro"
+    - type: list
+      title: "*Cuidado*"
+      items:
+        - "A Rockstar não confirmou nada disso"
+        - "Pode ser uma versão em desenvolvimento"
+        - "Não existe GTA VI para baixar: é golpe"
+        - "Lançamento oficial: 19/11"

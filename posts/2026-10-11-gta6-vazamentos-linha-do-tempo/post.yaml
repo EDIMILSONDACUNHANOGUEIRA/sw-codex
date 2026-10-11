@@ -1,0 +1,78 @@
+id: 2026-10-11-gta6-vazamentos-linha-do-tempo
+date: "2026-10-11"
+tag: vazamento
+site: false               # o site é só de notícia oficial
+estilo: v2
+foto_limpa: false        # imagem antiga da biblioteca (não é imagem nova): sem slide de imagem limpa
+zoom: 0.8                # recuo leve: rosto inteiro acima do selo e "DATAS" legível
+focus: [0.7, 0.5]        # Jason à direita; a arma em primeiro plano fica fora do recorte
+# imagem OFICIAL da Rockstar (nunca usar imagem dos vídeos vazados)
+image: "https://www.rockstargames.com/VI/_next/static/media/Jason_Duval_09.0to5nepm39efn.jpg"
+source: { name: "Kotaku / VGC / Insider Gaming", url: "https://kotaku.com/gta-6-leaker-threatens-rockstar-with-doomsday-scenario-if-meme-coin-hits-30-million-2000743779" }
+fontes:
+  - { name: "Kotaku (primeiras cenas, 18/08)", url: "https://kotaku.com/gta-6-gameplay-and-a-full-map-have-seemingly-leaked-ahead-of-the-big-netflix-reveal-2000725468" }
+  - { name: "Dexerto (cronologia de agosto)", url: "https://www.dexerto.com/gta/gta-6-gameplay-and-map-seemingly-leaked-ahead-of-netflix-extended-look-3399751/" }
+  - { name: "VGC (pedidos à Justiça, 21/08)", url: "https://videogameschronicle.com/news/take-two-files-subpoenas-to-microsoft-and-discord-in-hunt-for-gta-6-leaker/" }
+  - { name: "Hitmarker (pedidos à Justiça, 24/08)", url: "https://hitmarker.net/news/take-two-interactive-subpoenas-microsoft-and-discord-in-hunt-for-gta-6-leaker-4581546" }
+  - { name: "VGC (declaração da Rockstar, 26/08)", url: "https://videogameschronicle.com/news/gta-6-leaks-have-been-heartbreaking-for-our-team-says-rockstar-games-in-a-public-statement-regarding-gameplay-videos" }
+  - { name: "Pure Xbox (declaração da Rockstar, 26/08)", url: "https://www.purexbox.com/news/2026/08/rockstar-games-publishes-lengthy-statement-on-gta-6-leaks" }
+  - { name: "Kotaku (prólogo, 26/08)", url: "https://kotaku.com/watch-out-the-gta-6-leaker-is-now-sharing-story-spoilers-2000728456" }
+  - { name: "Notebookcheck (prólogo, 26/08)", url: "https://www.notebookcheck.net/In-Lucia-GTA-6-leak-Cyberleek-hints-at-release-date-delay-with-game-not-ready.1379272.0.html" }
+  - { name: "Kotaku (saque, 27/08)", url: "https://kotaku.com/gta6-grand-theft-auto-6-leaks-cyberleek-memecoin-rockstar-cash-out-2000728825" }
+  - { name: "Dexerto (saque, 27/08)", url: "https://www.dexerto.com/gta/gta-6-leaker-cyberleek-cashing-out-over-250k-from-meme-coin-ahead-of-netflix-extended-look-3402924/" }
+  - { name: "Insider Gaming (25 minutos, 08/10)", url: "https://insider-gaming.com/gta-6-new-gameplay-leaks/" }
+  - { name: "Insider Gaming (enquete, 09/10)", url: "https://insider-gaming.com/gta-6-leaker-poll-voters-want-more-lucia/" }
+  - { name: "Notebookcheck (enquete, 09/10)", url: "https://www.notebookcheck.net/GTA-6-leaker-back-with-another-poll-votes-indicating-new-footage-will-focus-on-Lucia.1420375.0.html" }
+  - { name: "Kotaku (ameaça, 10/10)", url: "https://kotaku.com/gta-6-leaker-threatens-rockstar-with-doomsday-scenario-if-meme-coin-hits-30-million-2000743779" }
+  - { name: "Insider Gaming (ameaça, 10/10)", url: "https://insider-gaming.com/gta-6-playable-leak/" }
+  - { name: "VGC (11/10)", url: "https://www.videogameschronicle.com/news/group-threatens-to-leak-full-gta-6-build-if-physical-plans-arent-reversed/" }
+  - { name: "TheGamer (vídeo de 11/10)", url: "https://www.thegamer.com/gta-6-naked-lucia-leak/" }
+  - { name: "TecMundo / Voxel (vídeo de 11/10)", url: "https://www.estadao.com.br/tecmundo/voxel/cyberleek-vaza-gameplay-de-gta-6-com-lucia-nua-e-ameaca-liberar-build-completa-do-jogo/" }
+  - { name: "Malwarebytes (golpe)", url: "https://www.malwarebytes.com/blog/threat-intel/2026/08/fake-gta-6-extended-look-and-demo-sites-deliver-an-infostealer" }
+pt:
+  kicker: DATAS
+  selo: "Linha do tempo · Não oficial"
+  headline: "GTA VI: a *saga* dos *vazamentos*"
+  summary: "De 18/08 até hoje: os vídeos, a ameaça, a reação da Rockstar e a caça da Take-Two ao autor."
+  caption: |
+    Do primeiro vídeo à ameaça de soltar o jogo inteiro: a linha do tempo dos vazamentos de GTA VI.
+
+    18/08: um leaker anônimo (não se sabe se é uma pessoa ou um grupo) começa a postar cenas de gameplay e imagens que diz serem do mapa. Diz protestar contra a pré-venda só digital.
+
+    20/08: a Take-Two pede à Justiça federal dos EUA, em Nova York, que obrigue a Microsoft e o Discord a entregar dados para identificar o responsável.
+
+    26/08: em post no X, a Rockstar afirma que ver o gameplay vazar assim foi "de partir o coração" para a equipe e diz esperar que todos aguardem um pouco mais para jogar em 19/11. No mesmo dia, sai um vídeo do que parece ser o prólogo da Lucia.
+
+    27/08: a Rockstar mostra o jogo oficialmente num especial da Netflix. Segundo Kotaku e Dexerto, o leaker sacou cerca de US$ 250 mil de uma criptomoeda ligada a ele, que despencou. Depois, sumiu por semanas.
+
+    08/10: solta cerca de 25 minutos de cenas novas. Em seguida, abre uma enquete para escolher o próximo vídeo.
+
+    10/10: ameaça soltar a campanha inteira se a moeda bater uma meta de valor de mercado. A "saída" para a Take-Two, segundo ele: disco físico e um pedido público de desculpas.
+
+    11/10: novo vídeo, de cerca de 5 minutos, com a Lucia.
+
+    ⚠️ Nada confirmado: ninguém provou que ele tem o jogo inteiro, e a Rockstar não comentou os vídeos de outubro nem a ameaça.
+
+    🛑 Cuidado: não existe GTA VI para baixar. Sites falsos de download espalham vírus que rouba senhas. E não invista em moeda de leaker.
+
+    GTA VI chega oficialmente em 19/11 para PS5 e Xbox Series X|S.
+
+    Essa história acaba antes do lançamento? 👇
+  hashtags: ["#gta6noticias", "#rockstargames", "#golpe", "#segurancadigital"]
+  slides:
+    - type: list
+      title: "Agosto: o *começo*"
+      items:
+        - "18/08: saem as primeiras cenas e\u00a0supostas imagens\u00a0do\u00a0mapa"
+        - "20/08: Take-Two vai à\u00a0Justiça para achar\u00a0o\u00a0autor"
+        - "26/08: Rockstar diz que foi \"de\u00a0partir\u00a0o\u00a0coração\""
+        - "26/08: sai o que parece ser o\u00a0prólogo\u00a0da\u00a0Lucia"
+        - "27/08: leaker saca ~US$\u00a0250\u00a0mil e\u00a0some por\u00a0semanas"
+    - type: list
+      title: "Outubro: a *volta*"
+      items:
+        - "08/10: cerca de 25\u00a0minutos de cenas\u00a0novas"
+        - "10/10: ameaça soltar o jogo inteiro e\u00a0pede\u00a0disco\u00a0físico"
+        - "11/10: vídeo de cerca de 5\u00a0minutos com a\u00a0Lucia"
+        - "Nada confirmado: a Rockstar não\u00a0comentou\u00a0os\u00a0vídeos\u00a0novos"
+        - "Download de GTA VI?\u00a0É\u00a0golpe que rouba\u00a0senhas"

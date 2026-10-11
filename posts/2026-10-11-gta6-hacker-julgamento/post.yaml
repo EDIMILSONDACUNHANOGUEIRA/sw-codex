@@ -1,0 +1,65 @@
+id: 2026-10-11-gta6-hacker-julgamento
+date: "2026-10-11"
+tag: oficial              # notícia da Justiça (não é vazamento novo)
+site: false               # tema de vazamento: fica fora do site
+estilo: v2
+foto_limpa: false         # imagem antiga da biblioteca: sem slide de imagem limpa
+zoom: 0.85               # recua: rosto inteiro acima do selo e "TRIBUNAL" legível
+focus: [0.6, 0.5]         # Lucia algemada no centro do recorte
+# imagem OFICIAL da Rockstar (nunca usar imagem dos vídeos vazados)
+image: "https://www.rockstargames.com/VI/_next/static/media/Lucia_Caminos_05.0i5b7k6a7_w6p.jpg"
+source: { name: "Red Lion Chambers / BBC", url: "https://www.linkedin.com/posts/cybercrime-criminallaw-seriouscrime-ugcPost-7490389990858809344-FJ6b/" }
+fontes:
+  - { name: "Red Lion Chambers (defesa, 05/08)", url: "https://www.linkedin.com/posts/cybercrime-criminallaw-seriouscrime-ugcPost-7490389990858809344-FJ6b/" }
+  - { name: "Joe Tidy, BBC (14/07)", url: "https://bsky.app/profile/joetidy.bsky.social/post/3mqmgoyac522b" }
+  - { name: "GamingBolt (17/07)", url: "https://gamingbolt.com/grand-theft-auto-6-hacker-has-been-moved-to-prison-as-he-waits-for-retrial" }
+  - { name: "Game Rant (09/10)", url: "https://gamerant.com/gta-6-leaker-trial-court-date/" }
+  - { name: "Notebookcheck (10/10)", url: "https://www.notebookcheck.net/Hacker-who-leaked-GTA-6-gameplay-goes-on-trial-10-days-before-release-date.1420448.0.html" }
+  - { name: "BBC (sentença de 2023)", url: "https://www.bbc.co.uk/news/technology-67663128" }
+  - { name: "Malwarebytes (golpe)", url: "https://www.malwarebytes.com/blog/threat-intel/2026/08/fake-gta-6-extended-look-and-demo-sites-deliver-an-infostealer" }
+pt:
+  kicker: TRIBUNAL
+  selo: "Caso do vazamento de 2022"
+  headline: "Hacker enfrenta *julgamento* *10\u00a0dias antes* do GTA\u00a0VI"   # sem "A" órfão no fim da 1ª linha
+  summary: "Arion Kurtaj, acusado pelo vazamento de 2022, deve ser julgado em 9 de novembro em Londres, segundo a defesa."
+  caption: |
+    O hacker do vazamento de GTA VI em 2022 vai a julgamento 10 dias antes do lançamento.
+
+    Arion Kurtaj, do grupo hacker Lapsus$, deve ser julgado em 9 de novembro no Crown Court de Woolwich, em Londres.
+
+    A data foi divulgada em agosto pela Red Lion Chambers, escritório dos advogados de defesa dele.
+
+    Segundo a defesa, ele foi avaliado como apto a ser julgado depois de dois anos de tratamento num hospital de segurança.
+
+    Em julho, o repórter Joe Tidy, da BBC, revelou que ele saiu do hospital e está numa prisão comum, à espera do julgamento.
+
+    Relembrando: em setembro de 2022, a Rockstar foi invadida e cerca de 90 vídeos de uma versão em desenvolvimento de GTA VI vazaram.
+
+    Em 2023, ele foi considerado incapaz de ser julgado. O júri só decidiu se ele cometeu os atos, concluiu que sim, e a Justiça mandou interná-lo por tempo indeterminado.
+
+    O Lapsus$ também atacou empresas como Nvidia e Uber e, segundo a BBC, teria integrantes no Brasil.
+
+    ⚠️ Atenção: a data veio da defesa e ainda pode mudar. E, neste novo julgamento, ele ainda não foi condenado.
+
+    🛑 E não caia em golpe: não existe GTA VI para baixar antes do lançamento. "Download" do jogo é golpe que rouba senhas.
+
+    GTA VI chega oficialmente em 19/11 para PS5 e Xbox Series X|S.
+
+    O que você acha que vai acontecer nesse julgamento? 👇
+  hashtags: ["#gta6noticias", "#rockstargames", "#segurancadigital", "#golpe"]
+  slides:
+    - type: list
+      title: "Como chegou *aqui*"
+      items:
+        - "Set/2022: Rockstar é invadida e\u00a0cerca de 90\u00a0vídeos vazam"
+        - "2023: considerado incapaz de\u00a0ser\u00a0julgado, é\u00a0internado"
+        - "Jul/2026: repórter da BBC revela que ele foi para uma\u00a0prisão\u00a0comum"
+        - "Ago/2026: defesa anuncia o\u00a0julgamento em 9\u00a0de\u00a0novembro"
+        - "19/11: lançamento de GTA\u00a0VI"
+    - type: list
+      title: "Vale *lembrar*"
+      items:
+        - "A data veio da defesa e\u00a0ainda pode\u00a0mudar"
+        - "Neste novo julgamento, ele ainda não foi\u00a0condenado"
+        - "Não existe GTA VI para baixar antes do\u00a0lançamento"
+        - "\"Download\" do jogo é golpe que rouba\u00a0senhas"
