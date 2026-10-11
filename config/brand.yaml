@@ -73,6 +73,7 @@ logo:
 
 # Vídeo de publicação (br/tiktok/post.mp4)
 video:
+  segundos: 20       # duração exata a 30 fps; conteúdo demais é recusado sem apagar a entrega anterior
   estilo_padrao: v2   # v2 = textos animados + transições + loop (leonida/motion.py) | dinamico | classico
                       # (um post pode trocar com "estilo:" no post.yaml)
 

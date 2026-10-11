@@ -12,7 +12,10 @@
       "02_imagem-limpa.png",
       "03_o-que-diz-o-selo.png",
       "04_siga.png",
-      "legenda.txt"
+      "legenda.txt",
+      "tiktok/post.mp4"
     ]
-  }
+  },
+  "music": true,
+  "publication_video_engine": "v2"
 }

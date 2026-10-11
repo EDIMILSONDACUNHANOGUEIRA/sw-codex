@@ -85,8 +85,8 @@ image: "https://www.rockstargames.com/VI/_next/static/media/Lucia_Caminos_06....
 # layout: card          # use 'card' para cenários/prints sem personagem em destaque
 # zoom: 0.85            # recua o enquadramento (o recuo automático costuma acertar)
 # focus: [0.6, 0.5]     # ponto de foco do recorte 9:16
-# video_segundos: 20    # alvo do vídeo do TikTok (padrão 20 s no v2). Com poucas cenas sai mais curto:
-#                       # nenhuma cena fica parada além do limite (capa ~4 s, imagem limpa ~4 s)
+# video_segundos: 20    # duração exata do vídeo do TikTok a 30 fps (padrão 20 s no v2).
+#                       # se faltar tempo para leitura, o build falha e preserva a entrega anterior
 # estilo: v2            # padrão (config/brand.yaml → video.estilo_padrao): textos animados, transições
 #                       # zoom/whip/luz, ritmo na batida e loop na capa (leonida/motion.py).
 #                       # dinamico = slideshow com itens um a um; classico = slideshow antigo

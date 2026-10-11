@@ -6,6 +6,8 @@ Fonte: [Diário Oficial da União](https://www.in.gov.br/web/dou/-/portaria-cgpc
 
 <img src="br/01_capa.png" width="240"> <img src="br/02_imagem-limpa.png" width="240"> <img src="br/03_o-que-diz-o-selo.png" width="240"> <img src="br/04_siga.png" width="240">
 
+🎬 Vídeo com música: [br/tiktok/post.mp4](br/tiktok/post.mp4)
+
 ```
 🚨 É oficial: GTA VI é 18 anos no Brasil.
 

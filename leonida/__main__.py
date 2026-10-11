@@ -62,7 +62,7 @@ def cmd_build(a):
     from . import gallery, notify, post
     for ref in a.posts:
         print(f"🎨 {ref}")
-        out = post.build(ref, video=not a.sem_video)
+        out = post.build(ref, video=not a.sem_video, estilo=a.estilo)
         print(f"✅ {out}")
         if a.enviar:
             print(f"   enviado: {notify.send(out) or 'nenhum canal configurado'}")
@@ -268,6 +268,7 @@ def main(argv=None):
     r.set_defaults(fn=cmd_novo)
 
     r = sp.add_parser("build", help="renderiza um ou mais posts")
+    r.add_argument("--estilo", choices=["v2", "dinamico", "classico"], help="motor do vídeo (sobrepõe o post.yaml)")
     r.add_argument("posts", nargs="+")
     r.add_argument("--sem-video", action="store_true")
     r.add_argument("--enviar", action="store_true", help="manda no Telegram/Discord")

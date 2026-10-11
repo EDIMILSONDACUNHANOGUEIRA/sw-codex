@@ -10,6 +10,8 @@ Cada elemento é guardado também como camada RGBA separada, usada pelo vídeo a
 from __future__ import annotations
 
 import datetime as dt
+import math
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -75,6 +77,39 @@ def fmt_date(d: str | dt.date | None, lang: str) -> str:
 
 def _blank(size):
     return Image.new("RGBA", size, (0, 0, 0, 0))
+
+
+def _protected(text: str) -> str:
+    """Mantém nomes compostos juntos em qualquer bloco, inclusive texto sem destaque."""
+    for pattern in (r"\bGTA\s+(?:VI|6)\b", r"\b18\s+anos\b", r"\bXbox\s+Series\s+X\s*\|\s*S\b"):
+        text = re.sub(pattern, lambda m: re.sub(r"\s+", "\u00a0", m.group()), text, flags=re.I)
+    return text
+
+
+def _wrap_words(words, fnt, max_w: int):
+    lines = gfx.wrap_words(words, fnt, max_w)
+    # Evita a última palavra isolada sem mudar o conteúdo ou quebrar nomes protegidos.
+    if len(lines) > 1 and len(lines[-1]) == 1 and len(lines[-2]) >= 3:
+        candidate = [lines[-2][-1], *lines[-1]]
+        if fnt.getlength(" ".join(w for w, _ in candidate)) <= max_w:
+            lines[-2] = lines[-2][:-1]
+            lines[-1] = candidate
+    return lines
+
+
+def _wrap_text(text: str, fnt, max_w: int) -> list[str]:
+    words = [(token, False) for token in _protected(text).split(" ") if token]
+    return [" ".join(w for w, _ in line) for line in _wrap_words(words, fnt, max_w)]
+
+
+def _line_height(fnt, factor: float = 1.3) -> int:
+    box = fnt.getbbox("ÁÉÇgjpq")
+    return max(math.ceil(fnt.size * factor), box[3] - box[1] + 10)
+
+
+def _finished_bg(bg: Image.Image) -> Image.Image:
+    """Acabamento uma única vez no fundo, compartilhado pela arte e pelo vídeo."""
+    return gfx.finish(bg.convert("RGB")).convert("RGBA")
 
 
 def _tag_info(tag: str, lang: str) -> tuple[str, str]:
@@ -174,10 +209,32 @@ def brand_layers(size, lang: str, y: int) -> tuple[Image.Image, Image.Image | No
 def top_layers(size, lang: str, y_brand: int, y_count: int, today: dt.date | None = None) -> list["Layer"]:
     """Topo de todas as artes: logo (+ ponto "ao vivo") e contador de dias."""
     logo, live = brand_layers(size, lang, y_brand)
+    chip = countdown_chip(size, lang, y_count, today)
+    # A largura do contador varia com a quantidade de dias. Mantém um vão de 20 px
+    # entre o conteúdo da marca e o selo, inclusive com três algarismos.
+    core = chip.split()[-1].point(lambda a: 255 if a >= 220 else 0).getbbox()
+    logo_core = logo.split()[-1].point(lambda a: 255 if a >= 220 else 0).getbbox()
+    if core and logo_core and logo_core[2] > core[0] - 20:
+        _, _, left, _ = _safe()
+        box = logo.split()[-1].getbbox()
+        if live is not None:
+            lb = live.split()[-1].getbbox()
+            box = (min(box[0], lb[0]), min(box[1], lb[1]), max(box[2], lb[2]), max(box[3], lb[3]))
+        scale = (core[0] - 20 - left) / (logo_core[2] - left)
+        def compact(layer):
+            result = _blank(size)
+            crop = layer.crop(box)
+            result.alpha_composite(crop.resize((max(1, round(crop.width * scale)),
+                                                max(1, round(crop.height * scale))), Image.LANCZOS),
+                                   (round(left + (box[0] - left) * scale),
+                                    round(y_brand + (box[1] - y_brand) * scale)))
+            return result
+        logo = compact(logo)
+        live = compact(live) if live is not None else None
     out = [Layer("brand", logo, "brand", 5)]
     if live is not None:
         out.append(Layer("live", live, "live", 5))
-    out.append(Layer("countdown", countdown_chip(size, lang, y_count, today), "pop", 6))
+    out.append(Layer("countdown", chip, "pop", 6))
     return out
 
 
@@ -232,7 +289,7 @@ def countdown_chip(size, lang: str, y: int, today: dt.date | None = None) -> Ima
     ui = UI[lang]
     days = days_to_release(today)
     layer = _blank(size)
-    right = W - 64
+    right = W - _safe()[3] - 8
     if days > 0:
         num = str(days)
         fnum = gfx.font("display", 66)
@@ -295,6 +352,8 @@ def corner_brackets(size, inset: int = 26, length: int = 78, thick: int = 6) -> 
 
 def tag_pill(size, text: str, color: str, x: int, y: int) -> tuple[Image.Image, int]:
     f = gfx.font("heavy", 30)
+    while gfx.text_width(text, f, 3) + 78 > size[0] - _safe()[3] - x - 8 and f.size > 14:
+        f = gfx.font("heavy", f.size - 2)
     tw = gfx.text_width(text, f, 3)
     h = 58
     w = int(tw + 30 + 26 + 22)
@@ -476,20 +535,22 @@ def cover(post: dict, lang: str, base_dir: Path | None = None, today: dt.date | 
     footer_txt = f"{ui['source']}: {src_name.upper()}  •  {fmt_date(post.get('date'), lang)}" if src_name \
         else fmt_date(post.get("date"), lang)
     ff = gfx.font("bold", 24)
+    while gfx.text_width(footer_txt, ff, 2) > text_w - 8 and ff.size > 14:
+        ff = gfx.font("bold", ff.size - 1)
     footer_y = bottom - 30
     fsum = gfx.font("body", 36)
-    summary_lines = gfx.wrap_text(loc.get("summary", ""), fsum, text_w) if loc.get("summary") else []
-    if len(summary_lines) > 2:
-        fsum = gfx.font("body", 32)
-        summary_lines = gfx.wrap_text(loc.get("summary", ""), fsum, text_w)[:3]
-    sum_lh = int(fsum.size * 1.32)
+    summary_lines = _wrap_text(loc.get("summary", ""), fsum, text_w) if loc.get("summary") else []
+    while len(summary_lines) > 3 and fsum.size > 24:
+        fsum = gfx.font("body", fsum.size - 2)
+        summary_lines = _wrap_text(loc.get("summary", ""), fsum, text_w)
+    sum_lh = _line_height(fsum, 1.32)
     sum_y = footer_y - 30 - len(summary_lines) * sum_lh
-    words = gfx.parse_marked(loc["headline"])
+    words = gfx.parse_marked(_protected(loc["headline"].upper()))
     # prefere 3 linhas grandes; se não couber, 4 linhas
-    fh, hl_lines = gfx.fit_font("display", lambda f: gfx.wrap_words(words, f, text_w), 3, 124, 100, 4)
+    fh, hl_lines = gfx.fit_font("display", lambda f: _wrap_words(words, f, text_w - 8), 3, 124, 100, 4)
     if len(hl_lines) > 3:
-        fh, hl_lines = gfx.fit_font("display", lambda f: gfx.wrap_words(words, f, text_w), 4, 108, 72, 4)
-    line_h = int(fh.size * 1.06)
+        fh, hl_lines = gfx.fit_font("display", lambda f: _wrap_words(words, f, text_w - 8), 4, 108, 72, 4)
+    line_h = _line_height(fh, 1.16)
     head_y = sum_y - 26 - len(hl_lines) * line_h
     tag_text, tag_color = _tag_info(post.get("tag", ""), lang)
     if loc.get("selo"):                     # gancho no selo, ex.: "A ROCKSTAR POSTOU" (só se for verdade)
@@ -548,7 +609,7 @@ def cover(post: dict, lang: str, base_dir: Path | None = None, today: dt.date | 
             subj_src = gfx.vice_grade(upscale.sharpen(sharp), float(post.get("grade", 1.0))).convert("RGBA")
     bg.alpha_composite(gfx.vertical_fade(size, pal["night"], 0.0, 0.22, 200, 0))
     bg.alpha_composite(gfx.scanlines(size, 4, 4))
-    layers.append(Layer("bg", bg, "kenburns", 0))
+    layers.append(Layer("bg", _finished_bg(bg), "kenburns", 0))
 
     # ---------- kicker + personagem
     kl = None
@@ -631,10 +692,8 @@ def cover(post: dict, lang: str, base_dir: Path | None = None, today: dt.date | 
     frame.alpha_composite(gfx.fill_with(wm, gfx.rgba("#FFFFFF", 150)))
     layers.append(Layer("frame", frame, "fade", 30))
 
-    img = _blank(size)
-    for ly in sorted(layers, key=lambda L: L.order):
-        img.alpha_composite(ly.image)
-    return Render(gfx.finish(img.convert("RGB")), layers, {"focus": focus, "has_cutout": mask is not None, "zoom": zoom,
+    img = compose(layers, size).convert("RGB")
+    return Render(img, layers, {"kind": "cover", "focus": focus, "has_cutout": mask is not None, "zoom": zoom,
                                               "headline_size": fh.size, "lines": len(hl_lines)})
 
 
@@ -648,7 +707,7 @@ def _slide_bg(post: dict, base_dir: Path | None, img_ref: str | None = None) -> 
     bg = gfx.vice_grade(bg, 1.0).convert("RGBA")
     bg.alpha_composite(Image.new("RGBA", (W, H), gfx.rgba(pal["night"], 175)))
     bg.alpha_composite(gfx.scanlines((W, H), 6, 4))
-    return bg
+    return _finished_bg(bg)
 
 
 def _slide_title(img: Image.Image, title: str, y: int) -> int:
@@ -662,9 +721,9 @@ def _title_layers(size, title: str, y: int, order: int = 10) -> tuple[list[Layer
     """Título do slide (Anton, destaque em gradiente), uma camada por linha."""
     W, H = size
     s_top, s_bottom, s_left, s_right = _safe()
-    words = gfx.parse_marked(title)
-    f, lines = gfx.fit_font("display", lambda f: gfx.wrap_words(words, f, W - s_left - s_right), 2, 104, 64, 4)
-    lh = int(f.size * 1.06)
+    words = gfx.parse_marked(_protected(title.upper()))
+    f, lines = gfx.fit_font("display", lambda f: _wrap_words(words, f, W - s_left - s_right - 8), 2, 104, 64, 4)
+    lh = _line_height(f, 1.16)
     out = []
     for i, (ln, hot) in enumerate(headline_lines(size, lines, f, s_left, y, lh, masks=True)):
         out.append(Layer(f"title_{i}", ln, "line", order + i, extra={"hot": hot} if hot else {}))
@@ -718,16 +777,18 @@ def slide_foto(post: dict, lang: str, img_ref: str | None = None, base_dir: Path
     src = upscale.ensure_min(src, W, 0)
     bg = gfx.cover_fit(src, (W, H)).filter(ImageFilter.GaussianBlur(48))
     bg = Image.blend(bg, Image.new("RGB", (W, H), gfx.hex_rgb(brand()["palette"]["night"])), 0.55).convert("RGBA")
-    ratio = src.height / src.width
-    if ratio <= 1.0:                                   # paisagem/quadrada: largura total
-        fw, fh = W, int(round(W * ratio))
-    else:                                              # retrato: cabe em 75% da altura
-        fh = int(H * 0.72)
-        fw = min(W, int(round(fh / ratio)))
-        fh = int(round(fw * ratio))
+    fc = gfx.font("bold", 26)
+    cred = f"{'Imagem' if lang == 'pt' else 'Image'}: {credit}"
+    credit_lines = _wrap_text(cred, fc, W - s_left - s_right - 8)
+    credit_lh = _line_height(fc, 1.3)
+    top, bottom = s_top + 140, H - s_bottom
+    credit_h = len(credit_lines) * credit_lh
+    max_h = max(1, bottom - top - credit_h - 36)
+    scale = min(W / src.width, max_h / src.height)
+    fw, fh = max(1, int(src.width * scale)), max(1, int(src.height * scale))
     fg = upscale.sharpen(src.resize((fw, fh), Image.LANCZOS), 40).convert("RGBA")
-    x, y = (W - fw) // 2, max(s_top + 140, (H - fh) // 2 - 60)
-    layers = [Layer("bg", bg, "kenburns", 0)]
+    x, y = (W - fw) // 2, top + max(0, (max_h - fh) // 2)
+    layers = [Layer("bg", _finished_bg(bg), "kenburns", 0)]
     sm = Image.new("L", (W, H), 0)
     sm.paste(255, (x, y, x + fw, y + fh))
     photo = gfx.drop_shadow(sm, (0, 14), 30, 160)
@@ -736,9 +797,7 @@ def slide_foto(post: dict, lang: str, img_ref: str | None = None, base_dir: Path
     # selo e crédito discretos, FORA da foto
     pill, _ = tag_pill(size, "IMAGEM OFICIAL" if lang == "pt" else "OFFICIAL IMAGE", "#22D3EE", s_left, y - 58 - 24)
     layers.append(Layer("tag", pill, "pop", 2))
-    fc = gfx.font("bold", 26)
-    cred = f"{'Imagem' if lang == 'pt' else 'Image'}: {credit}"
-    layers.append(Layer("credit", text_block(size, [cred], fc, s_left, y + fh + 24, 0, gfx.rgba("#E9E3F5", 220)),
+    layers.append(Layer("credit", text_block(size, credit_lines, fc, s_left, y + fh + 24, credit_lh, gfx.rgba("#E9E3F5", 220)),
                         "up", 3))
     layers.append(Layer("handle", _handle_layer(size, lang), "static", 30))
     img = compose(layers, size).convert("RGB")
@@ -779,9 +838,9 @@ def slide_grid(post: dict, lang: str, slide: dict, base_dir: Path | None = None,
         hmax = 0
         for row in rows:
             for it in row:
-                ll = gfx.wrap_text(it.get("label", "").upper(), fl, t)
-                sl = gfx.wrap_text(it.get("sub", ""), fs, t) if it.get("sub") else []
-                hmax = max(hmax, 14 + len(ll) * int(fl.size * 1.08) + (8 + len(sl) * int(fs.size * 1.3) if sl else 0))
+                ll = _wrap_text(it.get("label", "").upper(), fl, t - 8)
+                sl = _wrap_text(it.get("sub", ""), fs, t - 8) if it.get("sub") else []
+                hmax = max(hmax, 14 + len(ll) * _line_height(fl, 1.16) + (8 + len(sl) * _line_height(fs) if sl else 0))
         return hmax
 
     inside = cols == 1 or bool(slide.get("label_inside"))
@@ -819,27 +878,30 @@ def slide_grid(post: dict, lang: str, slide: dict, base_dir: Path | None = None,
             ImageDraw.Draw(ring).rounded_rectangle([x, y, x + tile - 1, y + th - 1], radius=22, outline=255, width=3)
             cell.alpha_composite(gfx.fill_with(ring, gfx.neon((W, H), 45)))
             if inside:
-                sub_h = int(fs.size * 1.4) if it.get("sub") else 0
-                ty = y + th - 26 - sub_h - int(fl.size * 1.25)
-                cell.alpha_composite(text_block(size, [it.get("label", "").upper()], fl, x + 26, ty, 0, "#FFFFFF"))
+                label_lines = _wrap_text(it.get("label", "").upper(), fl, tile - 60)
+                sub_lines = _wrap_text(it.get("sub", ""), fs, tile - 60) if it.get("sub") else []
+                label_h = len(label_lines) * _line_height(fl, 1.16)
+                sub_h = len(sub_lines) * _line_height(fs) + (8 if sub_lines else 0)
+                ty = y + th - 26 - sub_h - label_h
+                cell.alpha_composite(text_block(size, label_lines, fl, x + 26, ty, _line_height(fl, 1.16), "#FFFFFF"))
                 if it.get("sub"):
-                    cell.alpha_composite(text_block(size, [it["sub"]], fs, x + 26, ty + int(fl.size * 1.28), 0,
+                    cell.alpha_composite(text_block(size, sub_lines, fs, x + 26, ty + label_h + 8, _line_height(fs),
                                                     gfx.rgba("#FFC857", 245)))
             else:
                 ty = y + th + 14
-                for ln in gfx.wrap_text(it.get("label", "").upper(), fl, tile):
+                for ln in _wrap_text(it.get("label", "").upper(), fl, tile - 8):
                     cell.alpha_composite(text_block(size, [ln], fl, x, ty, 0, "#FFFFFF"))
-                    ty += int(fl.size * 1.08)
+                    ty += _line_height(fl, 1.16)
                 if it.get("sub"):
-                    sl = gfx.wrap_text(it["sub"], fs, tile)
-                    cell.alpha_composite(text_block(size, sl, fs, x, ty + 8, int(fs.size * 1.3),
+                    sl = _wrap_text(it["sub"], fs, tile - 8)
+                    cell.alpha_composite(text_block(size, sl, fs, x, ty + 8, _line_height(fs),
                                                     gfx.rgba("#FFC857", 240)))
             k += 1
             layers.append(Layer(f"tile_{k}", cell, "pop", 30 + k, step=k))
         y += th + lab_h + (26 if inside else 30)
     if slide.get("note"):
         fn = gfx.font("body", 30)
-        nl = gfx.wrap_text(slide["note"], fn, area_w)
+        nl = _wrap_text(slide["note"], fn, area_w - 8)
         ny = min(y + 6, H - s_bottom - len(nl) * 40)
         layers.append(Layer("note", text_block(size, nl, fn, s_left, ny, 40, gfx.rgba("#E9E3F5", 235)), "up", 80))
     layers.append(Layer("frame", corner_brackets(size), "static", 90))
@@ -864,14 +926,14 @@ def slide_list(post: dict, lang: str, slide: dict, base_dir: Path | None = None,
     fsz = 52 if len(items) <= 4 else 42
     while True:
         f = gfx.font("bold", fsz)
-        blocks = [gfx.wrap_text(t, f, area_w) for t in items]
-        total = sum(len(b) * int(fsz * 1.3) + 48 for b in blocks)
+        blocks = [_wrap_text(t, f, area_w - 8) for t in items]
+        total = sum(len(b) * _line_height(f) + 48 for b in blocks)
         if y + total <= H - s_bottom or fsz <= 28:
             break
         fsz -= 2
     y += max(0, int((H - s_bottom - y - total) * 0.3))
     fn = gfx.font("display", 48)
-    lh = int(fsz * 1.3)
+    lh = _line_height(f)
     for i, block in enumerate(blocks, 1):
         if upto is not None and i > upto:
             break
@@ -894,6 +956,8 @@ def slide_cta(post: dict, lang: str, base_dir: Path | None = None, today=None, w
     W, H = _canvas()
     size = (W, H)
     s_top, s_bottom, s_left, s_right = _safe()
+    text_w = W - s_left - s_right - 8
+    center_x = s_left + text_w / 2
     ui = UI[lang]
     b = brand()
     layers = [Layer("bg", _slide_bg(post, base_dir), "kenburns", 0),
@@ -913,9 +977,11 @@ def slide_cta(post: dict, lang: str, base_dir: Path | None = None, today=None, w
         words = b["name"].split()
         first, rest = words[0], " ".join(words[1:])
         fw = gfx.font("display", 112)
+        while gfx.text_width(first, fw, 3) + fw.getlength(" ") * 0.9 + gfx.text_width(rest, fw, 3) > text_w and fw.size > 60:
+            fw = gfx.font("display", fw.size - 2)
         sp = fw.getlength(" ") * 0.9
         w1, w2 = gfx.text_width(first, fw, 3), gfx.text_width(rest, fw, 3) if rest else 0
-        x0, wy = (W - (w1 + (sp + w2 if rest else 0))) / 2, ey + d + 34
+        x0, wy = center_x - (w1 + (sp + w2 if rest else 0)) / 2, ey + d + 34
         m1 = gfx.text_mask(size, (x0, wy), first, fw, 3)
         m2 = gfx.text_mask(size, (x0 + w1 + sp, wy), rest, fw, 3) if rest else Image.new("L", size, 0)
         wl = _blank(size)
@@ -930,30 +996,37 @@ def slide_cta(post: dict, lang: str, base_dir: Path | None = None, today=None, w
     else:
         fs = gfx.font("script", 150)
         name = b["name"].title()
-        m = gfx.text_mask(size, ((W - fs.getlength(name)) / 2, 520), name, fs)
+        while fs.getlength(name) > text_w and fs.size > 60:
+            fs = gfx.font("script", fs.size - 2)
+        m = gfx.text_mask(size, (center_x - fs.getlength(name) / 2, 520), name, fs)
         sig = gfx.glow(m, "#FF2E88", 30, 1.0)
         sig.alpha_composite(gfx.fill_with(m, gfx.sunset(size, 90)))
         layers.append(Layer("signature", sig, "wipe", 10))
     fh = gfx.font("display", 84)
-    hl = gfx.wrap_text(ui["follow"], fh, W - 2 * s_left - 40)
+    hl = _wrap_text(ui["follow"], fh, text_w)
     y = 800
     for i, ln in enumerate(hl):
-        x = (W - fh.getlength(ln)) / 2
+        x = center_x - fh.getlength(ln) / 2
         layers.append(Layer(f"follow_{i}", text_block(size, [ln], fh, int(x), y, 0, "#FFFFFF"), "line", 11 + i))
-        y += int(fh.size * 1.08)
+        y += _line_height(fh, 1.16)
     f2 = gfx.font("display", 70)
     handle = b["handle"][lang]
-    hm = gfx.text_mask(size, ((W - f2.getlength(handle)) / 2, y + 40), handle, f2)
+    while f2.getlength(handle) > text_w and f2.size > 28:
+        f2 = gfx.font("display", f2.size - 2)
+    hm = gfx.text_mask(size, (center_x - f2.getlength(handle) / 2, y + 40), handle, f2)
     hlayer = gfx.glow(hm, "#22D3EE", 20, 0.8)
     hlayer.alpha_composite(gfx.fill_with(hm, "#22D3EE"))
     layers.append(Layer("cta_handle", hlayer, "pop", 20))
     fb = gfx.font("body", 36)
     sub = ui["follow_sub"]
-    layers.append(Layer("sub", text_block(size, [sub], fb, int((W - fb.getlength(sub)) / 2), y + 150, 0,
-                                          gfx.rgba("#E9E3F5", 240)), "up", 21))
+    sub_layer = _blank(size)
+    for i, ln in enumerate(_wrap_text(sub, fb, text_w)):
+        sub_layer.alpha_composite(text_block(size, [ln], fb, int(center_x - fb.getlength(ln) / 2),
+                                             y + 150 + i * _line_height(fb), 0, gfx.rgba("#E9E3F5", 240)))
+    layers.append(Layer("sub", sub_layer, "up", 21))
     fsv = gfx.font("heavy", 30)
     sv = ui["save"]
-    layers.append(Layer("save", text_block(size, [sv], fsv, int((W - gfx.text_width(sv, fsv)) / 2), y + 240, 0,
+    layers.append(Layer("save", text_block(size, [sv], fsv, int(center_x - gfx.text_width(sv, fsv) / 2), y + 240, 0,
                                            gfx.rgba("#FFC857", 240)), "up", 22))
     layers.append(Layer("frame", corner_brackets(size), "static", 90))
     img = compose(layers, size).convert("RGB")

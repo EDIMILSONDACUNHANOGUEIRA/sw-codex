@@ -6,6 +6,8 @@ Fonte: [Rockstar Games](https://x.com/RockstarGames/status/2108392405707735366)
 
 <img src="br/01_capa.png" width="240"> <img src="br/02_imagem-limpa.png" width="240"> <img src="br/03_o-que-saiu.png" width="240"> <img src="br/04_siga.png" width="240">
 
+🎬 Vídeo com música: [br/tiktok/post.mp4](br/tiktok/post.mp4)
+
 ```
 🎧 A trilha de GTA VI ganhou mais 2 músicas inéditas!
 

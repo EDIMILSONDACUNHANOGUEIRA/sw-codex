@@ -6,6 +6,8 @@ Fonte: [Variety](https://variety.com/2026/gaming/news/legend-of-zelda-movie-gta-
 
 <img src="br/01_capa.png" width="240"> <img src="br/02_imagem-limpa.png" width="240"> <img src="br/03_o-que-a-nintendo-disse.png" width="240"> <img src="br/04_o-que-e-oficial.png" width="240"> <img src="br/05_siga.png" width="240">
 
+🎬 Vídeo com música: [br/tiktok/post.mp4](br/tiktok/post.mp4)
+
 ```
 🎮 GTA VI no Switch 2? A Nintendo respondeu.
 

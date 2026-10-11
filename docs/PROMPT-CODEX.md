@@ -146,8 +146,8 @@ cyan #22D3EE, mist #E9E3F5; Anton, Inter, Yellowtail). Visual fotográfico, sem 
      (loop perfeito: o último quadro emenda no primeiro).
    - Ritmo: algo muda a cada 1,5–3 s. Detecte as batidas da música tema (fluxo espectral, 90–160 BPM; ou
      music.bpm/music.fase no brand.yaml) e encaixe as trocas de cena e os itens das listas nas batidas.
-     Nenhuma cena estica além do limite (capa ~4 s, imagem limpa ~4 s, lista ≤ 3,4 s depois do último
-     item): com poucas cenas o vídeo sai mais curto que o alvo, em vez de ficar parado.
+     Câmera e pulsos mantêm movimento durante a leitura. A duração respeita video_segundos;
+     se não couberem as entradas e pelo menos 2,5 s de lista completa, o build falha sem apagar a entrega.
    - Saída: 1080×1920, 30 fps, H.264 High, CRF ~18, cores BT.709, +faststart, música tema com fade de 0,5 s.
      Duração = video_segundos (padrão 20). Render < 2 min por post num PC comum.
    - post.yaml: estilo: v2 (padrão) | dinamico | classico (o slideshow antigo continua funcionando).

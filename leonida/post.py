@@ -5,6 +5,7 @@ import datetime as dt
 import json
 import re
 import shutil
+import tempfile
 import unicodedata
 from pathlib import Path
 
@@ -135,18 +136,43 @@ def caption_text(post: dict, lang: str) -> str:
 
 
 def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
-          today: dt.date | None = None, log=print) -> Path:
+          today: dt.date | None = None, estilo: str | None = None, log=print) -> Path:
     """Renderiza tudo e devolve a pasta em prontos/."""
     post, base_dir = load(post_id_or_path)
+    estilo = estilo or post.get("estilo") or (brand().get("video") or {}).get("estilo_padrao", "v2")
+    if estilo not in {"v2", "dinamico", "classico"}:
+        raise ValueError(f"estilo desconhecido: {estilo}")
     errs = validate(post)
     if errs:
         raise ValueError(f"{post['id']}: " + "; ".join(errs))
     date = str(post.get("date") or dt.date.today().isoformat())[:10]
     today = today or dt.date.fromisoformat(date)
     out = OUT_DIR / date / post["id"]
+    out.parent.mkdir(parents=True, exist_ok=True)
+    # Só substitui a entrega depois do build completo. Erros deixam a pasta anterior intacta.
+    with tempfile.TemporaryDirectory(prefix=".build-", dir=out.parent) as temporary:
+        stage = Path(temporary) / post["id"]
+        if out.exists():
+            shutil.copytree(out, stage)
+        else:
+            stage.mkdir()
+        _render_post(post, base_dir, stage, estilo, video, langs, today, log)
+        previous = Path(temporary) / "previous"
+        if out.exists():
+            out.replace(previous)
+        try:
+            stage.replace(out)
+        except BaseException:
+            if previous.exists():
+                previous.replace(out)
+            raise
+    return out
+
+
+def _render_post(post, base_dir, out, estilo, video, langs, today, log):
+    date = str(post.get("date") or today.isoformat())[:10]
     manifest = {"id": post["id"], "date": date, "tag": post.get("tag"),
                 "source": post.get("source"), "files": {}}
-    estilo = post.get("estilo") or (brand().get("video") or {}).get("estilo_padrao", "v2")
     v2 = estilo == "v2"
     for lang in langs:
         scenes = []                          # estilo v2: cada arte em camadas, para o vídeo animado
@@ -160,6 +186,7 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
         r.image.save(folder / names["cover"], optimize=True)
         if v2:
             scenes.append(motion.scene_from(r, "cover"))
+            r = None  # as sprites recortadas já contêm a cena; libera os canvases RGBA integrais
         files = [names["cover"]]
         n = 2
         # imagem nova da Rockstar: primeiro a arte editada (capa), depois a IMAGEM LIMPA (original)
@@ -189,7 +216,7 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
                 scenes.append(motion.scene_from(im, kind))
                 im = im.image
             fn = f"{n:02d}_{slugify(slide.get('title', slide.get('type', 'slide')), 24)}.png"
-            gfx.finish(im.convert("RGB")).save(folder / fn, optimize=True)
+            (im if v2 else gfx.finish(im.convert("RGB"))).save(folder / fn, optimize=True)
             if estilo == "dinamico" and slide.get("type") != "grid" and len(slide.get("items") or []) > 1:
                 # vídeo dinâmico: os itens da lista aparecem um a um (quadros só para o vídeo, fora do git)
                 rev = folder / ".reveal"
@@ -205,7 +232,7 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
             if v2:
                 scenes.append(motion.scene_from(cta, "cta"))
                 cta = cta.image
-            gfx.finish(cta.convert("RGB")).save(folder / fn, optimize=True)
+            (cta if v2 else gfx.finish(cta.convert("RGB"))).save(folder / fn, optimize=True)
             files.append(fn)
         (folder / names["caption"]).write_text(caption_text(post, lang), encoding="utf-8")
         files.append(names["caption"])
@@ -224,18 +251,16 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
             # publicação em vídeo: é o único jeito de a música tema sempre tocar no TikTok
             from . import postvideo
             intro = folder / names["video"] if (folder / names["video"]).exists() else None
-            try:
-                if v2:
-                    motion.build(scenes, folder / "tiktok" / postvideo.OUT_NAME, seed=post["id"],
-                                 target=post.get("video_segundos") or 20, log=log)
-                else:
-                    postvideo.build(folder, seed=post["id"], intro=intro, log=log,
-                                    target=post.get("video_segundos"), estilo=estilo)
-            except postvideo.MusicMissing as exc:
-                log(f"  ⚠️  {exc}")
-            except Exception as exc:  # noqa: BLE001 — artes já estão prontas; só o vídeo falhou
-                (folder / "tiktok" / postvideo.OUT_NAME).unlink(missing_ok=True)
-                log(f"  ⚠️  vídeo de publicação não gerado ({exc}); o post NÃO será publicado")
+            if v2:
+                target = post.get("video_segundos", (brand().get("video") or {}).get("segundos", 20))
+                published_video = motion.build(scenes, folder / "tiktok" / postvideo.OUT_NAME,
+                                               seed=post["id"], target=target, log=log)
+            else:
+                published_video = postvideo.build(folder, seed=post["id"], intro=intro, log=log,
+                                                 target=post.get("video_segundos"), estilo=estilo)
+            files.append(str(published_video.relative_to(folder)).replace("\\", "/"))
+            manifest["music"] = True
+            manifest["publication_video_engine"] = estilo
         manifest["files"][LANG_FOLDER[lang]] = files
     (out / "post.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     _write_readme(post, out, manifest)
@@ -261,5 +286,7 @@ def _write_readme(post: dict, out: Path, manifest: dict) -> None:
         lines.append("")
         if "video.mp4" in files:
             lines += [f"🎬 Vídeo: [{folder}/video.mp4]({folder}/video.mp4)", ""]
+        if "tiktok/post.mp4" in files:
+            lines += [f"🎬 Vídeo com música: [{folder}/tiktok/post.mp4]({folder}/tiktok/post.mp4)", ""]
         lines += ["```", caption_text(post, lang).strip(), "```", ""]
     (out / "README.md").write_text("\n".join(lines), encoding="utf-8")
