@@ -85,9 +85,11 @@ image: "https://www.rockstargames.com/VI/_next/static/media/Lucia_Caminos_06....
 # layout: card          # use 'card' para cenários/prints sem personagem em destaque
 # zoom: 0.85            # recua o enquadramento (o recuo automático costuma acertar)
 # focus: [0.6, 0.5]     # ponto de foco do recorte 9:16
-# video_segundos: 30    # duração do vídeo do TikTok (padrão ~16 s); os slides esticam para caber
-# estilo: dinamico      # EM TESTE: itens da lista aparecem um a um, zoom maior na capa, transição
-#                       # deslizando e final que volta para a capa (loop). Sem isso, o vídeo é o padrão.
+# video_segundos: 20    # alvo do vídeo do TikTok (padrão 20 s no v2). Com poucas cenas sai mais curto:
+#                       # nenhuma cena fica parada além do limite (capa ~4 s, imagem limpa ~4 s)
+# estilo: v2            # padrão (config/brand.yaml → video.estilo_padrao): textos animados, transições
+#                       # zoom/whip/luz, ritmo na batida e loop na capa (leonida/motion.py).
+#                       # dinamico = slideshow com itens um a um; classico = slideshow antigo
 # foto_limpa: true      # força o slide da imagem limpa (ex.: arte oficial hospedada fora da Rockstar)
 # credito_imagem: "LOVE Magazine / Rockstar Games"   # crédito no slide da imagem limpa
 # site: false           # não vira matéria no site (use para análise/especulação)
@@ -137,8 +139,12 @@ evita a cara de "arte gerada por IA". `neon: true` volta ao visual antigo.
 
 Paleta "Vice" (pôr do sol de Leonida): night `#0B0614`, pink `#FF2E88`, orange `#FF8A3D`,
 gold `#FFC857`, purple `#7B2FF7`, cyan `#22D3EE`. Fontes: Anton (manchetes), Inter (texto),
-Yellowtail (assinatura). Assinatura da marca: **palavra gigante atrás do personagem recortado**,
-color grading roxo/quente, cantos neon estilo "mira", contador "X DIAS PARA O GTA VI" no topo.
+Yellowtail (assinatura antiga). Assinatura da marca: **palavra gigante atrás do personagem recortado**,
+color grading roxo/quente, cantos estilo "mira", contador "X DIAS PARA O GTA VI" no topo.
+Logo v2 (`config/brand.yaml → logo`): "sol de Vice" + LEONIDA WIRE + ponto "ao vivo"; a mesma marca grande
+fecha o vídeo no "siga". Se existir `assets/brand/logo.png` (ex.: a foto de perfil), ela entra no lugar do sol.
+Vídeo v2: a capa é legível desde o 1º quadro (miniatura e ponto do loop); os outros slides têm textos entrando
+(máscara, pop, deslize), as trocas são zoom punch / whip pan / luz quente e o vídeo termina na capa.
 Tudo é configurável em `config/brand.yaml` (nome, @ dos perfis, paleta, selos, áreas seguras).
 
 ## Mapa do código
@@ -148,7 +154,9 @@ Tudo é configurável em `config/brand.yaml` (nome, @ dos perfis, paleta, selos,
 | `leonida/radar.py` | feeds RSS (`config/sources.yaml`), filtro, agrupamento PT/EN, ranking |
 | `leonida/render.py` + `gfx.py` | artes 9:16 (capa, grade, lista, CTA) e camadas para vídeo |
 | `leonida/cutout.py` | recorte do personagem (rembg) |
-| `leonida/video.py` | vídeo animado (HyperFrames; fallback FFmpeg) |
+| `leonida/motion.py` | vídeo de publicação v2: camadas animadas, transições, batidas, loop (Pillow + FFmpeg) |
+| `leonida/postvideo.py` | vídeo de publicação dos estilos antigos (dinamico/classico) |
+| `leonida/video.py` | capa animada em HyperFrames (só nos estilos antigos; fallback FFmpeg) |
 | `leonida/clips.py` | cortes 9:16 de vídeos (yt-dlp + FFmpeg + legendas faster-whisper) |
 | `leonida/edit.py` | edição de vídeo por link: cenas, reenquadramento, movimentos de câmera, transições (HyperFrames) |
 | `leonida/writer.py` | redação automática via Claude API (opcional) |

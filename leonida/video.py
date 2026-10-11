@@ -39,7 +39,7 @@ def _timeline(r: Render, duration: float) -> list[str]:
         sel = f"#L{idx}"
         cx, cy = _bbox_center(L.image)
         origin = f'"{cx}px {cy}px"'
-        a = {"brand": "down", "live": "fade", "slide": "line", "wipe": "fade", "photo": "up",
+        a = {"brand": "down", "live": "down", "slide": "line", "wipe": "fade", "photo": "up",
              "static": "fade"}.get(L.anim, L.anim)
         if a == "kenburns":
             cmds.append(f'tl.fromTo("{sel}", {{scale: 1.14}}, {{scale: 1.0, duration: {duration}, ease: "power1.out"}}, 0);')

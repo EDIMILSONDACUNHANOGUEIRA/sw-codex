@@ -209,7 +209,7 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
             files.append(fn)
         (folder / names["caption"]).write_text(caption_text(post, lang), encoding="utf-8")
         files.append(names["caption"])
-        if video:
+        if video and not v2:                 # no v2 a capa já é animada dentro do post.mp4
             from . import video as vid
             log(f"  [{lang}] vídeo…")
             engine = vid.render_video(r, folder / names["video"])

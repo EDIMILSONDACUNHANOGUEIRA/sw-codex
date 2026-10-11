@@ -66,6 +66,16 @@ publicar:
   horarios: ["11:00", "17:00"]   # horários de postagem (fuso da marca no Metricool)
   fuso: America/Cuiaba
 
+# Logo do topo (capa, slides e "siga")
+logo:
+  versao: v2                      # v2 = sol de Vice + LEONIDA WIRE + ponto "ao vivo" | v1 = selo antigo "LW"
+  arquivo: assets/brand/logo.png  # opcional: se existir (ex.: a foto de perfil), entra no lugar do sol
+
+# Vídeo de publicação (br/tiktok/post.mp4)
+video:
+  estilo_padrao: v2   # v2 = textos animados + transições + loop (leonida/motion.py) | dinamico | classico
+                      # (um post pode trocar com "estilo:" no post.yaml)
+
 # Acabamento das artes — visual fotográfico (sem cara de IA)
 acabamento:
   neon: false              # true = visual antigo (contorno rosa no personagem, brilho neon nos textos)
@@ -87,3 +97,5 @@ music:
   volume: 1.0          # vídeos de notícia (sem áudio próprio)
   under_clip: 0.30     # cortes: música por baixo do áudio original
   start: 0             # segundo do arquivo onde começar
+  # bpm: 125           # opcional: tempo da faixa (o vídeo v2 encaixa cortes e itens na batida);
+  # fase: 0.41         #   sem isso, o app estima sozinho

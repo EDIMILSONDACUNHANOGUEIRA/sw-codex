@@ -23,7 +23,7 @@ def _post_files(folder: Path) -> dict:
             continue
         imgs = sorted(d.glob("*.png"))
         cap = next(iter(list(d.glob("legenda.txt")) + list(d.glob("caption.txt"))), None)
-        vid = next(iter(list(d.glob("*.mp4"))), None)
+        vid = next(iter(list(d.glob("tiktok/post.mp4")) + list(d.glob("*.mp4"))), None)
         out[sub] = {"images": imgs, "caption": cap.read_text(encoding="utf-8") if cap else "", "video": vid}
     return {"manifest": manifest, "langs": out}
 

@@ -121,16 +121,22 @@ def scene_from(render, kind: str) -> Scene:
 # ------------------------------------------------------------------ batidas da música
 
 def beat_grid(seed: str | None, seconds: float) -> list[float]:
-    """Batidas da música tema (tempo constante estimado pela energia/onsets). Lista vazia se não der."""
+    """Batidas da música tema. Usa music.bpm / music.fase do brand.yaml quando existirem; senão estima o
+    tempo (90–160 BPM) pelo fluxo espectral suavizado, testando todas as fases. Lista vazia se não der."""
+    cfg = music._cfg() or {}
+    if cfg.get("bpm"):
+        per = 60.0 / float(cfg["bpm"])
+        ph = float(cfg.get("fase", 0.0)) % per
+        return [ph + k * per for k in range(int((seconds + 0.5 - ph) / per) + 1)]
     path = music.theme_path(seed)
     ff = shutil.which("ffmpeg")
     if not path or not ff:
         return []
-    start = music._ts((music._cfg() or {}).get("start", 0))
+    start = music._ts(cfg.get("start", 0))
     sr, hop, n = 22050, 512, 1024
     try:
-        raw = subprocess.run([ff, "-v", "error", "-ss", str(start), "-t", f"{seconds + 2:.2f}", "-stream_loop", "-1",
-                              "-i", str(path), "-ac", "1", "-ar", str(sr), "-f", "f32le", "-"],
+        raw = subprocess.run([ff, "-v", "error", "-ss", str(start), "-stream_loop", "-1", "-i", str(path),
+                              "-t", f"{seconds + 2:.2f}", "-ac", "1", "-ar", str(sr), "-f", "f32le", "-"],
                              capture_output=True, check=True, timeout=60).stdout
     except (subprocess.SubprocessError, OSError):
         return []
@@ -140,27 +146,25 @@ def beat_grid(seed: str | None, seconds: float) -> list[float]:
     frames = np.lib.stride_tricks.sliding_window_view(x, n)[::hop] * np.hanning(n).astype(np.float32)
     mag = np.log1p(np.abs(np.fft.rfft(frames, axis=1)) * 10)
     flux = np.maximum(0, np.diff(mag, axis=0)).sum(axis=1)
-    flux = flux - np.convolve(flux, np.ones(16) / 16, mode="same")
-    flux = np.maximum(flux, 0)
+    flux = np.maximum(flux - np.convolve(flux, np.ones(16) / 16, mode="same"), 0)
+    flux = np.convolve(flux, [0.1, 0.2, 0.4, 0.2, 0.1], mode="same")        # suaviza ~2 quadros
     if flux.max() <= 0:
         return []
     flux /= flux.max()
     fps = sr / hop
-    best, best_lag = -1.0, 0
-    for bpm in np.arange(70, 181, 0.5):
+    idx = np.arange(len(flux), dtype=np.float32)
+    best = (-1.0, 0.0, 0.0)
+    for bpm in np.arange(90, 160.5, 0.5):
         lag = fps * 60 / bpm
-        idx = np.arange(0, len(flux) - lag, lag)
-        score = flux[(idx + lag).astype(int)].dot(flux[idx.astype(int)]) / max(1, len(idx))
-        score *= math.exp(-0.5 * (math.log2(bpm / 120)) ** 2)      # prefere ~120 BPM
-        if score > best:
-            best, best_lag = score, lag
-    if best_lag <= 0:
+        for ph in np.arange(0, lag, 1.0):
+            pos = np.arange(ph, len(flux) - 1, lag)
+            sc = float(np.interp(pos, idx, flux).mean())
+            if sc > best[0]:
+                best = (sc, lag, ph)
+    _, lag, ph = best
+    if lag <= 0:
         return []
-    phases = np.arange(0, best_lag, 1.0)
-    sums = [flux[np.arange(p, len(flux), best_lag).astype(int)].sum() for p in phases]
-    p0 = phases[int(np.argmax(sums))]
-    beats = np.arange(p0, len(flux), best_lag) / fps
-    return [float(b) for b in beats if b <= seconds + 0.5]
+    return [float(b) for b in np.arange(ph, len(flux), lag) / fps if b <= seconds + 0.5]
 
 
 def _snap(t: float, beats: list[float], tol: float = 0.22) -> float:
@@ -196,18 +200,20 @@ def _plan_entries(sc: Scene, beats_local: list[float] | None = None) -> None:
     if sc.kind == "foto":
         for s in sc.sprites:
             if s.anim == "photo":
-                s.start, s.dur = ENTER - 0.1, 0.6
+                s.start, s.dur = ENTER - 0.1, 0.5
         t_after = ENTER + 0.35
     steps = sorted({s.step for s in sc.sprites if s.step is not None})
     times: list[float] = []
-    t = t_after + 0.05
-    gap = 0.62 if sc.kind == "list" else 0.16
-    for k in steps:
-        tt = _snap(t, beats_local or []) if sc.kind == "list" else t
-        if times and tt - times[-1] < (0.42 if sc.kind == "list" else 0.12):
-            tt = times[-1] + (0.42 if sc.kind == "list" else 0.12)
-        times.append(tt)
-        t = tt + gap
+    bl = [b for b in (beats_local or []) if b >= t_after - 0.05]
+    if sc.kind == "list" and len(bl) >= 2:
+        per = bl[1] - bl[0]                  # um item por batida (ou a cada 2, se a música for rápida)
+        stride = 1 if per >= 0.42 else 2
+        for i in range(len(steps)):
+            j = i * stride
+            times.append(bl[j] if j < len(bl) else times[-1] + per * stride)
+    else:
+        gap = 0.62 if sc.kind == "list" else 0.16
+        times = [t_after + 0.05 + gap * i for i in range(len(steps))]
     sc.times = times
     for s in sc.sprites:
         if s.step is not None and s.step in steps:
@@ -228,37 +234,55 @@ def _plan_entries(sc: Scene, beats_local: list[float] | None = None) -> None:
     sc.settle = max([end_steps, t_after] + ends)
 
 
-def plan(scenes: list[Scene], target: float | None, seed: str | None) -> list[float]:
-    """Durações das cenas (com as batidas da música). Devolve os inícios globais de cada cena."""
+HOLD_MIN = {"cover": 2.4, "list": 2.0, "grid": 2.0, "foto": 1.8, "cta": 1.0}
+HOLD_MAX = {"cover": 4.1, "list": 3.4, "grid": 3.2, "foto": 2.8, "cta": 2.2}   # TikTok: nada parado muito tempo
+
+
+def plan(scenes: list[Scene], target: float | None, seed: str | None, log=print) -> list[float]:
+    """Durações das cenas (com as batidas da música). Devolve os inícios globais de cada cena.
+    Cada tipo de cena só estica até HOLD_MAX: com poucas cenas o vídeo sai mais curto que o alvo
+    (melhor 12 s com ritmo do que 20 s com a capa parada)."""
     beats = beat_grid(seed, (target or 22) + 6)
     for sc in scenes:
         _plan_entries(sc)
         sc.dur = sc.settle + HOLD.get(sc.kind, 2.5) + T
-    total = sum(s.dur for s in scenes) - T * (len(scenes) - 1)
+
+    def total() -> float:
+        return sum(s.dur for s in scenes) - T * (len(scenes) - 1)
+
     if target:
-        extra = float(target) - total
         weights = {"cover": 1.2, "list": 1.6, "grid": 1.2, "foto": 0.6, "cta": 0.25}
-        wsum = sum(weights.get(s.kind, 1.0) for s in scenes)
-        for s in scenes:
-            hold = HOLD.get(s.kind, 2.5)
-            add = extra * weights.get(s.kind, 1.0) / wsum
-            add = max(-hold * 0.35, min(hold * 1.8, add))
-            s.dur += add
+        lo = {id(s): s.settle + HOLD_MIN.get(s.kind, 2.0) + T for s in scenes}
+        hi = {id(s): s.settle + HOLD_MAX.get(s.kind, 3.0) + T for s in scenes}
+        for _ in range(8):                       # distribui a sobra até acabar ou todos baterem no limite
+            extra = float(target) - total()
+            if abs(extra) < 0.05:
+                break
+            free = [s for s in scenes if (extra > 0 and s.dur < hi[id(s)] - 1e-3) or
+                    (extra < 0 and s.dur > lo[id(s)] + 1e-3)]
+            if not free:
+                break
+            wsum = sum(weights.get(s.kind, 1.0) for s in free)
+            for s in free:
+                s.dur = min(hi[id(s)], max(lo[id(s)], s.dur + extra * weights.get(s.kind, 1.0) / wsum))
+        if abs(total() - float(target)) > 1.0:
+            log(f"  ℹ️  vídeo com {total():.1f}s (pedido {float(target):.0f}s): "
+                f"{'poucas cenas para esticar sem deixar a tela parada' if total() < float(target) else 'muito texto para caber'}")
     # encaixa as viradas de cena nas batidas e reprograma os itens das listas nas batidas locais
     starts, g = [], 0.0
     for i, s in enumerate(scenes):
         starts.append(g)
+        if s.kind == "list" and beats:
+            _plan_entries(s, [b - g for b in beats if g <= b <= g + s.dur + 2])
+            s.dur = max(s.dur, s.settle + HOLD_MIN["list"] + T)
         if beats and i < len(scenes) - 1:
             cut = g + s.dur - T / 2
             snapped = _snap(cut, beats, 0.25)
             s.dur = max(s.settle + 1.2 + T, s.dur + (snapped - cut))
-        if s.kind == "list" and beats:
-            _plan_entries(s, [b - g for b in beats if g <= b <= g + s.dur])
-            s.dur = max(s.dur, s.settle + 1.6 + T)
         g += s.dur - T
     for s, st in zip(scenes, starts):
         s.t0 = st
-        s.pulses = beats[::2]           # um pulso a cada 2 batidas: ritmo sem tremedeira
+        s.pulses = [b for b in beats[::2] if b >= 0.3]   # pulso a cada 2 batidas; o 1º quadro fica igual à arte
     return starts
 
 
@@ -306,9 +330,16 @@ def _shine(sp: Sprite, p: float) -> Image.Image | None:
     return out
 
 
+CAM_ANCHOR = (W / 2, 0.45 * H)
+
+
+def _cam(sc: Scene, t: float) -> float:
+    return 1.0 + 0.05 * in_out_sine(t / max(sc.dur, 0.1)) + _pulse(sc, t)
+
+
 def _bg_frame(sc: Scene, t: float) -> Image.Image:
-    """Fundo com push-in lento (sub-pixel, sem tremer)."""
-    z = 1.0 + 0.05 * in_out_sine(t / max(sc.dur, 0.1)) + _pulse(sc, t)
+    """Fundo com push-in lento (sub-pixel, sem tremer). Âncora = CAM_ANCHOR."""
+    z = _cam(sc, t)
     if z <= 1.0005:
         return sc.bg.copy()
     cw, ch = W / z, H / z
@@ -336,15 +367,23 @@ def _content(sc: Scene, t: float) -> Image.Image:
         a = sp.anim
         if a in ("shade", "fade", "static"):
             _blit(canvas, sp.img, sp.x, sp.y)
-        elif a == "kicker":
-            s = 1.0 + 0.04 * in_out_sine(life)
-            cx, cy = sp.x + sp.img.width / 2, sp.y + sp.img.height / 2
-            im, x, y = _scaled(sp, s, (cx, cy))
-            _blit(canvas, im, x, y - 14 * in_out_sine(life))
+        elif a == "kicker" or sp.name == "subject_shadow":
+            # a palavra gigante (e a sombra do personagem sobre ela) anda um pouco diferente da câmera:
+            # cresce menos e sobe só 6 px — o parallax vem daí, sem o personagem invadir a palavra
+            e = in_out_sine(life)
+            kick = next((k for k in sc.sprites if k.anim == "kicker"), sp)
+            anchor = (kick.x + kick.img.width / 2, kick.y + kick.img.height / 2)
+            im, x, y = _scaled(sp, 1.0 + 0.03 * e, anchor)
+            _blit(canvas, im, x, y - 6 * e)
         elif a == "subject":
-            s = 1.0 + 0.06 * in_out_sine(life)
-            im, x, y = _scaled(sp, s, (sp.x + sp.img.width / 2, sp.y + sp.img.height))
-            _blit(canvas, im, x, y - 18 * in_out_sine(life))
+            # o personagem também está no fundo: precisa da MESMA câmera, senão aparece um "fantasma"
+            im, x, y = _scaled(sp, _cam(sc, t), CAM_ANCHOR)
+            _blit(canvas, im, x, y)
+        elif a == "photo" and (not sc.enters or t >= sp.start + sp.dur):
+            # imagem limpa: continua assentando devagar e termina exatamente na composição da arte
+            k = 0.035 * (1 - in_out_sine(_clamp((t - sp.start - sp.dur) / max(0.1, sc.dur - T - sp.start - sp.dur))))
+            im, x, y = _scaled(sp, 1.0 + k, (sp.x + sp.img.width / 2, sp.y + sp.img.height / 2))
+            _blit(canvas, im, x, y)
         elif not sc.enters or t >= sp.start + sp.dur:
             _blit(canvas, sp.img, sp.x, sp.y)
             _maybe_shine(canvas, sc, sp, t)
@@ -394,7 +433,7 @@ def _enter(canvas: Image.Image, sp: Sprite, p: float) -> None:
             _blit(canvas, sp.img.crop((0, 0, vis, h)), sp.x, sp.y)
     elif a == "photo":
         e = out_cubic(p)
-        im, x, y = _scaled(sp, 1.04 - 0.04 * e, (sp.x + w / 2, sp.y + h / 2))
+        im, x, y = _scaled(sp, 1.035, (sp.x + w / 2, sp.y + h / 2))
         _blit(canvas, im, x, y + 40 * (1 - e), e)
     else:
         _blit(canvas, sp.img, sp.x, sp.y, out_cubic(p))
@@ -446,7 +485,8 @@ def _flash(im: Image.Image, amount: float, warm: bool = True, p: float = 0.5) ->
     sw, sh = 108, 192
     yy, xx = np.mgrid[0:sh, 0:sw].astype(np.float32)
     cx, cy = (-0.3 + 1.6 * p) * sw, (0.15 + 0.5 * p) * sh
-    d = np.sqrt(((xx - cx) / (sw * 0.75)) ** 2 + ((yy - cy) / (sh * 0.55)) ** 2)
+    r = 0.75 + 0.35 * math.sin(math.pi * p)              # a mancha cresce no meio da transição
+    d = np.sqrt(((xx - cx) / (sw * r)) ** 2 + ((yy - cy) / (sh * r * 0.75)) ** 2)
     m = np.clip(1 - d, 0, 1) ** 1.6 * min(1.0, amount)
     mask = Image.fromarray((m * 255).astype(np.uint8)).resize((W, H), Image.BILINEAR)
     return Image.composite(ImageChops.screen(im, _warm()), im, mask)
@@ -475,8 +515,8 @@ def _transition(kind: str, a: Image.Image, b: Image.Image, p: float) -> Image.Im
         im = b.resize((W, H), Image.BILINEAR, box=((W - cw) / 2, (H - ch) / 2, (W + cw) / 2, (H + ch) / 2))
         return _flash(im, 0.85 * (1 - q), warm=False)
     # flash: luz quente cruzando
-    mix = Image.blend(a, b, in_out_sine(p))
-    return _flash(mix, 0.9 * math.sin(math.pi * p), True, p)
+    mix = Image.blend(a, b, in_out_sine(_clamp((p - 0.42) / 0.16)))
+    return _flash(mix, min(1.0, 1.15 * math.sin(math.pi * p)), True, p)
 
 
 def _kind_between(a: Scene, b: Scene) -> str:
@@ -497,7 +537,7 @@ def render_frames(scenes: list[Scene], starts: list[float]):
     n = int(round(total * FPS))
     for f in range(n):
         g = f / FPS
-        i = max(k for k, s in enumerate(starts) if s <= g + 1e-9)
+        i = next((k for k, s in enumerate(scenes) if g < starts[k] + s.dur - 1e-9), len(scenes) - 1)
         sc = scenes[i]
         t = g - starts[i]
         out_end = sc.dur - T
@@ -517,8 +557,15 @@ def render_frames(scenes: list[Scene], starts: list[float]):
                 if f == n - 1:
                     p = 1.0
             a = _content(sc, t).convert("RGB")
-            frame = _transition(kind, a, b, p)
-            hud = Image.blend(_hud(sc, g, t), hud_b, p) if p > 0 else _hud(sc, g, t)
+            frame = _transition(kind, a, b, p).convert("RGBA")
+            fa = frame.copy()
+            fa.alpha_composite(_hud(sc, g, t))
+            if p <= 0:
+                yield fa.convert("RGB")
+                continue
+            frame.alpha_composite(hud_b)
+            yield Image.blend(fa, frame, p).convert("RGB")
+            continue
         fr = frame.convert("RGBA")
         fr.alpha_composite(hud)
         yield fr.convert("RGB")
@@ -534,30 +581,39 @@ def build(scenes: list[Scene], out: Path, seed: str | None = None, target: float
     ff = shutil.which("ffmpeg")
     if not ff:
         raise RuntimeError("ffmpeg não encontrado")
-    starts = plan(scenes, target, seed)
+    starts = plan(scenes, target, seed, log)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.unlink(missing_ok=True)
-    tmp = out.with_name(".v2_" + out.name)
+    work = out.parent / ".work"
+    work.mkdir(exist_ok=True)
+    tmp = work / ("v2_" + out.name)
+    errf = work / "ffmpeg_v2.log"
     cmd = [ff, "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS),
-           "-i", "-", "-c:v", "libx264", "-profile:v", "high", "-preset", "medium", "-crf", "18",
-           "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(tmp)]
-    proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+           "-i", "-", "-vf", "scale=out_color_matrix=bt709:out_range=tv", "-c:v", "libx264", "-profile:v", "high",
+           "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p", "-colorspace", "bt709",
+           "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv",
+           "-movflags", "+faststart", str(tmp)]
     try:
-        for fr in render_frames(scenes, starts):
-            proc.stdin.write(fr.tobytes())
-        proc.stdin.close()
-        err = proc.stderr.read().decode(errors="replace")
-        if proc.wait() != 0:
-            raise RuntimeError(f"ffmpeg falhou: {err[-800:]}")
-    except BaseException:
-        proc.kill()
-        tmp.unlink(missing_ok=True)
-        raise
-    ok = music.apply(tmp, under_original=False, seed=seed, fade_out=0.5)
-    if not ok or not music._has_audio(tmp):
-        tmp.unlink(missing_ok=True)
-        raise MusicMissing("não consegui colocar a música tema no vídeo — confira assets/music/")
-    tmp.replace(out)
+        with open(errf, "wb") as ef:
+            proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stderr=ef)
+            try:
+                for fr in render_frames(scenes, starts):
+                    proc.stdin.write(fr.tobytes())
+                proc.stdin.close()
+            except BrokenPipeError:
+                pass
+            except BaseException:
+                proc.kill()
+                proc.wait()
+                raise
+            if proc.wait() != 0:
+                raise RuntimeError("ffmpeg falhou: " + errf.read_text(errors="replace")[-800:])
+        ok = music.apply(tmp, under_original=False, seed=seed, fade_out=0.5)
+        if not ok or not music._has_audio(tmp):
+            raise MusicMissing("não consegui colocar a música tema no vídeo — confira assets/music/")
+        tmp.replace(out)
+    finally:
+        shutil.rmtree(work, ignore_errors=True)
     total = starts[-1] + scenes[-1].dur
     log(f"  🎬 vídeo v2 (textos animados) com música tema: {out.relative_to(ROOT)} ({total:.1f}s, "
         f"{music.theme_path(seed).name})")

@@ -34,3 +34,18 @@ Status: ✅ feito · 🧪 em teste (só com `estilo: dinamico` no post.yaml) · 
 
 Coloque `estilo: dinamico` no post.yaml e rode `python -m leonida build <id> --sem-video`. Exemplo:
 `posts/2026-10-10-gta6-capa-love-magazine/post.yaml`. Se o dono aprovar, o estilo vira padrão.
+
+## Atualização 11/10 — estilo v2 é o padrão
+
+O pedido do dono ("melhore a logo, as transições dos textos e o estilo de editar") virou o **estilo v2**
+(`leonida/motion.py`), que já é o padrão (`config/brand.yaml → video.estilo_padrao: v2`):
+
+- ✅ Logo nova no topo (sol de Vice + LEONIDA WIRE + ponto "ao vivo") e a mesma marca grande no "siga".
+- ✅ Textos entrando animados (linhas sobem da máscara, selos com pop, itens da lista um por batida).
+- ✅ Transições de verdade: zoom punch com flash (capa → próximo), whip pan com borrão (entre slides) e
+  luz quente (para o "siga" e no loop final).
+- ✅ Ritmo na batida da música (125 BPM detectado na faixa atual), pulso leve do fundo a cada 2 batidas.
+- ✅ Capa legível desde o 1º quadro e loop perfeito (o último quadro emenda no primeiro).
+- ✅ Nenhuma cena parada demais: com poucas cenas o vídeo sai mais curto (ex.: contagem ~12 s).
+
+`estilo: dinamico` e `estilo: classico` continuam funcionando para quem quiser o slideshow antigo.

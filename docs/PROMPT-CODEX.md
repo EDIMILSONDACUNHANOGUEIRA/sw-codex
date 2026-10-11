@@ -108,9 +108,8 @@ usa em cada rodada. Siga todos.
 Objetivo: deixar o Leonida Wire com cara de canal profissional. Três frentes: a LOGO do topo, as
 TRANSIÇÕES/ENTRADAS dos textos no vídeo e o ESTILO DE EDIÇÃO do vídeo de publicação (br/tiktok/post.mp4).
 
-Primeiro: git pull. Se o branch já tiver o commit "Estilo v2" (leonida/motion.py existe e
-config/brand.yaml tem logo.versao: v2), NÃO reimplemente: rode um build de teste, confira os critérios de
-aceite abaixo e só corrija o que falhar. Se não existir, implemente seguindo esta especificação.
+Primeiro: git pull. Se leonida/motion.py já existir (o Claude implementou o estilo v2), NÃO reimplemente:
+rode um build de teste, confira os critérios de aceite abaixo e só corrija o que falhar. Se não existir, implemente seguindo esta especificação.
 Paleta e fontes não mudam (night #0B0614, pink #FF2E88, orange #FF8A3D, gold #FFC857, purple #7B2FF7,
 cyan #22D3EE, mist #E9E3F5; Anton, Inter, Yellowtail). Visual fotográfico, sem neon exagerado.
 
@@ -137,16 +136,19 @@ cyan #22D3EE, mist #E9E3F5; Anton, Inter, Yellowtail). Visual fotográfico, sem 
    - Logo: o ponto "ao vivo" pisca devagar; o contador dá um pop quando a capa entra.
 
 3) ESTILO DE EDIÇÃO
-   - Gancho: a capa abre com um flash curto, a palavra gigante entra com escala 1,3 → 1 e a manchete inteira
-     está legível até 1,5 s.
+   - Gancho: a capa fica COMPLETA desde o 1º quadro (é a miniatura do TikTok e o ponto do loop) e já está
+     viva: push-in no fundo, palavra gigante derivando, brilho passando nas palavras em destaque, contador
+     dando um pulo. O personagem recortado usa a mesma câmera do fundo (senão aparece um "fantasma").
    - Câmera: fundo com push-in lento (1,00 → 1,05) em cada cena; personagem com parallax (cresce um pouco mais
      e sobe ~20 px); palavra gigante deriva devagar. Nada de tremedeira.
    - Transições (0,35–0,45 s): capa → próximo = "zoom punch" (escala + flash); entre slides = whip pan
      horizontal com borrão de movimento; para o "siga" = flash de luz rosa/laranja; no fim volta para a capa
      (loop perfeito: o último quadro emenda no primeiro).
-   - Ritmo: algo muda a cada 1,5–3 s. Detecte as batidas da música tema (envelope de energia/onsets) e
-     encaixe as trocas de cena e a entrada dos itens na batida mais próxima (±0,25 s).
-   - Saída: 1080×1920, 30 fps, H.264 High, CRF ~18, +faststart, música tema com fade de 0,5 s.
+   - Ritmo: algo muda a cada 1,5–3 s. Detecte as batidas da música tema (fluxo espectral, 90–160 BPM; ou
+     music.bpm/music.fase no brand.yaml) e encaixe as trocas de cena e os itens das listas nas batidas.
+     Nenhuma cena estica além do limite (capa ~4 s, imagem limpa ~4 s, lista ≤ 3,4 s depois do último
+     item): com poucas cenas o vídeo sai mais curto que o alvo, em vez de ficar parado.
+   - Saída: 1080×1920, 30 fps, H.264 High, CRF ~18, cores BT.709, +faststart, música tema com fade de 0,5 s.
      Duração = video_segundos (padrão 20). Render < 2 min por post num PC comum.
    - post.yaml: estilo: v2 (padrão) | dinamico | classico (o slideshow antigo continua funcionando).
 

@@ -79,9 +79,10 @@ PASSOS
    LIMPA (a original, sem texto). Com imagem oficial (rockstargames.com) isso é automático; se
    saíram várias imagens novas, liste todas em `fotos_limpas: [url1, url2, ...]` (uma imagem limpa
    para cada, logo depois da capa).
-6. Rode `python -m leonida build <id> --sem-video` (sem a capa animada do HyperFrames, mais rápido;
-   sem a flag, a capa animada abre o vídeo). O build gera as artes, as cópias JPEG e o VÍDEO DE
-   PUBLICAÇÃO `br/tiktok/post.mp4`: a capa e os slides em sequência, com a música tema. Abra cada capa
+6. Rode `python -m leonida build <id> --sem-video`. O build gera as artes, as cópias JPEG e o VÍDEO DE
+   PUBLICAÇÃO `br/tiktok/post.mp4` no estilo v2 (textos animados, transições, ritmo na batida, loop na
+   capa), com a música tema. Só nos estilos antigos (dinamico/classico) a capa animada do HyperFrames
+   abre o vídeo quando você roda sem `--sem-video`. Abra cada capa
    e corrija texto cortado, palavra gigante ilegível ou rosto coberto. Confira que o post.mp4 existe.
    Se o build terminar com erro ou estourar o tempo, NÃO publique: rode de novo (leva 1–2 min; use
    timeout maior ou rode em segundo plano).
