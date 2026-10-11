@@ -35,7 +35,7 @@ HUD = {"brand", "live", "countdown", "frame", "handle"}   # topo fixo e @ discre
 CONTENT_ANIMS = {"line", "pop", "pop_first", "up", "slide", "wipe", "photo"}
 
 # tempo mínimo de leitura (segundos depois de tudo ter entrado), por tipo de cena
-HOLD = {"cover": 3.2, "list": 2.6, "grid": 2.6, "foto": 2.4, "cta": 1.3}
+HOLD = {"cover": 3.2, "list": 2.6, "grid": 2.6, "foto": 2.2, "cta": 1.2}
 
 
 # ------------------------------------------------------------------ easing
@@ -228,6 +228,8 @@ def _plan_entries(sc: Scene, beats_local: list[float] | None = None) -> None:
     for i, s in enumerate(pops):
         s.start, s.dur = (ENTER + 0.05 if sc.kind == "foto" else t_after + 0.05 * i), 0.42
     base_up = max(t_after, (pops[-1].start + 0.15) if pops else 0)
+    if times:
+        base_up = max(base_up, end_steps - 0.2)          # rodapé/nota entra depois dos itens
     for i, s in enumerate(ups):
         s.start, s.dur = base_up + 0.07 * i, 0.45
     ends = [s.start + s.dur for s in sc.sprites if s.anim in CONTENT_ANIMS]
@@ -235,7 +237,7 @@ def _plan_entries(sc: Scene, beats_local: list[float] | None = None) -> None:
 
 
 HOLD_MIN = {"cover": 2.4, "list": 2.0, "grid": 2.0, "foto": 1.8, "cta": 1.0}
-HOLD_MAX = {"cover": 4.1, "list": 3.4, "grid": 3.2, "foto": 2.8, "cta": 2.2}   # TikTok: nada parado muito tempo
+HOLD_MAX = {"cover": 3.6, "list": 3.0, "grid": 3.0, "foto": 2.6, "cta": 1.5}   # TikTok: nada parado muito tempo
 
 
 def plan(scenes: list[Scene], target: float | None, seed: str | None, log=print) -> list[float]:
@@ -274,7 +276,7 @@ def plan(scenes: list[Scene], target: float | None, seed: str | None, log=print)
         starts.append(g)
         if s.kind == "list" and beats:
             _plan_entries(s, [b - g for b in beats if g <= b <= g + s.dur + 2])
-            s.dur = max(s.dur, s.settle + HOLD_MIN["list"] + T)
+            s.dur = min(max(s.dur, s.settle + HOLD_MIN["list"] + T), s.settle + HOLD_MAX["list"] + T)
         if beats and i < len(scenes) - 1:
             cut = g + s.dur - T / 2
             snapped = _snap(cut, beats, 0.25)
@@ -418,6 +420,13 @@ def _enter(canvas: Image.Image, sp: Sprite, p: float) -> None:
         e = out_expo(p)
         vis = int(round(w * (0.15 + 0.85 * e)))
         part = sp.img.crop((0, 0, max(1, vis), h))
+        feather = min(60, vis)
+        if e < 0.999 and feather > 1:                # borda suave na revelação (sem corte reto nas letras)
+            ramp = np.ones(vis, dtype=np.float32)
+            ramp[-feather:] = np.linspace(1, 0, feather, dtype=np.float32)
+            al = (np.asarray(part.getchannel("A"), dtype=np.float32) * ramp[None, :]).astype(np.uint8)
+            part = part.copy()
+            part.putalpha(Image.fromarray(al))
         _blit(canvas, part, sp.x - 60 * (1 - e), sp.y, min(1.0, p * 2.5))
     elif a in ("pop", "pop_first"):
         s = 0.55 + 0.45 * out_back(p)
@@ -488,6 +497,7 @@ def _flash(im: Image.Image, amount: float, warm: bool = True, p: float = 0.5) ->
     r = 0.75 + 0.35 * math.sin(math.pi * p)              # a mancha cresce no meio da transição
     d = np.sqrt(((xx - cx) / (sw * r)) ** 2 + ((yy - cy) / (sh * r * 0.75)) ** 2)
     m = np.clip(1 - d, 0, 1) ** 1.6 * min(1.0, amount)
+    m = np.maximum(m, 0.92 * max(0.0, 1 - abs(p - 0.5) / 0.14))     # no pico a luz cobre tudo
     mask = Image.fromarray((m * 255).astype(np.uint8)).resize((W, H), Image.BILINEAR)
     return Image.composite(ImageChops.screen(im, _warm()), im, mask)
 
@@ -505,18 +515,18 @@ def _transition(kind: str, a: Image.Image, b: Image.Image, p: float) -> Image.Im
     if kind == "punch":
         if p < 0.5:
             q = p / 0.5
-            z = 1 + 0.30 * q ** 2
+            z = 1 + 0.35 * q ** 3
             cw, ch = W / z, H / z
             im = a.resize((W, H), Image.BILINEAR, box=((W - cw) / 2, (H - ch) / 2, (W + cw) / 2, (H + ch) / 2))
-            return _flash(im, 0.85 * q, warm=False)
+            return _flash(im, 0.95 * q ** 4, warm=False)
         q = (p - 0.5) / 0.5
-        z = 1.12 - 0.12 * out_cubic(q)
+        z = 1.12 - 0.12 * out_expo(q)
         cw, ch = W / z, H / z
         im = b.resize((W, H), Image.BILINEAR, box=((W - cw) / 2, (H - ch) / 2, (W + cw) / 2, (H + ch) / 2))
-        return _flash(im, 0.85 * (1 - q), warm=False)
+        return _flash(im, 0.95 * (1 - q) ** 3, warm=False)
     # flash: luz quente cruzando
-    mix = Image.blend(a, b, in_out_sine(_clamp((p - 0.42) / 0.16)))
-    return _flash(mix, min(1.0, 1.15 * math.sin(math.pi * p)), True, p)
+    src = a if p < 0.5 else b              # troca seca escondida no pico da luz (sem texto sobre texto)
+    return _flash(src, min(1.0, 1.15 * math.sin(math.pi * p)), True, p)
 
 
 def _kind_between(a: Scene, b: Scene) -> str:
