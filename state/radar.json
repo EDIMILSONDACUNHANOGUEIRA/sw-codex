@@ -1,7 +1,9 @@
 {
- "generated_at": "2026-10-11T15:21:40.676738+00:00",
- "count": 10,
- "errors": [],
+ "generated_at": "2026-10-11T15:51:20.346368+00:00",
+ "count": 17,
+ "errors": [
+  "Reddit r/GTA6 (hot): 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/GTA6/hot/.rss"
+ ],
  "stories": [
   {
    "id": "48747eadec",
@@ -9,13 +11,13 @@
    "title_pt": "Cyberleek vaza gameplay de GTA 6 com Lucia nua e ameaça liberar build completa do jogo",
    "title_en": "New GTA 6 Leak Reveals Totally Nude Lucia Exploring the Map",
    "summary": "GTA 6 leaker CyberLeek is back with another video, this time with a naked Lucia taking a parachute jump off a rooftop. Read more",
-   "score": 217.6,
-   "coverage": 30,
+   "score": 205.7,
+   "coverage": 45,
    "official": false,
    "video": false,
    "community": false,
-   "published": "2026-10-11T15:04:54+00:00",
-   "first_seen": "2026-10-11T09:28:37+00:00",
+   "published": "2026-10-11T15:06:01+00:00",
+   "first_seen": "2026-10-11T02:31:12+00:00",
    "thumb": "https://assetsio.gnwcdn.com/lucia-gta-6-car.jpg?width=690&quality=85&format=jpg&auto=webp",
    "sources": [
     {
@@ -50,6 +52,12 @@
     },
     {
      "name": "Google News US",
+     "title": "New GTA 6 Leak Reveals Totally Nude Lucia Exploring the Map",
+     "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxNLUpyQ1Z0Xy1BVGNBQVI5OTRaUnhuaGVtZUxvenk1N05YLWRFMUhHTnpveGF0QS1GRC12NW4tVE1ycHI4XzZoVWRibFV6d3U3UTJKc2FFaFhzdktBREh1eEw1YmJVckNLT1VHX3prV2hobkR2UkpFdFdaZ2lsLXpGeWxHWU5MZw?oc=5",
+     "lang": "en"
+    },
+    {
+     "name": "Google News US",
      "title": "'GTA 6' Leaker Posts Nude Lucia Video As Threat To Release Full Game Early Looms",
      "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQcUU2ai14cGliOUdvRWhMd2Jma3lZN0JyemZMWXI5RkZOSVViYWp2SVZOMWxYSmQ4U3JQQ0pOTklDc2hUSkVoNUpMaGxhUTNKam11QjAyamc5djhxU0Q5UlNfN0dRa3kzTUJRZWU0RjNQemdfUW12T0dmUFJOR25IblIwbzBldnE1bWlkZFhEREtBd3J5dlZkeGhR?oc=5",
      "lang": "en"
@@ -68,30 +76,24 @@
     },
     {
      "name": "Google News US",
-     "title": "Even More GTA 6 Gameplay Footage Leaks, This Time Showing Off Lucia",
-     "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOZmVOZENQR3ZIRDRfVGJPbk5DTFcwZ3Z0OExMSW5jWkpjZGxWWWUwYkw5dTQ2NVdzNWVaMDRTU2NILUFLVV9JMlVxLXJnMy1PbjhfdEl0V1pILWo2X3M3LVJySkdnUXhUVXBFazV6Ujk3RlcxUXVMaXRXdERIcDJmSGZ2bHp3aDM3QUV6dVZoZkNrOXBkbmE1RDF6SC1zTjhLVXM3VGVrTGxRdw?oc=5",
-     "lang": "en"
-    },
-    {
-     "name": "Google News US",
      "title": "GTA 6 Leaker Just Posted Footage Of Naked Lucia Parachuting",
      "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQQ2ZueVRZX1JMNkVEZENQWkFsdHFNTHhpcTItWUdudGR6YUtaZW1CRlZndGJla2Z0NGtpakVKbTg5aDBxSGVMT1hCSThlV29UUmNFQlpaOHNrZEF2enVlaWJ5XzgwWEhFZXpSRloyMU0xaGRIY2lsYW1mbUpJZ1NQdWFuR2w0eHd0TENtS2tIWGY1Y1hjTVBWRA?oc=5",
      "lang": "en"
     },
     {
      "name": "Google News US",
-     "title": "Solana Meme Coin Tied To GTA 6 Leaker Jumps After Threat To Release Full Game Build",
-     "url": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxQTXpEM0lEbGhrUXJoXzRyR293ajFHcVJKQnVrdWZGNTNDUkpIZEYta0dmVTA1LS16NDV4U01MZE54RkFKbVFGbFlxWmFHR2dNcFo2ZzdvVC1XVDBqZ0NuYnNoT3Q5cklGM3gxVnQzNXhTOEszdXZ0eUdxMmNiZDZUa0FpWkhEQ1ppU0t1Ujlqd0k4bTA3Y2dsRTdaZVFQbk9ENVp1WUJ5MlRWV0ZpR3JhWmRnd2h6RWIwNlVLNXZOSFBEUWNhWGd2VndTckRaZDRjNVlXQ0RyS0JLTDdB?oc=5",
+     "title": "Even More GTA 6 Gameplay Footage Leaks, This Time Showing Off Lucia",
+     "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOZmVOZENQR3ZIRDRfVGJPbk5DTFcwZ3Z0OExMSW5jWkpjZGxWWWUwYkw5dTQ2NVdzNWVaMDRTU2NILUFLVV9JMlVxLXJnMy1PbjhfdEl0V1pILWo2X3M3LVJySkdnUXhUVXBFazV6Ujk3RlcxUXVMaXRXdERIcDJmSGZ2bHp3aDM3QUV6dVZoZkNrOXBkbmE1RDF6SC1zTjhLVXM3VGVrTGxRdw?oc=5",
      "lang": "en"
     },
     {
-     "name": "Google News US",
-     "title": "GTA 6 Leaker Threatens To Release Full Game Build Before November Launch",
-     "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxOeVptcUEyMnhIOU0xT3ZkRDQ0RnBUdFhVMmlwRUppdmlvZkNxZUxLUnNsX3BlalN0RmdMVHhuMnpPNHFaeXVudzUta3hhcmo5dUZLN0x0RTJ2RmZkTHpuNW1DNGlxX3BXRGQ1LVdGWmRwNEpwTDQ1eGU4dDZPUkRuTEdaYlBwQ3hIMU4w?oc=5",
-     "lang": "en"
+     "name": "Google Notícias BR",
+     "title": "Slideshow: Even More GTA 6 Screenshots from Rockstar Games",
+     "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBKQXpZVjM2Snc4NmtHMWZid2FyaTI2NXVRU2NuQnBHWEhYOC1jeDZ0SWRIUVVxS2dFalJpV3Qzc2dpekdmWWFjM1Z6bU9DQU1wNS10clhZVEc2MGdtdjc4?oc=5",
+     "lang": "pt"
     }
    ],
-   "is_new": true
+   "is_new": false
   },
   {
    "id": "7a04d03f21",
@@ -99,7 +101,7 @@
    "title_pt": "Rockstar confirma que mapa de GTA 6 será duas vezes maior que o de GTA 5",
    "title_en": null,
    "summary": "Rockstar confirma que mapa de GTA 6 será duas vezes maior que o de GTA 5 Tenho Mais Discos Que Amigos",
-   "score": 78.9,
+   "score": 78.1,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -123,7 +125,7 @@
    "title_pt": null,
    "title_en": "GTA 6 Gets A Nudity Pass That Indies Don't For One Weird Reason",
    "summary": "Rockstar's Grand Theft Auto 6 has caused controversy with nudity and sex scenes - but some other games aren't so lucky",
-   "score": 61.7,
+   "score": 60.9,
    "coverage": 2,
    "official": false,
    "video": false,
@@ -153,7 +155,7 @@
    "title_pt": "Vazador ameaça divulgar GTA 6 inteiro e exige discos físicos e pedido público de desculpas",
    "title_en": null,
    "summary": "Vazador ameaça divulgar GTA 6 inteiro e exige discos físicos e pedido público de desculpas Hardware.com.br",
-   "score": 57.1,
+   "score": 56.3,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -172,12 +174,66 @@
    "is_new": false
   },
   {
+   "id": "0f83c44aa3",
+   "title": "GTA 6 será incrivelmente rico em detalhes, e as colisões com cones de trânsito são o melhor exemplo disso",
+   "title_pt": "GTA 6 será incrivelmente rico em detalhes, e as colisões com cones de trânsito são o melhor exemplo disso",
+   "title_en": null,
+   "summary": "A prévia mais recente deixa entrever no que ainda se está trabalhando nas últimas semanas antes do lançamento — e, ao que tudo indica, trata-se sobretudo de detalhes especiais e impressionantes como este",
+   "score": 51.5,
+   "coverage": 2,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-11T09:03:33+00:00",
+   "first_seen": "2026-10-11T09:00:35+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "IGN Brasil",
+     "title": "GTA 6 será incrivelmente rico em detalhes, e as colisões com cones de trânsito são o melhor exemplo disso",
+     "url": "https://br.ign.com/grand-theft-auto-vi/156771/gta-6-sera-incrivelmente-rico-em-detalhes-e-as-colisoes-com-cones-de-transito-sao-o-melhor-exemplo-d",
+     "lang": "pt"
+    },
+    {
+     "name": "Google Notícias BR",
+     "title": "GTA 6 será incrivelmente rico em detalhes, e as colisões com cones de trânsito são o melhor exemplo disso",
+     "url": "https://news.google.com/rss/articles/CBMi3wFBVV95cUxQdG9OVlk5X3BFQWp3TFhsSEFXcnNyLTJpQUJhRW5IV0M5djlsLWdUbjlEYk4xdWNpTHlMcmlCV0ZjTUhuSjJoLWxOYWt4ZDVoVHBzWUxPM2prZWQ4eDJ4RGhzVENmZDZBSWpTNTVlQm1samptUVVEeU5MYm93Q1B5TUtmWHhManJSUEhSczdjM1NmQnRfVFJXSk84bXJtblRUenV0Y3BpZUJuVFpzcE1PcUlrSkszekR4NDNPdHlaakhtQ0Z3ZHZZYlVkMkw1el9aMk11V2dvUkVnQVBjdFBr?oc=5",
+     "lang": "pt"
+    }
+   ],
+   "is_new": false
+  },
+  {
+   "id": "52bbe3ac77",
+   "title": "GTA 6 é tão grande que surpreende até a Rockstar",
+   "title_pt": "GTA 6 é tão grande que surpreende até a Rockstar",
+   "title_en": null,
+   "summary": "GTA 6 é tão grande que surpreende até a Rockstar Estadão",
+   "score": 49.2,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-11T14:43:12+00:00",
+   "first_seen": "2026-10-11T14:43:12+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google Notícias BR",
+     "title": "GTA 6 é tão grande que surpreende até a Rockstar",
+     "url": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxONjFxRFhzTEVlbUxiY2J5SVM0UUlMRlAyeUh4dHJSdlhoOTJyeUdVQy1taHU0MlI0WVFRR00yenpMOUI1RXFZWG9TQ0FjVUM2NHNESEw2RzRJRkkzZElUd3ZGY0didldvUnJWU2FuQTMxVXRNdU9peW9KeGsxdWlMbkZKM1J1SFZxN0RScU5QNmRYM0NIUjJVcXpJUEVRQTQ4YTRDNUplUVBaOGVSdk90MWJwVnVhei1BM0YwTXpWcDZNcDV3c0lUMFV4NGFLMGl3c09SYnIzYnNMQVVT?oc=5",
+     "lang": "pt"
+    }
+   ],
+   "is_new": false
+  },
+  {
    "id": "6ba24b5209",
    "title": "Rockstar has a whole team of GTA 6 writers dedicated to pedestrian dialogue: \"There are no shortcuts when it comes to building a world like this\"",
    "title_pt": null,
    "title_en": "Rockstar has a whole team of GTA 6 writers dedicated to pedestrian dialogue: \"There are no shortcuts when it comes to building a world like this\"",
    "summary": "Rockstar has a whole team of GTA 6 writers dedicated to pedestrian dialogue: \"There are no shortcuts when it comes to building a world like this\" GamesRadar+",
-   "score": 49.8,
+   "score": 49.0,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -201,7 +257,7 @@
    "title_pt": null,
    "title_en": "GTA 6 Official Rating Revealed",
    "summary": "GTA 6 Official Rating Revealed OpenCritic",
-   "score": 49.8,
+   "score": 49.0,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -225,7 +281,7 @@
    "title_pt": null,
    "title_en": "‘I’m Shocked That People Are Still Playing’",
    "summary": "Could GTA 6 be as big as its predecessor? We take a look at how GTA 5 became one of the biggest games in history, selling over 230m copies and being played by millions of people every week for over a decade.",
-   "score": 45.6,
+   "score": 44.8,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -249,7 +305,7 @@
    "title_pt": null,
    "title_en": "We're In The Middle Of A PS5 Pro Shortage And GTA 6 Will Only Make It Worse",
    "summary": "We're In The Middle Of A PS5 Pro Shortage And GTA 6 Will Only Make It Worse Engadget",
-   "score": 42.0,
+   "score": 41.2,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -273,7 +329,7 @@
    "title_pt": null,
    "title_en": "Where to Buy GTA 6 Cheapest: Pre-order Deals Compared",
    "summary": "Where to Buy GTA 6 Cheapest: Pre-order Deals Compared DLCompare.com",
-   "score": 36.6,
+   "score": 35.8,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -297,7 +353,7 @@
    "title_pt": "GTA 6: Rob Nelson revela sistema de moral e relacionamento",
    "title_en": null,
    "summary": "GTA 6: Rob Nelson revela sistema de moral e relacionamento Estadão",
-   "score": 35.5,
+   "score": 34.8,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -310,6 +366,126 @@
      "name": "Google Notícias BR",
      "title": "GTA 6: Rob Nelson revela sistema de moral e relacionamento",
      "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxNdDdoU3RyT0xyM3pDZUMxR3QwTUR2UUl0V2UyZEU5Q0ZDRWZzSV9XdUxORmVXTWNtOFhnQlZzcF9qRUJSRUhNLVBiR3F2b1p6eERHWEd6QktnTjdzckVZWlIyQ2lsekRna256STZDY2l2R1R3T083OFlubUlqenJ2X0F2QWhyN2RPNXQ1X3pYTHdmbVYwLUF0UEVlWGdxbVFyQlM2NHJXaDhpTEJ5bW92dVpDVW11OVVuRjFiNE5Xb0lacy1uZ25TaHNsVXZteDh2ZUNxa2Y0MlZ1dUk?oc=5",
+     "lang": "pt"
+    }
+   ],
+   "is_new": false
+  },
+  {
+   "id": "ecf32c02d6",
+   "title": "Cardi B Just Landed on the GTA VI Soundtrack: Here’s the New Song",
+   "title_pt": null,
+   "title_en": "Cardi B Just Landed on the GTA VI Soundtrack: Here’s the New Song",
+   "summary": "Cardi B Just Landed on the GTA VI Soundtrack: Here’s the New Song JubileeCast",
+   "score": 31.7,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-11T08:46:00+00:00",
+   "first_seen": "2026-10-11T08:46:00+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google News US",
+     "title": "Cardi B Just Landed on the GTA VI Soundtrack: Here’s the New Song",
+     "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNOTdwWjgzcW00akZDSlNrclAtRm92NmZBSXlNNlVKaW9wT0EyUTg2b1FWSGhRbTdXeF8xU0tBbXJIVWUwX0tMcG52bUhwYkpFMzNOTk1xa3pWb1BFLW9fWkQ0VjBya3NkaUlnazVjOG80bl96cVJDemo2RW56cVlaM2w5cmEwclJxWmxYZzJlZ0hWSWV6V1FBR0hhbnkwTF9CWDM4?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": false
+  },
+  {
+   "id": "815d82db0d",
+   "title": "GTA VI terá cenas de sexo e nudez: confira outros jogos que também tiveram momentos picantes",
+   "title_pt": "GTA VI terá cenas de sexo e nudez: confira outros jogos que também tiveram momentos picantes",
+   "title_en": null,
+   "summary": "GTA VI terá cenas de sexo e nudez: confira outros jogos que também tiveram momentos picantes Jornal Correio",
+   "score": 30.4,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-11T08:00:00+00:00",
+   "first_seen": "2026-10-11T08:00:00+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google Notícias BR",
+     "title": "GTA VI terá cenas de sexo e nudez: confira outros jogos que também tiveram momentos picantes",
+     "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxObHBHclVSZ3NZUkY3a05YT1pOaGtzWlBmbmtMVE1Xb05vV3lEa1J2WVd3STI3dElSNGtLbW9hZE5DRzVmZ0JCQjBtWC1zaGlPdUJmWXJvVFpzOVNnUEF2Q2xleDR2NHk5X0JfdXRDVjI1Mi0zSDU3T0ZuSVEwZlJWVm10dUFVaGpwRkJCZVVvbHVyRXc1a3ZPcmhtdklBU3Q1X01NZnhKWWQ2dUx3aE9NQmN5OUhmZ0NPb1kyb0l2R3ZmN0xjMXlzcVEtLUNlSlJSUXV6dXh3bjA?oc=5",
+     "lang": "pt"
+    }
+   ],
+   "is_new": false
+  },
+  {
+   "id": "a6ff2d3ab7",
+   "title": "UK shoppers are snapping up damaged PlayStation 5 consoles for £480 to buy GTA VI.",
+   "title_pt": null,
+   "title_en": "UK shoppers are snapping up damaged PlayStation 5 consoles for £480 to buy GTA VI.",
+   "summary": "UK shoppers are snapping up damaged PlayStation 5 consoles for £480 to buy GTA VI. GameGPU",
+   "score": 29.3,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-11T07:18:06+00:00",
+   "first_seen": "2026-10-11T07:18:06+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google News US",
+     "title": "UK shoppers are snapping up damaged PlayStation 5 consoles for £480 to buy GTA VI.",
+     "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxOMDJFMWtUaG9Bb1c0a1pweFBrX2t6WkcySEZ6TGhMQ2Z3UVI2MUNvSWNKclFGY1JDUXRmMlVOak5uZ2N5TW9hWXUwRVRMLW8tcjhTSnZubG0wWWhIbGVHWkE5UURhVlJWbHFaSE5xU2ZHajVDcFp2UEp4WkVOUlp3NnF2a2NldHZLU1AxNGFjT3g0UW5qcVBmSTczcXVQYV9EV2phc2NLNDdXemFiQVRfa3hqY3c1WGxNSVVUOFlvSHFEejRiYkxfWmN3?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": false
+  },
+  {
+   "id": "cd4572cb73",
+   "title": "GTA 6 Developers Explain How Florida Shapes Leonida | Outlook Respawn",
+   "title_pt": null,
+   "title_en": "GTA 6 Developers Explain How Florida Shapes Leonida | Outlook Respawn",
+   "summary": "GTA 6 Developers Explain How Florida Shapes Leonida | Outlook Respawn Outlook Respawn",
+   "score": 28.8,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-11T07:00:00+00:00",
+   "first_seen": "2026-10-11T07:00:00+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google News US",
+     "title": "GTA 6 Developers Explain How Florida Shapes Leonida | Outlook Respawn",
+     "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxOOTBKVXJId01YQ2J4dUdkR3FaSzNFYkFvWkFqRUVLQ1BnZ2pkdVpCU0hmU3RmVTBsTUctQUdyRndwU1REeGx3Q2JrMm9JUi13S01GV0kxdmdpT0dIRkRsaWFxbnhKX1pTVzZVQUgxRm1mMS01VVN0aFJUUDFwQXZ1RlVWLU83M3ZJNnZENmxUMTdWWHVkdXgydFlGdVc2Q0EzbDBjTU1B0gGzAUFVX3lxTE80SHFuOWhjeF9Pd3pMaDN5RXRHVi1ZRmVQQUlTbDI3eFhxME44THYzT1lhcnRsYzg0SnFvRUdOQ0p3LWNKTkZuSWNIb1BmaWpmYl9rZDBfdnpFU3lNZjBqTE9EMmw1R0s2WUFyYUZobFE3RWQ3bnNiNFh3QmZ2cUxrRUhIZXl2eWppR0hqV1UzZkJkZWV4MHFhUlBveDNybTFwWDRYVzZrcUlIRjc5NjgyLTZJ?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": false
+  },
+  {
+   "id": "3697b4932b",
+   "title": "Dezenas de sites falsos de GTA 6 tentam roubar gamers; veja domínios",
+   "title_pt": "Dezenas de sites falsos de GTA 6 tentam roubar gamers; veja domínios",
+   "title_en": null,
+   "summary": "Dezenas de sites falsos de GTA 6 tentam roubar gamers; veja domínios Estadão",
+   "score": 23.9,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-11T03:55:30+00:00",
+   "first_seen": "2026-10-11T03:55:30+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google Notícias BR",
+     "title": "Dezenas de sites falsos de GTA 6 tentam roubar gamers; veja domínios",
+     "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxNdUJYZGFZb3EtYW9HX3NCWTVuREpDNDlMMXpBS19KUnNMb2s3VmhCbFphWmszaWVaTWhBRWV5amJYNHh2SnBtcGoyU0ZRM014UTdQbDFub3FDdXpqVGVUTERrLXZNMFhlN05hZGJ3TnZmcU5fdGZuUzlGUlIzRjFtZE9kRUx5MFlFRTM3cnZhS0tKV2JzdFFVZmZ1ejdSY1VraWk3U0w5U2I2eGZRalVfZXFfc2pDbTlYclNmNlREdmRiQmc3U3c?oc=5",
      "lang": "pt"
     }
    ],
