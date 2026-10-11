@@ -1,0 +1,22 @@
+{
+  "id": "2026-10-12-gta6-sites-falsos-golpe",
+  "date": "2026-10-12",
+  "tag": "urgente",
+  "source": {
+    "name": "TecMundo (pesquisa da Avast)",
+    "url": "https://www.estadao.com.br/tecmundo/ciberseguranca/dezenas-de-sites-falsos-de-gta-6-tentam-roubar-gamers-veja-dominios/"
+  },
+  "files": {
+    "br": [
+      "01_capa.png",
+      "02_imagem-limpa.png",
+      "03_as-iscas-mais-comuns.png",
+      "04_como-se-proteger.png",
+      "05_siga.png",
+      "legenda.txt",
+      "tiktok/post.mp4"
+    ]
+  },
+  "music": true,
+  "publication_video_engine": "v2"
+}

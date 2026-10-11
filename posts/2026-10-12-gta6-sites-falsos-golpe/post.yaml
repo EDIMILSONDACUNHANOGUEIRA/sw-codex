@@ -1,0 +1,57 @@
+id: 2026-10-12-gta6-sites-falsos-golpe
+date: "2026-10-12"
+tag: urgente
+estilo: v2
+video_segundos: 22      # 20 s não cabe (o build exige 20,86 s para as duas listas)
+# imagem OFICIAL da Rockstar: Lucia na frente de uma loja de "dinheiro rápido"
+image: "https://www.rockstargames.com/VI/_next/static/media/Lucia_Caminos_08.08wo73uyjkhlk.jpg"
+focus: [0.39, 0.5]      # Lucia mais à direita: "GOLP" inteiro, topo do E visível e o rosto fora do texto
+source: { name: "TecMundo (pesquisa da Avast)", url: "https://www.estadao.com.br/tecmundo/ciberseguranca/dezenas-de-sites-falsos-de-gta-6-tentam-roubar-gamers-veja-dominios/" }
+fontes:
+  - { name: "TecMundo (Estadão)", url: "https://www.estadao.com.br/tecmundo/ciberseguranca/dezenas-de-sites-falsos-de-gta-6-tentam-roubar-gamers-veja-dominios/" }
+  - { name: "Infobae", url: "https://www.infobae.com/tecno/2026/10/06/encuentran-mas-200-sitios-falsos-para-comprar-gta-6-buscan-robar-datos-y-dinero/" }
+  - { name: "Adnews", url: "https://adnews.com.br/post/golpistas-se-antecipam-a-gta-6-e-criam-sites-falsos-para-roubar-dados-e-pagamentos-aponta-avast" }
+  - { name: "Clubic", url: "https://www.clubic.com/actualite-633457-avast-a-repere-plus-de-200-sites-lies-a-gta-6-en-24-heures-et-beaucoup-sont-dangereux.html" }
+  - { name: "Malwarebytes", url: "https://www.malwarebytes.com/blog/threat-intel/2026/08/fake-gta-6-extended-look-and-demo-sites-deliver-an-infostealer" }
+  - { name: "CyberInsider", url: "https://cyberinsider.com/gta-6-leak-hype-abused-to-distribute-vidar-infostealer-malware/" }
+pt:
+  kicker: GOLPE
+  selo: "Alerta de golpe"
+  headline: "*Sites falsos* de GTA VI tentam *roubar seu dinheiro*"
+  summary: "Em 24 horas, a Avast achou mais de 200 sites ligados ao GTA VI, e cerca de 10% são de risco. Compre só em loja oficial."
+  caption: |
+    🚨 Cuidado: tem site falso de GTA VI tentando levar seu dinheiro e sua senha antes mesmo do lançamento.
+
+    Em um levantamento de 24 horas, a Avast achou mais de 200 sites ligados ao GTA VI. Cerca de 10% são de risco alto ou médio, segundo o TecMundo.
+
+    As iscas: pré-venda falsa, download ou crack, formulário que rouba login, cobrança por produto falso e pedido para conectar carteira de cripto.
+
+    Um dos sites imita a loja da PlayStation para "vender" a Ultimate Edition. Outro divulga um token de cripto "de GTA" sem nenhum vínculo com a Rockstar.
+
+    Em agosto, a Malwarebytes já tinha flagrado sites de "demo de GTA 6" que espalham o Vidar, vírus que rouba senhas e sessões do navegador.
+
+    Como se proteger:
+    Compre só na PlayStation Store, na Microsoft Store ou em loja conhecida.
+    Não existe demo nem download antecipado fora das lojas oficiais, e GTA VI não tem versão de PC anunciada.
+    Nunca conecte carteira de cripto em site de jogo.
+    Confira o endereço antes de digitar senha ou cartão.
+
+    GTA VI chega em 19/11 para PS5 e Xbox Series X|S.
+
+    Já te ofereceram algum golpe desses? 👇
+  hashtags: ["#golpe", "#segurancadigital", "#sitesfalsos", "#avast"]
+  slides:
+    - type: list
+      title: "As *iscas* mais comuns"
+      items:
+        - "Pré-venda falsa imitando a PlayStation"
+        - "Download, crack e \"demo\" com vírus"
+        - "Formulário que rouba login e senha"
+        - "Pedido para conectar carteira de cripto"
+    - type: list
+      title: "Como se *proteger*"
+      items:
+        - "Compre só em loja oficial ou conhecida"
+        - "Não existe demo nem versão de PC anunciada"
+        - "Nunca conecte carteira cripto em site de jogo"
+        - "Confira o endereço antes de pôr senha ou cartão"
