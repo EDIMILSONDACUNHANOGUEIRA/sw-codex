@@ -1,0 +1,62 @@
+id: 2026-10-11-gta6-cyberleek-novo-video
+date: "2026-10-11"
+tag: vazamento
+site: false               # o site é só de notícia oficial
+estilo: v2
+zoom: 0.76              # recua: rosto inteiro acima do selo e "VAZOU" legível
+focus: [0.44, 0.5]      # Lucia à esquerda, palavra gigante livre à direita
+video_segundos: 22
+# imagem OFICIAL da Rockstar (nunca usar imagem do vídeo vazado)
+image: "https://www.rockstargames.com/VI/_next/static/media/Lucia_Caminos_03.14xgd2y_ymmeg.jpg"
+source: { name: "TecMundo / VGC", url: "https://www.estadao.com.br/tecmundo/voxel/cyberleek-vaza-gameplay-de-gta-6-com-lucia-nua-e-ameaca-liberar-build-completa-do-jogo/" }
+fontes:
+  - { name: "TecMundo (Voxel)", url: "https://www.estadao.com.br/tecmundo/voxel/cyberleek-vaza-gameplay-de-gta-6-com-lucia-nua-e-ameaca-liberar-build-completa-do-jogo/" }
+  - { name: "VGC", url: "https://www.videogameschronicle.com/news/group-threatens-to-leak-full-gta-6-build-if-physical-plans-arent-reversed/" }
+  - { name: "TheGamer", url: "https://www.thegamer.com/gta-6-naked-lucia-leak/" }
+  - { name: "Dexerto", url: "https://www.dexerto.com/gta/gta-6-leak-shows-lucia-skydiving-completely-naked-in-a-rooftop-stunt-mission-3417940/" }
+  - { name: "Insider Gaming", url: "https://insider-gaming.com/gta-6-leaker-poll-voters-want-more-lucia/" }
+  - { name: "Malwarebytes", url: "https://www.malwarebytes.com/blog/threat-intel/2026/08/fake-gta-6-extended-look-and-demo-sites-deliver-an-infostealer" }
+pt:
+  kicker: VAZOU
+  selo: "Atualização · Vazamento"
+  headline: "Leaker solta *vídeo da Lucia* e diz\u00a0ter *GTA VI completo*"
+  summary: "A Rockstar não comentou o vídeo, e ninguém provou que o grupo tem o jogo inteiro."
+  caption: |
+    Atualização: depois da ameaça de ontem, o grupo Cyberleek soltou um novo vídeo não oficial de GTA VI com a Lucia.
+
+    O vídeo tem cerca de 5 minutos e saiu neste domingo (11).
+
+    Mostra a Lucia numa briga, num caixa eletrônico e num salto de paraquedas do alto de um prédio.
+
+    Ele tem cenas para adultos, então aqui não mostramos nada dele.
+
+    O TheGamer e fãs citados pelo Dexerto apontam que pode ser uma versão em desenvolvimento usada com ferramentas de teste.
+
+    A ameaça continua: o grupo diz que solta a campanha inteira, "até os créditos", se uma criptomoeda ligada a ele bater uma meta de valor de mercado.
+
+    A "saída" para a Take-Two, segundo o grupo: discos físicos e um pedido público de desculpas.
+
+    ⚠️ Nada confirmado: a Rockstar não comentou o novo vídeo, e ninguém provou que o grupo tem o jogo inteiro. A Take-Two já foi à Justiça pedir dados ao Discord para achar os responsáveis.
+
+    🛑 Cuidado: não existe "GTA 6 completo" para baixar. Sites falsos de download já espalham vírus que rouba senhas. E não invista em moeda de leaker.
+
+    GTA VI chega oficialmente em 19/11 para PS5 e Xbox Series X|S.
+
+    Você acha que eles têm mesmo o jogo inteiro? 👇
+  hashtags: ["#gta6noticias", "#rockstargames", "#golpe", "#segurancadigital"]
+  slides:
+    - type: list
+      title: "O que se *sabe*"
+      items:
+        - "Vídeo novo de cerca de 5 minutos saiu no domingo (11)"
+        - "Mostra a Lucia numa briga e num salto de paraquedas"
+        - "Pode ser uma versão em desenvolvimento alterada"
+        - "O grupo mantém a ameaça de soltar o jogo inteiro"
+        - "A Rockstar não comentou o vídeo"
+    - type: list
+      title: "*Cuidado*"
+      items:
+        - "Ninguém provou que eles têm o jogo inteiro"
+        - "Não existe GTA 6 completo para baixar"
+        - "Sites falsos de download espalham\u00a0vírus"
+        - "Lançamento oficial: 19/11"
