@@ -117,6 +117,19 @@ def validate(post: dict, langs=LANGS) -> list[str]:
 
     if not post.get("image"):
         errs.append("image vazio")
+    visuals = post.get("visuals", [])
+    if not isinstance(visuals, list) or len(visuals) > 6:
+        errs.append("visuals deve conter até 6 imagens de apoio")
+    else:
+        for i, visual in enumerate(visuals):
+            path = f"visuals[{i}]"
+            if not isinstance(visual, dict):
+                errs.append(f"{path} deve conter image, credit e label")
+                continue
+            text_field(visual.get("image"), path + ".image")
+            for field in ("credit", "label", "text"):
+                if field in visual and (not isinstance(visual[field], str) or len(visual[field]) > 160):
+                    errs.append(f"{path}.{field} deve ser texto curto")
     for lang in langs:
         loc = post.get(lang)
         if loc is None:
@@ -226,12 +239,39 @@ def _render_post(post, base_dir, out, estilo, video, langs, today, log):
             r = None  # as sprites recortadas já contêm a cena; libera os canvases RGBA integrais
         files = [names["cover"]]
         n = 2
+        media_used = {post["image"]}
+        chosen_visuals = []
+        visual_facts = [item for slide in post[lang].get("slides") or [] if slide.get("type") == "list"
+                        for item in slide.get("items") or [] if isinstance(item, str)]
+        for visual in post.get("visuals") or []:
+            ref = visual["image"]
+            if ref in media_used:
+                continue
+            log(f"  [{lang}] imagem de apoio…")
+            image = render.slide_foto(post, lang, ref, base_dir,
+                                      credit=visual.get("credit") or post.get("credito_imagem") or "Rockstar Games",
+                                      label=visual.get("label") or ("Imagem oficial ilustrativa" if lang == "pt" else "Official illustrative image"),
+                                      context=visual.get("text") or (visual_facts[len(chosen_visuals)] if len(chosen_visuals) < len(visual_facts) else None),
+                                      with_layers=v2)
+            if v2:
+                scenes.append(motion.scene_from(image, "foto"))
+                image = image.image
+            filename = f"{n:02d}_{'imagem-apoio' if lang == 'pt' else 'supporting-image'}.png"
+            image.save(folder / filename, optimize=True)
+            files.append(filename)
+            n += 1
+            media_used.add(ref)
+            chosen_visuals.append(visual)
+        if chosen_visuals:
+            manifest["visuals"] = chosen_visuals
         # imagem nova da Rockstar: primeiro a arte editada (capa), depois a IMAGEM LIMPA (original)
         clean = list(post.get("fotos_limpas") or [])
         fl = post.get("foto_limpa", "auto")
         if fl is True or (fl == "auto" and render.is_official_image(post.get("image"))):
             clean.insert(0, post["image"])
         for ref in dict.fromkeys(clean):
+            if ref in media_used and ref != post["image"]:
+                continue
             log(f"  [{lang}] imagem limpa…")
             im = render.slide_foto(post, lang, ref, base_dir, credit=post.get("credito_imagem", "Rockstar Games"),
                                    with_layers=v2)
@@ -242,6 +282,7 @@ def _render_post(post, base_dir, out, estilo, video, langs, today, log):
             im.save(folder / fn, optimize=True)          # sem grão/filtro: é a imagem original
             files.append(fn)
             n += 1
+            media_used.add(ref)
         for slide in (post[lang].get("slides") or []):
             log(f"  [{lang}] slide {slide.get('type')}…")
             kind = "grid" if slide.get("type") == "grid" else "list"
@@ -263,7 +304,7 @@ def _render_post(post, base_dir, out, estilo, video, langs, today, log):
                     gfx.finish(part.convert("RGB")).save(rev / f"{Path(fn).stem}__{k}.png", optimize=True)
             files.append(fn)
             n += 1
-        if (post[lang].get("slides") or clean) and post.get("cta", True):
+        if (post[lang].get("slides") or clean or chosen_visuals) and post.get("cta", True):
             fn = f"{n:02d}_{'siga' if lang == 'pt' else 'follow'}.png"
             cta = render.slide_cta(post, lang, base_dir, today, with_layers=v2)
             if v2:
@@ -290,8 +331,9 @@ def _render_post(post, base_dir, out, estilo, video, langs, today, log):
             intro = folder / names["video"] if (folder / names["video"]).exists() else None
             if v2:
                 target = post.get("video_segundos", (brand().get("video") or {}).get("segundos", 20))
+                rhythm = {"max_scene_seconds": 7} if float(target) >= 30 else {}
                 published_video = motion.build(scenes, folder / "tiktok" / postvideo.OUT_NAME,
-                                               seed=post["id"], target=target, log=log)
+                                               seed=post["id"], target=target, log=log, **rhythm)
             else:
                 published_video = postvideo.build(folder, seed=post["id"], intro=intro, log=log,
                                                  target=post.get("video_segundos"), estilo=estilo)

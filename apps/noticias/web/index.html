@@ -57,16 +57,27 @@
             </select></label>
           <label>Data <input name="date" type="date"></label>
           <label>Layout
-            <select name="layout"><option value="cover">Capa (recorte do personagem)</option><option value="card">Card (imagem emoldurada)</option></select></label>
+            <select name="layout"><option value="card">Foto inteira (recomendado)</option><option value="cover">Personagem recortado</option></select></label>
         </div>
         <label>Imagem principal (URL ou arquivo)
           <div class="inline"><input name="image" placeholder="https://..."><button type="button" id="btn-lib">Biblioteca oficial</button>
           <label class="file">Enviar<input type="file" id="upload" accept="image/*"></label></div></label>
         <div class="row">
           <label>Recuo (zoom) <input name="zoom" type="number" step="0.02" min="0.6" max="1" placeholder="auto"></label>
-          <label class="check"><input name="cutout" type="checkbox" checked> Recortar personagem</label>
+          <label class="check"><input name="cutout" type="checkbox"> Recortar personagem</label>
           <label class="check"><input name="cta" type="checkbox" checked> Slide final "siga"</label>
         </div>
+        <div class="cover-selection">
+          <img id="selected-cover" class="hidden" alt="Foto escolhida para a capa">
+          <div><b>Foto da capa</b><p id="cover-state" class="hint">Escolha uma imagem na biblioteca oficial para ver o enquadramento.</p></div>
+        </div>
+        <fieldset class="visual-selection">
+          <legend>Imagens do vídeo</legend>
+          <p class="hint">Selecione fotos diferentes para acompanhar a notícia. A capa e estas imagens entram na edição; a ordem abaixo é a ordem escolhida. Você pode escrever um fato verificado em "Texto desta cena" para aparecer junto da foto.</p>
+          <div class="actions"><button type="button" id="btn-video-lib">+ Escolher imagens oficiais</button><span id="visual-count" class="hint">0 imagens selecionadas</span></div>
+          <div id="visual-grid" class="visual-grid"></div>
+          <p id="visual-empty" class="hint">Escolha de 3 a 6 imagens de apoio: personagens, cenário e detalhes relacionados ao assunto.</p>
+        </fieldset>
         <div class="row">
           <label>Fonte <input name="source_name" placeholder="IGN, Rockstar Games..."></label>
           <label>Link da fonte <input name="source_url" placeholder="https://..."></label>
@@ -98,7 +109,7 @@
         </div>
         <pre id="job-log" class="log hidden"></pre>
       </form>
-      <div class="preview"><img id="preview-img" alt=""><p class="hint">A prévia mostra a capa. "Gerar" cria carrossel + vídeo + legendas em <code>prontos/</code>.</p></div>
+      <div class="preview"><img id="preview-img" alt="Prévia da capa editada"><p class="hint" id="preview-state">Use "Prévia BR" para conferir a capa editada antes de gerar. "Gerar" cria carrossel + vídeo + legendas em <code>prontos/</code>.</p></div>
     </div>
   </section>
 
@@ -123,6 +134,7 @@
 </main>
 
 <div id="lib-modal" class="modal hidden"><div class="modal-box"><header class="bar"><h2>Screenshots oficiais (Rockstar)</h2><button id="lib-close">Fechar</button></header>
+  <div class="library-controls"><label>Usar imagem como <select id="lib-use"><option value="cover">Foto da capa</option><option value="video">Imagem do vídeo</option></select></label><p id="lib-state" class="hint">Escolha a foto da capa. Ela será preservada inteira.</p></div>
   <input id="lib-filter" placeholder="Filtrar: Lucia, Jason, Vice_City, Leonida_Keys..."><div id="lib-grid" class="grid"></div></div></div>
 <div id="toast"></div>
 <script src="/static/app.js"></script>

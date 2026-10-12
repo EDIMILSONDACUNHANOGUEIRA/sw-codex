@@ -60,16 +60,34 @@ explicando o que mudou. Não use a palavra novidade para informação antiga só
 artigo novo. Priorize até dois assuntos diferentes por rodada e deixe o restante na fila.
 
 Crie um post.yaml novo para cada vídeo, somente com pt, source/fontes e video_segundos de 30 a
-60; use 45 como padrão e ajuste pelo tempo de leitura. Escolha imagens oficiais, preserve a
-anatomia dos personagens, revise os recortes e use layout card quando necessário. Os vídeos
-anteriores e as versões já entregues devem ser preservados. Para pedido explícito em inglês,
+60; use 45 como padrão e ajuste pelo tempo de leitura. Priorize screenshots oficiais pertinentes
+ao assunto para a capa. Para rostos e fotos horizontais, prefira layout: card, que preserva a
+fotografia inteira; revise o enquadramento sem reconstruir os personagens. Os vídeos
+anteriores e as versões já entregues devem ser preservados: toda revisão usa uma versão nova.
+Para pedido explícito em inglês,
 use o bloco en e post.build com langs=('en',), mantendo idiomas: [pt] no config.
+
+Escolha 3–6 fotos de apoio oficiais distintas e declare visuals: [{image, credit, label}] no
+post.yaml, com URLs reais e créditos. Use o campo opcional text para uma frase curta e verificada em cada foto; na interface,
+isso aparece como "Texto desta cena". Sem esse campo, o vídeo reutiliza os fatos já escritos
+nos slides, quando disponíveis, sem inventar conteúdo adicional.
+Use label "Imagem oficial ilustrativa" quando a foto
+apenas ilustra o assunto: ela não é prova da notícia nem quadro de um vazamento. No app,
+Biblioteca oficial → Foto da capa escolhe a capa; Imagem do vídeo adiciona apoio, com miniaturas
+para conferir e remover. O roteiro visual abre com a capa, alterna as fotos e slides curtos de
+fatos apurados e fecha com a CTA, quando ativada. Não invente fatos para criar mais slides.
+
+Nas notícias v2 de 30 s ou mais, o motor usa max_scene_seconds=7. Fotos diferentes podem retornar
+espaçadas para completar a duração; capa e CTA não se repetem para preencher tempo. Listas cujo
+mínimo de leitura excede 7 s registram uma exceção; prefira dividi-las sem perder informação.
+Se faltarem fotos ou slides, corrija a seleção indicada no erro. Não estique uma capa por 30 s.
 
 Rode .venv/Scripts/python.exe -B -u -X utf8 scripts/produzir_rotina.py <id>. Esse comando gera
 br/tiktok/post.mp4 e a subpasta br/qa com as verificações e imagens para revisão. Use música tema
 local autorizada. Não substitua a trilha por uma escolha aleatória nem por música automática da plataforma.
 
-Abra as capas e quadros das transições e revise os MP4 exportados: textos legíveis, rosto íntegro,
+Abra as capas e quadros das transições e revise os MP4 exportados: variedade real de imagens,
+texto legível, rosto íntegro,
 áreas seguras, movimentos suaves, áudio, resolução 1080x1920, 30 fps e duração real entre 30 e 60 s.
 Rode as verificações apropriadas ao que foi alterado e registre apenas testes realmente executados.
 Se o build/QA falhar, corrija ou relate a pendência; não marque a história como entregue.

@@ -12,12 +12,13 @@ import json
 import os
 import re
 import html as htmlmod
+from urllib.parse import urlparse
 
 import requests
 
 from . import media
 from .config import USER_AGENT, brand, days_to_release
-from .post import save, slugify
+from .post import post_dir, save, slugify
 
 MODEL = os.environ.get("LEONIDA_MODEL", "claude-opus-5-5")
 
@@ -124,39 +125,152 @@ def draft_with_claude(story: dict) -> dict:
     return json.loads(text)
 
 
+def _short_text(text: str, limit: int) -> str:
+    """Encurta o texto no limite de uma palavra, sem cortar nomes ao meio."""
+    text = re.sub(r"\s+", " ", htmlmod.unescape(str(text or ""))).strip()
+    if len(text) <= limit:
+        return text
+    words = text.split()
+    kept = []
+    for word in words:
+        if len(" ".join([*kept, word])) > limit - 1:
+            break
+        kept.append(word)
+    return " ".join(kept).rstrip(" ,;:-") + "…"
+
+
+def _story_words(story: dict) -> str:
+    return " ".join(str(story.get(key) or "") for key in
+                    ("title", "title_pt", "title_en", "summary")).lower()
+
+
+def _game_topic(story: dict) -> str:
+    text = _story_words(story)
+    if re.search(r"\bgta\s*(?:vi|6)\b", text):
+        return "GTA VI"
+    if re.search(r"\bgta\s*online\b", text):
+        return "GTA Online"
+    if re.search(r"\bgta\s*(?:v|5)\b", text):
+        return "GTA V"
+    return "GTA VI"
+
+
+def image_hint(story: dict, hint: str = "") -> str:
+    """Identifica o assunto antes de recorrer ao cenário genérico de Vice City."""
+    text = _story_words(story)
+    if re.search(r"\blucia\b", text) and re.search(r"\bjason\b", text):
+        return "Jason_and_Lucia"
+    if re.search(r"\blucia\b", text):
+        return "Lucia_Caminos"
+    if re.search(r"\bjason\b", text):
+        return "Jason_Duval"
+    groups = ("Leonida_Keys", "Grassrivers", "Port_Gellhorn", "Ambrosia",
+              "Mount_Kalaga_National_Park", "Vice_City")
+    for group in groups:
+        if group.replace("_", " ").lower() in text:
+            return group
+    allowed = (*groups, "Jason_Duval", "Lucia_Caminos", "Jason_and_Lucia")
+    return next((group for group in allowed if group.lower() == str(hint).lower()), "Vice_City")
+
+
 def draft_template(story: dict) -> dict:
-    """Sem IA: usa os títulos originais. O post fica marcado como 'revisar'."""
+    """Sem IA: rascunho curto para revisão, sem repetir conteúdo explícito do feed."""
     en = story.get("title_en") or story["title"]
     pt = story.get("title_pt") or story["title"]
-    summ = (story.get("summary") or "")[:115]
+    text = _story_words(story)
+    game = _game_topic(story)
+    explicit = re.search(r"\b(?:naked|nude|nudity|nudes|nudez|nu[as]?|nus|pelad[oa]s?|porn\w*|sexualmente|sexual\w*)\b", text)
+    if explicit:
+        pt, en = f"Relato não confirmado sobre {game}", f"Unconfirmed {game} report"
+        summ = "O relato precisa de verificação antes da publicação."
+        summ_en = "The report needs verification before publication."
+    else:
+        summ = _short_text(story.get("summary") or "", 115)
+        summ_en = summ
+    leaked = bool(re.search(r"\b(?:leak\w*|vaza\w*|vazou)\b", text))
+    rumored = bool(re.search(r"\b(?:rumo(?:r|res)\w*|unconfirmed|não confirmado|nao confirmado)\b", text))
+    tag = "vazamento" if leaked else "rumor" if (rumored or explicit) else "analise"
     return {
-        "tag": "urgente",
-        "image_hint": "Vice_City",
+        "tag": tag,
+        "image_hint": image_hint(story),
         "needs_review": True,
-        "pt": {"kicker": "GTA VI", "headline": pt[:90], "summary": summ,
+        "pt": {"kicker": game, "headline": _short_text(pt, 70), "summary": summ,
                "caption": f"{pt}\n\nO que você acha? Comenta aí 👇", "hashtags": [], "facts": []},
-        "en": {"kicker": "GTA VI", "headline": en[:90], "summary": summ,
+        "en": {"kicker": game, "headline": _short_text(en, 70), "summary": summ_en,
                "caption": f"{en}\n\nThoughts? Drop them below 👇", "hashtags": [], "facts": []},
     }
 
 
+def _official_image(url: str) -> bool:
+    parsed = urlparse(str(url or ""))
+    host = (parsed.hostname or "").lower()
+    trusted = host == "rockstargames.com" or host.endswith(".rockstargames.com") \
+        or host == "media-rockstargames-com.akamaized.net"
+    return parsed.scheme == "https" and trusted and not parsed.username and not parsed.password
+
+
+def _library_candidates(story: dict, hint: str) -> list[str]:
+    """Rotação determinística dentro do assunto, seguida apenas de cenários de Vice City."""
+    if _game_topic(story) != "GTA VI":
+        return []   # a biblioteca é exclusivamente de GTA VI, não ilustra GTA Online/GTA V
+    try:
+        items = media.sync_rockstar_library()
+    except Exception:
+        return []
+    group = image_hint(story, hint)
+    selected = []
+    try:
+        index = int(str(story.get("id") or "0"), 16)
+    except ValueError:
+        index = sum(str(story.get("id") or "").encode("utf-8"))
+    for requested in dict.fromkeys((group, "Vice_City")):
+        pool = sorted({item.get("url") for item in items
+                       if str(item.get("group") or "").lower() == requested.lower()
+                       and _official_image(item.get("url"))})
+        if not pool:
+            continue
+        shift = index % len(pool)
+        selected.extend(url for url in [*pool[shift:], *pool[:shift]] if url not in selected)
+    return selected
+
+
 def pick_image(story: dict, hint: str) -> str:
-    """Imagem da matéria (se for grande) ou screenshot oficial da Rockstar."""
-    for s in story["sources"]:
+    """Screenshot oficial pertinente; imagem oficial da matéria apenas como alternativa."""
+    candidates = _library_candidates(story, hint)
+    if candidates:
+        return candidates[0]
+    for s in story.get("sources") or []:
         if "news.google.com" in s["url"] or "reddit.com" in s["url"]:
             continue
         try:
             meta = media.page_meta(s["url"])
             url = meta.get("image")
-            if not url:
+            if not _official_image(url):
                 continue
             from PIL import Image
-            im = Image.open(media.fetch(url))
-            if im.width >= 1600:
-                return url
+            with Image.open(media.fetch(url)) as im:
+                if im.width >= 1200 and im.height >= 600:
+                    return url
         except Exception:
             continue
-    return media.library_pick(hint or "Vice_City", int(story["id"], 16)) or ""
+    return ""
+
+
+def pick_visuals(story: dict, hint: str, cover_image: str, limit: int = 3) -> list[dict]:
+    """Imagens distintas para novas cenas; são ilustrações oficiais, não prova do relato."""
+    urls = [url for url in _library_candidates(story, hint) if url != cover_image]
+    return [{"image": url, "credit": "Rockstar Games", "label": "Imagem oficial ilustrativa"}
+            for url in urls[:max(0, limit)]]
+
+
+def _available_post_id(base: str) -> str:
+    """Uma nova proposta não substitui um rascunho ou uma entrega anterior."""
+    candidate = base
+    version = 2
+    while (post_dir(candidate) / "post.yaml").exists():
+        candidate = f"{base}-v{version}"
+        version += 1
+    return candidate
 
 
 def story_to_post(story: dict, use_llm: bool | None = None) -> dict:
@@ -165,11 +279,17 @@ def story_to_post(story: dict, use_llm: bool | None = None) -> dict:
     draft = draft_with_claude(story) if use_llm else draft_template(story)
     date = dt.date.today().isoformat()
     lead = story["sources"][0]
+    hint = image_hint(story, draft.get("image_hint", ""))
+    image = pick_image(story, hint)
     post = {
-        "id": f"{date}-{slugify(draft['en']['headline'].replace('*', ''), 48)}",
+        "id": _available_post_id(f"{date}-{slugify(draft['en']['headline'].replace('*', ''), 48)}"),
         "date": date,
         "tag": draft["tag"],
-        "image": pick_image(story, draft.get("image_hint", "")),
+        "image": image,
+        "layout": "card",
+        "cutout": False,
+        "foto_limpa": False,
+        "visuals": pick_visuals(story, hint, image),
         "source": {"name": lead["name"].split(" (")[0], "url": lead["url"]},
         "radar_id": story["id"],
     }

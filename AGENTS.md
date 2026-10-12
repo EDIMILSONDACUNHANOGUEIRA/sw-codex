@@ -52,9 +52,15 @@ Use `--sem-video` para pular só a capa animada (HyperFrames); o vídeo de publi
      Faça até dois vídeos por rodada, priorizando a relevância; deixe as demais pautas novas para a
      próxima rodada. Cada vídeo novo tem **30–60 segundos**, padrão **45 s**, definido explicitamente
      em `video_segundos` pelo tempo de leitura. Não aumente a duração de vídeos antigos ao refazê-los.
-   - Escolha a imagem: prefira **screenshots oficiais da Rockstar** (`python -m leonida biblioteca`
-     lista todas; URLs do tipo `https://www.rockstargames.com/VI/_next/static/media/...`) ou a
-     `og:image` da matéria se for oficial e tiver ≥ 1200 px de largura.
+   - Escolha uma capa pertinente ao assunto, priorizando **screenshots oficiais da Rockstar**
+     (`python -m leonida biblioteca` lista todas; URLs do tipo
+     `https://www.rockstargames.com/VI/_next/static/media/...`). Use a `og:image` da matéria somente
+     se for oficial, pertinente e tiver ≥ 1200 px de largura. Para rostos e fotos horizontais,
+     prefira `layout: card`, que preserva a fotografia inteira. Não use um recorte defeituoso.
+   - Acrescente **3–6 imagens oficiais de apoio distintas** em `visuals`, com `image`, `credit`
+     e `label`. Escolha cenas relacionadas à pauta, sem representar uma imagem ilustrativa como
+     prova ou quadro de vazamento. Inclua slides apenas com fatos apurados. Na biblioteca do app,
+     **Foto da capa** altera a capa; **Imagem do vídeo** adiciona apoio, com miniaturas para revisão.
 3. `python -m leonida build <post-id> --sem-video` — gera capa, carrossel, vídeo e legendas em
    `prontos/<data>/<post-id>/{br,us}/`. Use `--sem-video` para iterar rápido.
    Para um pedido explícito em inglês, use `post.build('<id>', langs=('en',), video=False, estilo='v2')`
@@ -64,6 +70,11 @@ Use `--sem-video` para pular só a capa animada (HyperFrames); o vídeo de publi
    oficial; se o recorte falhar, use `layout: card`. Confira a capa e as transições no vídeo exportado,
    texto legível entre movimentos, áreas seguras, duração real, resolução e áudio. Nunca declare QA
    que não foi executada. Preserve as entregas existentes; crie uma versão nova para revisões.
+   Para notícias v2 de 30 s ou mais, `post.py` usa `max_scene_seconds=7`: capa inicial, fotos de
+   apoio, slides e CTA alternam sem deixar a capa parada por 30 s. Fotos distintas podem voltar
+   espaçadas; capa e CTA não se repetem para completar a duração. A leitura mínima de listas pode
+   ultrapassar 7 s, com exceção registrada no log; divida listas extensas quando possível. Se faltam
+   imagens ou slides, o build falha com orientação clara. Corrija a seleção, sem esticar a capa.
 5. `python -m leonida galeria` atualiza `prontos/index.html`. Só depois de exportação e revisão bem
    sucedidas, marque as histórias entregues com `radar.mark_seen(['<id>'], 'entregue')`.
    `published` ou `state/publicados.json` exige evidência de publicação real, não apenas geração.
@@ -156,6 +167,11 @@ image: "https://www.rockstargames.com/VI/_next/static/media/Lucia_Caminos_06....
 #                       # dinamico = slideshow com itens um a um; classico = slideshow antigo
 # foto_limpa: true      # força o slide da imagem limpa (ex.: arte oficial hospedada fora da Rockstar)
 # credito_imagem: "LOVE Magazine / Rockstar Games"   # crédito no slide da imagem limpa
+# Imagens de apoio: escolha 3–6 URLs distintas da biblioteca (substitua os exemplos abaixo).
+visuals:
+  - {image: "URL_OFICIAL_DA_FOTO_1", credit: "Rockstar Games", label: "Imagem oficial ilustrativa"}
+  - {image: "URL_OFICIAL_DA_FOTO_2", credit: "Rockstar Games", label: "Imagem oficial ilustrativa"}
+  - {image: "URL_OFICIAL_DA_FOTO_3", credit: "Rockstar Games", label: "Imagem oficial ilustrativa"}
 # site: false           # não vira matéria no site (use para análise/especulação)
 # fontes: [{name: ..., url: ...}]                    # várias fontes (aparecem no fim da matéria)
 source: { name: "Rockstar Games", url: "https://www.rockstargames.com/VI/music" }

@@ -25,9 +25,19 @@ Use este texto no chat do projeto e peça para agendar às 11h e 17h no fuso Ame
 > em português do Brasil, 1080x1920, rodapé @leonidawirebrz e legenda para publicar.
 > Inglês apenas quando eu pedir explicitamente, usando @leonidawireusa naquela entrega.
 > Se houver mais notícias, guarde uma fila local para a próxima rodada.
-> Escreva os post.yaml com fontes e imagens oficiais, preservando os arquivos anteriores.
+> Escreva os post.yaml com fontes e imagens oficiais pertinentes à pauta. Preserve os arquivos
+> anteriores e crie uma versão nova para qualquer revisão. Prefira layout: card para rostos e
+> fotografias horizontais, preservando a imagem inteira. Escolha 3–6 fotos oficiais de apoio
+> diferentes em visuals: [{image, credit, label}], com URLs reais e créditos. Imagens ilustrativas
+> devem ter esse rótulo; não são prova da notícia nem quadros de um vazamento. Na Biblioteca oficial,
+> Foto da capa escolhe a miniatura principal; Imagem do vídeo adiciona apoio com miniaturas.
+> Abra com a capa, alterne as fotos de apoio e slides curtos de fatos verificados e termine com
+> a CTA, quando ativada. Notícias v2 de 30 s ou mais usam max_scene_seconds=7: fotos distintas
+> podem retornar espaçadas, sem repetir capa e CTA para completar o tempo. Listas extensas
+> preservam a leitura mínima e registram exceção acima de 7 s; prefira dividi-las. Se faltam
+> imagens ou slides, corrija a seleção indicada no erro, sem esticar uma capa por 30 s.
 > Rode scripts/produzir_rotina.py com os IDs escolhidos. Revise todas as capas e o
-> contato de quadros gerado no QA, incluindo as transições. Confira duração,
+> contato de quadros gerado no QA, incluindo variedade das imagens e transições. Confira duração,
 > resolução, decodificação completa e presença de áudio. Entregue aqui os MP4,
 > legendas e fontes locais. Registre os IDs e temas entregues em state/entregas.json;
 > entregue não significa publicado. Não publique em redes, não envie notificações

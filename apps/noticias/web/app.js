@@ -67,6 +67,8 @@ $("#btn-count").addEventListener("click", async () => { const r = await api("/ap
 
 // ---------------------------------------------------------------- editor
 let current = null;
+let selectedVisuals = [];
+let coverPreviewObject = null;
 async function loadPostList(select) {
   const posts = await api("/api/posts");
   const sel = $("#post-select");
@@ -87,8 +89,8 @@ async function openPost(id) {
   current = await api(`/api/posts/${encodeURIComponent(id)}`);
   $("#editor").classList.remove("hidden");
   const p = current;
-  setField("tag", p.tag || "oficial"); setField("date", String(p.date || "").slice(0, 10)); setField("layout", p.layout || "cover");
-  setField("image", p.image); setField("zoom", p.zoom || ""); setField("cutout", p.cutout); setField("cta", p.cta);
+  setField("tag", p.tag || "oficial"); setField("date", String(p.date || "").slice(0, 10)); setField("layout", p.layout || "card");
+  setField("image", p.image); setField("zoom", p.zoom || ""); setField("cutout", p.cutout === true || (p.layout === "cover" && p.cutout !== false)); setField("cta", p.cta);
   setField("source_name", p.source?.name); setField("source_url", p.source?.url);
   for (const l of ["pt", "en"]) {
     const loc = p[l] || {};
@@ -96,13 +98,14 @@ async function openPost(id) {
     setField(`${l}.hashtags`, (loc.hashtags || []).join(" "));
     setField(`${l}.slides`, loc.slides?.length ? JSON.stringify(loc.slides, null, 1) : "");
   }
-  $("#preview-img").removeAttribute("src");
+  selectedVisuals = (Array.isArray(p.visuals) ? p.visuals : []).map((v) => typeof v === "string" ? { image: v } : { ...v }).filter((v) => typeof v.image === "string" && v.image.trim());
+  clearCoverPreview(); drawSelectedCover(); drawSelectedVisuals();
   if (p.needs_review) toast("⚠️ Rascunho sem IA: revise manchete, resumo e legenda");
 }
 function collect() {
   const f = $("#post-form"); const g = (n) => $(`[name="${n}"]`, f);
   const p = { ...current, tag: g("tag").value, date: g("date").value, layout: g("layout").value, image: g("image").value.trim(),
-    cutout: g("cutout").checked, cta: g("cta").checked, source: { name: g("source_name").value, url: g("source_url").value }, _reviewed: true };
+    cutout: g("cutout").checked, cta: g("cta").checked, visuals: selectedVisuals.map((v) => ({ ...v })), source: { name: g("source_name").value, url: g("source_url").value }, _reviewed: true };
   const z = parseFloat(g("zoom").value); if (z) p.zoom = z; else delete p.zoom;
   for (const l of ["pt", "en"]) {
     const loc = { ...(current[l] || {}) };
@@ -126,7 +129,8 @@ async function preview(lang, btn) {
   try {
     await save(); btn.disabled = true; btn.textContent = "Renderizando…";
     const blob = await api(`/api/posts/${encodeURIComponent(current.id)}/preview?lang=${lang}`, { method: "POST" });
-    $("#preview-img").src = URL.createObjectURL(blob);
+    clearCoverPreview(); coverPreviewObject = URL.createObjectURL(blob); $("#preview-img").src = coverPreviewObject;
+    $("#preview-state").textContent = "Capa editada. Confira o rosto, o enquadramento e o texto antes de gerar o vídeo.";
   } catch (e) { toast("Erro: " + e.message); }
   btn.disabled = false; btn.textContent = lang === "pt" ? "Prévia BR" : "Prévia US";
 }
@@ -142,9 +146,62 @@ $("#btn-build").addEventListener("click", async (e) => {
 $("#upload").addEventListener("change", async (e) => {
   const file = e.target.files[0]; if (!file || !current) return;
   const fd = new FormData(); fd.append("file", file);
-  const r = await fetch(`/api/posts/${encodeURIComponent(current.id)}/upload`, { method: "POST", body: fd }).then((x) => x.json());
-  setField("image", r.image); toast("Imagem enviada");
+  try {
+    const response = await fetch(`/api/posts/${encodeURIComponent(current.id)}/upload`, { method: "POST", body: fd });
+    if (!response.ok) throw new Error("Não foi possível enviar a imagem");
+    const r = await response.json(); chooseCover(r.image); toast("Foto da capa enviada");
+  } catch (err) { toast("Erro: " + err.message); }
 });
+
+function clearCoverPreview() {
+  if (coverPreviewObject) URL.revokeObjectURL(coverPreviewObject);
+  coverPreviewObject = null; $("#preview-img").removeAttribute("src");
+  $("#preview-state").textContent = "Use \"Prévia BR\" para conferir a capa editada com a foto e o texto atuais.";
+}
+function imageThumb(ref) {
+  if (typeof ref !== "string" || !ref.trim()) return "";
+  ref = ref.trim();
+  if (/^https?:\/\//i.test(ref)) {
+    try { const url = new URL(ref); if (!["http:", "https:"].includes(url.protocol) || !url.hostname || url.username || url.password) return ""; }
+    catch (_) { return ""; }
+  } else {
+    // Relative image references are limited to this post or project assets.
+    if (ref.includes("\\") || ref.includes(":") || ref.startsWith("/") || ref.split("/").some((part) => part === "..")) return "";
+    if (!ref.includes("/")) ref = `posts/${current?.id}/${ref}`;
+  }
+  return "/api/thumb?url=" + encodeURIComponent(ref);
+}
+function drawSelectedCover() {
+  const ref = $('[name="image"]', $("#post-form")).value.trim();
+  const image = $("#selected-cover"), thumb = imageThumb(ref);
+  image.classList.toggle("hidden", !thumb);
+  if (thumb) image.src = thumb; else image.removeAttribute("src");
+  const whole = $('[name="layout"]', $("#post-form")).value === "card";
+  $("#cover-state").textContent = !ref ? "Escolha uma imagem na biblioteca oficial para ver o enquadramento." : whole ? "Foto inteira, com proporções preservadas. Use Prévia BR para conferir a capa final." : "Modo personagem recortado. Confira o rosto e o recorte na Prévia BR.";
+}
+function chooseCover(ref) {
+  setField("image", ref); setField("layout", "card"); setField("cutout", false); setField("zoom", "");
+  clearCoverPreview(); drawSelectedCover(); drawSelectedVisuals();
+}
+$('[name="image"]', $("#post-form")).addEventListener("input", () => { clearCoverPreview(); drawSelectedCover(); });
+$('[name="layout"]', $("#post-form")).addEventListener("change", () => { clearCoverPreview(); drawSelectedCover(); });
+function drawSelectedVisuals() {
+  const count = selectedVisuals.length;
+  $("#visual-count").textContent = `${count} ${count === 1 ? "imagem selecionada" : "imagens selecionadas"}`;
+  $("#visual-empty").classList.toggle("hidden", count > 0);
+  $("#visual-grid").innerHTML = selectedVisuals.map((v, index) => {
+    const thumb = imageThumb(v.image);
+    const title = v.name || v.label || "Imagem de apoio";
+    return `<article class="visual-item">${thumb ? `<img loading="lazy" src="${esc(thumb)}" alt="${esc(title)}">` : '<div class="visual-placeholder">Imagem salva</div>'}<div class="visual-info"><b>${index + 1}. ${esc(title)}</b><small>${esc(v.credit || "Rockstar Games")}</small><label>Texto desta cena <small>(opcional)</small><input type="text" data-visual-text="${index}" maxlength="160" value="${esc(v.text || "")}" placeholder="Um fato ou detalhe da notícia"></label><button type="button" data-remove-visual="${index}" aria-label="Remover imagem ${index + 1} do vídeo">Remover do vídeo</button></div></article>`;
+  }).join("");
+  $$("[data-visual-text]").forEach((input) => input.addEventListener("input", () => {
+    const visual = selectedVisuals[Number(input.dataset.visualText)];
+    if (visual) visual.text = input.value.slice(0, 160);
+  }));
+  $$("[data-remove-visual]").forEach((b) => b.addEventListener("click", () => {
+    selectedVisuals.splice(Number(b.dataset.removeVisual), 1); drawSelectedVisuals(); drawLib();
+  }));
+}
 
 function followJob(id, logEl, onDone) {
   logEl.classList.remove("hidden"); logEl.textContent = "Trabalhando…";
@@ -158,18 +215,51 @@ function followJob(id, logEl, onDone) {
 
 // ---------------------------------------------------------------- biblioteca oficial
 let library = [];
-$("#btn-lib").addEventListener("click", async () => {
-  $("#lib-modal").classList.remove("hidden");
-  if (!library.length) { $("#lib-grid").innerHTML = "<p class='hint'>Carregando…</p>"; library = await api("/api/library"); }
-  drawLib();
-});
+function officialLibraryImage(item) {
+  if (!item || typeof item.name !== "string" || typeof item.url !== "string") return false;
+  try {
+    const url = new URL(item.url);
+    return url.protocol === "https:" && !url.username && !url.password && (url.hostname === "rockstargames.com" || url.hostname.endsWith(".rockstargames.com")) && url.pathname.startsWith("/VI/");
+  } catch (_) { return false; }
+}
+async function openLibrary(mode) {
+  if (!current) return;
+  $("#lib-use").value = mode; $("#lib-modal").classList.remove("hidden");
+  try {
+    if (!library.length) {
+      $("#lib-grid").innerHTML = "<p class='hint'>Carregando imagens oficiais…</p>";
+      const items = await api("/api/library"); library = (Array.isArray(items) ? items : []).filter(officialLibraryImage);
+    }
+    drawLib();
+  } catch (err) { $("#lib-grid").textContent = "Não foi possível abrir a biblioteca. Tente novamente."; toast("Erro: " + err.message); }
+}
+$("#btn-lib").addEventListener("click", () => openLibrary("cover"));
+$("#btn-video-lib").addEventListener("click", () => openLibrary("video"));
 $("#lib-close").addEventListener("click", () => $("#lib-modal").classList.add("hidden"));
 $("#lib-filter").addEventListener("input", drawLib);
+$("#lib-use").addEventListener("change", drawLib);
 function drawLib() {
-  const q = $("#lib-filter").value.toLowerCase();
-  $("#lib-grid").innerHTML = library.filter((i) => !q || i.name.toLowerCase().includes(q)).map((i) =>
-    `<figure data-url="${esc(i.url)}"><img loading="lazy" src="/api/thumb?url=${encodeURIComponent(i.url)}"><figcaption>${esc(i.name)}</figcaption></figure>`).join("");
-  $$("#lib-grid figure").forEach((f) => f.addEventListener("click", () => { setField("image", f.dataset.url); $("#lib-modal").classList.add("hidden"); toast("Imagem escolhida"); }));
+  const q = $("#lib-filter").value.toLowerCase(), mode = $("#lib-use").value;
+  const cover = $('[name="image"]', $("#post-form")).value.trim();
+  $("#lib-state").textContent = mode === "cover" ? "Escolha a foto da capa. Ela será preservada inteira." : `Adicione fotos diferentes ao vídeo. ${selectedVisuals.length} de 6 selecionadas; clique em Fechar quando terminar.`;
+  const shown = library.filter((i) => !q || `${i.name} ${i.group || ""}`.toLowerCase().includes(q));
+  $("#lib-grid").innerHTML = shown.length ? shown.map((i) => {
+    const selected = selectedVisuals.some((v) => v.image === i.url), isCover = cover === i.url;
+    const label = isCover ? "Foto da capa" : selected ? "No vídeo ✓" : mode === "video" ? "Adicionar ao vídeo" : "Usar como capa";
+    const disabled = mode === "video" && (selected || isCover || selectedVisuals.length >= 6);
+    return `<figure class="${selected || isCover ? "selected" : ""}"><img loading="lazy" src="${esc(imageThumb(i.url))}" alt="${esc(i.name)}"><figcaption><b>${esc(i.name.replace(/_/g, " "))}</b><small>Rockstar Games</small><button type="button" data-library-image="${esc(i.url)}"${disabled ? " disabled" : ""}>${label}</button></figcaption></figure>`;
+  }).join("") : "<p class='hint'>Nenhuma imagem oficial corresponde ao filtro.</p>";
+  $$("[data-library-image]").forEach((button) => button.addEventListener("click", () => {
+    const ref = button.dataset.libraryImage, item = library.find((i) => i.url === ref);
+    if (!item) return;
+    if (mode === "cover") {
+      chooseCover(ref); $("#lib-modal").classList.add("hidden"); toast("Foto da capa escolhida — confira a Prévia BR");
+    } else {
+      if (selectedVisuals.length >= 6 || ref === cover || selectedVisuals.some((v) => v.image === ref)) return;
+      selectedVisuals.push({ image: ref, credit: "Rockstar Games", label: "Imagem oficial ilustrativa", name: item.name.replace(/_/g, " ") });
+      drawSelectedVisuals(); drawLib(); toast("Imagem adicionada ao vídeo");
+    }
+  }));
 }
 
 

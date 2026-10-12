@@ -20,7 +20,7 @@ import os
 import shutil
 import subprocess
 import tempfile
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 
 import numpy as np
@@ -252,11 +252,97 @@ def _plan_entries(sc: Scene, beats_local: list[float] | None = None,
 HOLD_MIN = {"cover": 2.4, "list": 2.5, "grid": 2.5, "foto": 1.8, "cta": 1.0}
 
 
-def plan(scenes: list[Scene], target: float | None, seed: str | None, log=print) -> list[float]:
+def _scene_minimum(sc: Scene) -> float:
+    return sc.settle + HOLD_MIN.get(sc.kind, 2.5) + OUTRO + T
+
+
+def _photo_key(sc: Scene) -> bytes:
+    """Compara a mídia, sem contar textos, logo ou as cópias de uma cena."""
+    photos = [sp for sp in sc.sprites if sp.anim == "photo"]
+    source = max(photos, key=lambda sp: sp.img.width * sp.img.height).img if photos else sc.bg
+    return source.convert("RGB").resize((48, 48), Image.Resampling.BILINEAR).tobytes()
+
+
+def _bounded_variety(scenes: list[Scene], target: float, limit: float, log) -> list[float]:
+    """Completa a agenda somente com fotos existentes e distintas, sem criar informação.
+
+    Os clones compartilham bitmaps, mas possuem suas próprias entradas e tempos.
+    A lista recebida é atualizada: os novos inícios continuam correspondendo às cenas
+    usadas pelo encode e pelo QA. Capa e CTA não se repetem para preencher tempo.
+    """
+    if not math.isfinite(limit) or limit <= 0:
+        raise ValueError("max_scene_seconds precisa ser positivo e finito")
+
+    def caps():
+        values = []
+        for sc in scenes:
+            minimum = _scene_minimum(sc)
+            if minimum > limit + 1e-7 and sc.kind not in {"list", "grid"}:
+                raise ValueError(f"limite de {limit:g}s é curto para ler a cena {sc.kind}: mínimo {minimum:.2f}s")
+            values.append(max(limit, minimum))
+        return values
+
+    maximum = caps()
+    photos: dict[bytes, Scene] = {}
+    for sc in scenes:
+        if sc.kind == "foto":
+            photos.setdefault(_photo_key(sc), sc)
+    originals = list(photos.items())
+    cursor, inserted = 0, 0
+    while target > sum(maximum) - T * (len(scenes) - 1) + 1e-7:
+        if len(originals) < 2:
+            raise ValueError("o vídeo ficaria tempo demais na mesma imagem: adicione mais imagens ou slides "
+                             "(pelo menos duas fotos de apoio diferentes) ou reduza video_segundos")
+        at = len(scenes) - 1 if scenes[-1].kind == "cta" else len(scenes)
+        previous = _photo_key(scenes[at - 1]) if at and scenes[at - 1].kind == "foto" else None
+        while originals[cursor % len(originals)][0] == previous:
+            cursor += 1
+        _, original = originals[cursor % len(originals)]
+        clone = replace(original, sprites=[replace(sp) for sp in original.sprites], times=[], pulses=[])
+        _plan_entries(clone)
+        scenes.insert(at, clone)
+        cursor += 1
+        inserted += 1
+        maximum = caps()
+        if sum(_scene_minimum(sc) for sc in scenes) - T * (len(scenes) - 1) > target + 1e-7:
+            raise ValueError("a leitura não cabe entre as trocas: adicione mais imagens ou slides mais curtos "
+                             "ou aumente video_segundos")
+    if inserted:
+        log(f"  ritmo: {inserted} retomada(s) de fotos de apoio, sem repetir imagens adjacentes; "
+            f"capa e CTA aparecem uma vez")
+    for sc, cap in zip(scenes, maximum):
+        if cap > limit + 1e-7:
+            log(f"  leitura: cena {sc.kind} precisa de {cap:.2f}s, acima do limite visual de {limit:g}s")
+    return maximum
+
+
+def _bounded_extra(minimum: list[float], maximum: list[float], weights: list[float],
+                   available: float) -> list[float]:
+    """Distribui a folga sem deixar a capa absorver a duração inteira."""
+    extra = [0.0] * len(minimum)
+    remaining = available
+    while remaining > 1e-8:
+        active = [i for i in range(len(extra)) if maximum[i] - minimum[i] - extra[i] > 1e-8]
+        if not active:
+            raise ValueError("faltam imagens ou slides para manter o ritmo do vídeo")
+        weight = sum(weights[i] for i in active)
+        used = 0.0
+        for i in active:
+            add = min(remaining * weights[i] / weight, maximum[i] - minimum[i] - extra[i])
+            extra[i] += add
+            used += add
+        remaining -= used
+    return extra
+
+
+def plan(scenes: list[Scene], target: float | None, seed: str | None, log=print,
+         *, max_scene_seconds: float | None = None) -> list[float]:
     """Agenda exata a 30 fps, com leitura preservada; alvo impossível gera ValueError.
 
     Mantém a API do motor v2: devolve os inícios e atualiza dur/settle/times das cenas.
     As batidas só deslocam uma entrada em até 250 ms, respeitando a reserva de leitura.
+    max_scene_seconds limita a permanência; fotos de apoio distintas podem ser
+    retomadas. Sem esse parâmetro, mantém a duração dos projetos legados.
     """
     if not scenes:
         raise ValueError("vídeo v2 precisa de pelo menos uma cena")
@@ -269,20 +355,29 @@ def plan(scenes: list[Scene], target: float | None, seed: str | None, log=print)
     target = frames / FPS
     for sc in scenes:
         _plan_entries(sc)
-    minimum = [s.settle + HOLD_MIN.get(s.kind, 2.5) + OUTRO + T for s in scenes]
+    minimum = [_scene_minimum(s) for s in scenes]
     required = sum(minimum) - T * (len(scenes) - 1)
     if target < required - 1e-7:
         raise ValueError(f"video_segundos={target:g} é curto para estas cenas: mínimo {required:.2f}s "
                          "para revelar todo o conteúdo, manter a lista legível por 2,5s e reservar a troca")
+    maximum = None
+    if max_scene_seconds is not None:
+        maximum = _bounded_variety(scenes, target, float(max_scene_seconds), log)
+        minimum = [_scene_minimum(s) for s in scenes]
+        required = sum(minimum) - T * (len(scenes) - 1)
     beats = beat_grid(seed, target + 1)
     weights = [{"cover": 1.2, "list": 1.6, "grid": 1.2, "foto": 0.6, "cta": 0.25}.get(s.kind, 1.0)
                for s in scenes]
-    extra = [(target - required) * w / sum(weights) for w in weights]
+    extra = ([(target - required) * w / sum(weights) for w in weights] if maximum is None
+             else _bounded_extra(minimum, maximum, weights, target - required))
     starts = [0.0]
     for i in range(1, len(scenes)):
         desired = sum(minimum[:i]) + sum(extra[:i]) - T * i
         low = starts[-1] + minimum[i - 1] - T
         high = target - sum(minimum[i:]) + T * (len(scenes) - i - 1)
+        if maximum is not None:
+            low = max(low, target - sum(maximum[i:]) + T * (len(scenes) - i - 1))
+            high = min(high, starts[-1] + maximum[i - 1] - T)
         choices = [b for b in beats if low - 1e-8 <= b <= high + 1e-8 and abs(b - desired) <= 0.25 + 1e-8]
         starts.append(min(choices, key=lambda b: abs(b - desired)) if choices
                       else min(max(desired, low), high))
@@ -559,7 +654,7 @@ def render_frames(scenes: list[Scene], starts: list[float]):
 
 
 def build(scenes: list[Scene], out: Path, seed: str | None = None, target: float | None = None,
-          log=print) -> Path:
+          log=print, *, max_scene_seconds: float | None = None) -> Path:
     """Renderiza o vídeo v2 com a música tema em `out`. Lança postvideo.MusicMissing sem música."""
     from .postvideo import MusicMissing
     theme = music.theme_path(seed)
@@ -569,7 +664,7 @@ def build(scenes: list[Scene], out: Path, seed: str | None = None, target: float
     ff = shutil.which("ffmpeg")
     if not ff:
         raise RuntimeError("ffmpeg não encontrado")
-    starts = plan(scenes, target, seed, log)
+    starts = plan(scenes, target, seed, log, max_scene_seconds=max_scene_seconds)
     if any(sc.bg.size != (W, H) for sc in scenes):
         raise ValueError(f"as cenas v2 precisam medir {W}×{H}")
     total = starts[-1] + scenes[-1].dur

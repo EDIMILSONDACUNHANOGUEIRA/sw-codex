@@ -174,8 +174,44 @@ $env:LEONIDA_YTDLP_BROWSER="chrome"   # usa os cookies do seu navegador (chrome,
 - Fotos pequenas (ex.: imagem de matéria em 1280×720) são ampliadas antes do recorte. Para upscale
   **com IA**, baixe o `realesrgan-ncnn-vulkan` nos Releases do
   [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) e coloque no PATH (ou defina `REALESRGAN_BIN`).
-- O redator automático só aceita imagem de matéria com ≥ 1600 px; senão usa screenshot oficial em 4K.
+- A seleção prioriza screenshots oficiais pertinentes ao assunto. Confira o personagem e a cena:
+  a resolução alta, sozinha, não torna uma imagem adequada para a notícia.
 - Vídeos em qualidade alta, 12 Mbps (`LEONIDA_VIDEO_BITRATE` para mudar).
+
+### Capa e imagens do vídeo
+
+No **Leonida Notícias**, abra **Biblioteca oficial** e use **Foto da capa** para escolher a
+miniatura principal. Para rostos e screenshots horizontais, prefira **Foto inteira (recomendado)**
+(`layout: card`): mantém a fotografia sem recortar ou reconstruir o personagem. Confira a prévia
+antes de gerar.
+
+Em **+ Escolher imagens oficiais**, selecione **Imagem do vídeo** e adicione **3–6 fotos de apoio
+diferentes**, relacionadas à pauta. As miniaturas permitem conferir e remover cada escolha.
+A foto da capa e as imagens já selecionadas não podem ser adicionadas novamente pela biblioteca.
+Os arquivos também podem ser definidos no `post.yaml`:
+
+```yaml
+layout: card
+video_segundos: 45
+visuals:
+  - {image: "URL_OFICIAL_DA_FOTO_1", credit: "Rockstar Games", label: "Imagem oficial ilustrativa"}
+  - {image: "URL_OFICIAL_DA_FOTO_2", credit: "Rockstar Games", label: "Imagem oficial ilustrativa"}
+  - {image: "URL_OFICIAL_DA_FOTO_3", credit: "Rockstar Games", label: "Imagem oficial ilustrativa"}
+```
+
+Substitua os três campos `URL_OFICIAL...` por URLs reais copiadas da biblioteca.
+O campo opcional `text` mostra uma frase curta junto à foto, editável em
+**Texto desta cena**. Quando ele está vazio, o vídeo usa os fatos já escritos nos slides,
+se disponíveis. A edição abre com a capa, alterna as fotos de apoio e os slides de fatos verificados e fecha com a CTA, quando
+ativada. Nas notícias v2 de 30 segundos ou mais, cada cena tem limite de **7 segundos**. Fotos
+distintas podem voltar em momentos separados para completar a duração; capa e CTA não se repetem
+para preencher tempo. Listas extensas preservam o tempo mínimo de leitura e registram essa exceção
+no log; prefira dividir o conteúdo em slides curtos.
+
+Se faltar variedade para a duração escolhida, a geração pede **mais imagens ou slides**. Ela não
+estica uma capa por 30 segundos. Revise a capa e os quadros das trocas; para corrigir uma entrega,
+crie uma versão nova e preserve os vídeos anteriores. Imagens ilustrativas oficiais não são prova
+da notícia nem quadros de um suposto vazamento: mantenha essa indicação no rótulo e no texto.
 
 ## Automação e GitHub Actions
 

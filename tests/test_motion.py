@@ -36,6 +36,13 @@ def scene(kind="cover", items=0, notes=0):
     return motion.Scene(kind, bg, sprites, enters=kind != "cover")
 
 
+def photo_scene(color):
+    sc = scene("foto")
+    sc.sprites.append(motion.Sprite("photo", "photo", 1,
+                                    Image.new("RGBA", (130, 160), color), 25, 80))
+    return sc
+
+
 class SmallCanvas(unittest.TestCase):
     def setUp(self):
         for name, value in (("W", TEST_SIZE[0]), ("H", TEST_SIZE[1]), ("CAM_ANCHOR", (90, 144))):
@@ -100,8 +107,77 @@ class PlanTests(unittest.TestCase):
                 self.assertGreaterEqual(sc.dur - motion.T - motion.OUTRO - sc.settle + 1e-8, 2.5)
                 self.assertTrue(all(.45 - 1e-8 <= b-a <= .7 + 1e-8 for a,b in zip(sc.times,sc.times[1:])))
 
+    def test_news_targets_reuse_only_distinct_supporting_photos_and_cap_holds(self):
+        for target in (30, 35, 40, 45, 60):
+            scenes = [scene(), photo_scene((190, 90, 20)), photo_scene((30, 80, 210)),
+                      photo_scene((30, 180, 70)), scene("cta")]
+            original_images = [(sc.bg.tobytes(), [sp.img.tobytes() for sp in sc.sprites]) for sc in scenes]
+            originals = scenes.copy()
+            rng = np.random.default_rng(target)
+            beats = sorted(rng.uniform(0, target + 1, target * 2))
+            with patch.object(motion, "beat_grid", return_value=beats):
+                starts = motion.plan(scenes, target, None, log=lambda _: None, max_scene_seconds=7)
+            self.assertAlmostEqual(starts[-1] + scenes[-1].dur, target, places=8)
+            self.assertEqual(sum(sc.kind == "cover" for sc in scenes), 1)
+            self.assertEqual(sum(sc.kind == "cta" for sc in scenes), 1)
+            for sc in scenes:
+                self.assertLessEqual(sc.dur, 7 + 1e-7)
+                self.assertGreaterEqual(sc.dur + 1e-7, motion._scene_minimum(sc))
+            for left, right in zip(scenes, scenes[1:]):
+                if left.kind == right.kind == "foto":
+                    self.assertNotEqual(motion._photo_key(left), motion._photo_key(right))
+            for original, pixels in zip(originals, original_images):
+                self.assertEqual((original.bg.tobytes(), [sp.img.tobytes() for sp in original.sprites]), pixels)
+            # Retakes have independent timing objects, with shared original media.
+            for sc in scenes:
+                self.assertTrue(any(sc.bg is source.bg for source in originals))
+            self.assertEqual(len({id(sp) for sc in scenes for sp in sc.sprites}),
+                             sum(len(sc.sprites) for sc in scenes))
+
+    def test_long_cover_and_duplicate_supporting_images_fail_before_beat_io(self):
+        for scenes in ([scene()], [scene(), scene("cta")],
+                       [scene(), photo_scene((190, 90, 20)), photo_scene((190, 90, 20)), scene("cta")]):
+            with patch.object(motion, "beat_grid") as beats:
+                with self.assertRaisesRegex(ValueError, "mais imagens ou slides"):
+                    motion.plan(scenes, 40, None, log=lambda _: None, max_scene_seconds=7)
+                beats.assert_not_called()
+
+    def test_different_labels_on_same_photo_do_not_count_as_new_images(self):
+        a, b = photo_scene((190, 90, 20)), photo_scene((190, 90, 20))
+        b.sprites[1].img = Image.new("RGBA", (100, 9), (255, 255, 255))
+        with patch.object(motion, "beat_grid") as beats:
+            with self.assertRaisesRegex(ValueError, "mais imagens ou slides"):
+                motion.plan([scene(), a, b, scene("cta")], 40, None,
+                            log=lambda _: None, max_scene_seconds=7)
+            beats.assert_not_called()
+
+    def test_long_list_retains_reading_and_reports_duration_exception(self):
+        scenes = [scene(), photo_scene((190, 90, 20)), scene("list", 12, notes=2),
+                  photo_scene((30, 80, 210)), scene("cta")]
+        logs = []
+        with patch.object(motion, "beat_grid", return_value=[]):
+            starts = motion.plan(scenes, 40, None, log=logs.append, max_scene_seconds=7)
+        listing = next(sc for sc in scenes if sc.kind == "list")
+        self.assertGreater(listing.dur, 7)
+        self.assertGreaterEqual(listing.dur - motion.T - motion.OUTRO - listing.settle + 1e-8, 2.5)
+        self.assertTrue(any("leitura: cena list" in line for line in logs))
+        self.assertAlmostEqual(starts[-1] + scenes[-1].dur, 40)
+
 
 class DrawingTests(SmallCanvas):
+    def test_bounded_news_has_real_visual_changes_and_preserves_loop(self):
+        scenes = [scene(), photo_scene((190, 90, 20)), photo_scene((30, 80, 210)), scene("cta")]
+        with patch.object(motion, "beat_grid", return_value=[]):
+            starts = motion.plan(scenes, 40, None, log=lambda _: None, max_scene_seconds=7)
+        first = np.asarray(motion.frame_at(scenes, starts, 0))
+        last = np.asarray(motion.frame_at(scenes, starts, 1199))
+        np.testing.assert_array_equal(first, last)
+        photos = [np.asarray(motion.frame_at(scenes, starts, round((st + sc.settle + 1) * 30)))[110:200, 40:140]
+                  for sc, st in zip(scenes, starts) if sc.kind == "foto"]
+        self.assertGreaterEqual(len(photos), 4)
+        for left, right in zip(photos, photos[1:]):
+            self.assertGreater(np.abs(left.astype(int) - right.astype(int)).mean(), 35)
+
     def test_source_loop_and_actual_hold_equal_static_layers(self):
         scenes = [scene(), scene("list", 5), scene("cta")]
         with patch.object(motion, "beat_grid", return_value=[]):
@@ -280,6 +356,17 @@ class BuildTests(SmallCanvas):
                     motion.build([scene(),scene("list",10)],path,target=5,log=lambda _:None)
                 encoder.assert_not_called()
             self.assertEqual(path.read_bytes(),b"old")
+
+    def test_long_cover_cannot_replace_existing_export(self):
+        with tempfile.TemporaryDirectory(dir=Path(__file__).parent) as folder:
+            path = Path(folder) / "test.mp4"
+            path.write_bytes(b"previous-valid-output")
+            with patch.object(motion.music, "theme_path", return_value=self.audio(folder)), \
+                    patch.object(motion.subprocess, "Popen") as encoder:
+                with self.assertRaisesRegex(ValueError, "mais imagens ou slides"):
+                    motion.build([scene()], path, target=40, log=lambda _: None, max_scene_seconds=7)
+                encoder.assert_not_called()
+            self.assertEqual(path.read_bytes(), b"previous-valid-output")
 
 
 if __name__ == "__main__":

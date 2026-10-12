@@ -524,7 +524,6 @@ def cover(post: dict, lang: str, base_dir: Path | None = None, today: dt.date | 
                 focus = (c[0], 0.5)
     if not focus:
         focus = cut.face_focus(src) or (0.5, 0.5)
-        focus = (focus[0], 0.5)
     focus = tuple(focus)
 
     # ---------- bloco inferior (calculado de baixo p/ cima)
@@ -552,6 +551,16 @@ def cover(post: dict, lang: str, base_dir: Path | None = None, today: dt.date | 
         fh, hl_lines = gfx.fit_font("display", lambda f: _wrap_words(words, f, text_w - 8), 4, 108, 72, 4)
     line_h = _line_height(fh, 1.16)
     head_y = sum_y - 26 - len(hl_lines) * line_h
+    # Never let a long headline consume the photograph or silently lose lines.
+    min_pill_y = s_top + 130 + 360 + 60 if layout == "card" else s_top + 350
+    while (len(hl_lines) > 4 or head_y - 82 < min_pill_y or
+           any(fh.getlength(" ".join(word for word, _ in line)) > text_w - 8 for line in hl_lines)) and fh.size > 52:
+        fh = gfx.font("display", fh.size - 2)
+        hl_lines = _wrap_words(words, fh, text_w - 8)
+        line_h = _line_height(fh, 1.16)
+        head_y = sum_y - 26 - len(hl_lines) * line_h
+    if len(hl_lines) > 4 or head_y - 82 < min_pill_y or any(fh.getlength(" ".join(word for word, _ in line)) > text_w - 8 for line in hl_lines):
+        raise ValueError("Manchete longa demais para manter a capa legível; use um título curto e leve os detalhes aos slides.")
     tag_text, tag_color = _tag_info(post.get("tag", ""), lang)
     if loc.get("selo"):                     # gancho no selo, ex.: "A ROCKSTAR POSTOU" (só se for verdade)
         tag_text = str(loc["selo"]).upper()
@@ -642,13 +651,14 @@ def cover(post: dict, lang: str, base_dir: Path | None = None, today: dt.date | 
         layers.append(Layer("subject", subj, "subject", 3))
 
     if layout == "card":
-        card_w = W - 2 * s_left
+        card_w = W - s_left - s_right
         ratio = src.height / src.width
         card_h = int(min(card_w * ratio, pill_y - 60 - (s_top + 130)))
         card_w2 = int(card_h / ratio) if card_w * ratio > card_h else card_w
-        img = upscale.sharpen(gfx.cover_fit(src, (card_w2, card_h), focus), 70)
+        # Matching the source ratio keeps the full face, hands and scene in view.
+        img = upscale.sharpen(src.resize((max(1, card_w2), max(1, card_h)), Image.Resampling.LANCZOS), 40)
         img = gfx.vice_grade(img, 0.6).convert("RGBA")
-        cx = (W - card_w2) // 2
+        cx = s_left + (card_w - card_w2) // 2
         cy = max(s_top + 130, (s_top + 120 + pill_y - 40 - card_h) // 2 + 20)
         rm = gfx.rounded_mask((card_w2, card_h), 30)
         card = _blank(size)
@@ -768,7 +778,8 @@ def is_official_image(ref: str | None) -> bool:
 
 
 def slide_foto(post: dict, lang: str, img_ref: str | None = None, base_dir: Path | None = None,
-               credit: str = "Rockstar Games", with_layers: bool = False):
+               credit: str = "Rockstar Games", with_layers: bool = False, label: str | None = None,
+               context: str | None = None):
     """Imagem LIMPA: a foto oficial inteira, sem texto por cima, sem recorte e sem filtro.
     Fundo = a própria foto desfocada; só um selo discreto "IMAGEM OFICIAL" e o crédito."""
     W, H = _canvas()
@@ -782,9 +793,20 @@ def slide_foto(post: dict, lang: str, img_ref: str | None = None, base_dir: Path
     cred = f"{'Imagem' if lang == 'pt' else 'Image'}: {credit}"
     credit_lines = _wrap_text(cred, fc, W - s_left - s_right - 8)
     credit_lh = _line_height(fc, 1.3)
+    context_lines = []
+    context_font = gfx.font("heavy", 44)
+    if context:
+        context_lines = _wrap_text(context, context_font, W - s_left - s_right - 8)
+        while len(context_lines) > 3 and context_font.size > 30:
+            context_font = gfx.font("heavy", context_font.size - 2)
+            context_lines = _wrap_text(context, context_font, W - s_left - s_right - 8)
+        if len(context_lines) > 3 or any(gfx.text_width(line, context_font) > W - s_left - s_right - 8 for line in context_lines):
+            raise ValueError("Texto da imagem de apoio longo demais; use uma frase curta por cena.")
+    context_lh = _line_height(context_font, 1.25)
+    context_h = len(context_lines) * context_lh + (36 if context_lines else 0)
     top, bottom = s_top + 140, H - s_bottom
     credit_h = len(credit_lines) * credit_lh
-    max_h = max(1, bottom - top - credit_h - 36)
+    max_h = max(1, bottom - top - credit_h - 36 - context_h)
     scale = min(W / src.width, max_h / src.height)
     fw, fh = max(1, int(src.width * scale)), max(1, int(src.height * scale))
     fg = upscale.sharpen(src.resize((fw, fh), Image.LANCZOS), 40).convert("RGBA")
@@ -796,10 +818,14 @@ def slide_foto(post: dict, lang: str, img_ref: str | None = None, base_dir: Path
     photo.alpha_composite(fg, (x, y))
     layers.append(Layer("photo", photo, "photo", 1))
     # selo e crédito discretos, FORA da foto
-    pill, _ = tag_pill(size, "IMAGEM OFICIAL" if lang == "pt" else "OFFICIAL IMAGE", "#22D3EE", s_left, y - 58 - 24)
+    label = label or ("IMAGEM OFICIAL" if lang == "pt" else "OFFICIAL IMAGE")
+    pill, _ = tag_pill(size, label.upper(), "#22D3EE", s_left, y - 58 - 24)
     layers.append(Layer("tag", pill, "pop", 2))
     layers.append(Layer("credit", text_block(size, credit_lines, fc, s_left, y + fh + 24, credit_lh, gfx.rgba("#E9E3F5", 220)),
                         "up", 3))
+    if context_lines:
+        layers.append(Layer("visual_context", text_block(size, context_lines, context_font, s_left,
+                            y + fh + 24 + credit_h + 36, context_lh, "#FFFFFF"), "up", 4))
     layers.append(Layer("handle", _handle_layer(size, lang), "static", 30))
     img = compose(layers, size).convert("RGB")
     return Render(img, layers, {"kind": "foto"}) if with_layers else img

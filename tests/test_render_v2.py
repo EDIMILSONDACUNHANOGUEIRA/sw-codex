@@ -61,6 +61,50 @@ class RenderV2Tests(unittest.TestCase):
         self.assertEqual(result.meta["kind"], "cover")
         self.assertTrue(any(layer.extra.get("hot") is not None for layer in result.layers))
 
+    def test_card_keeps_full_photo_and_reserves_room_for_long_headline(self):
+        self.src = Image.new("RGB", (960, 540), (80, 50, 60))
+        self.src.paste((255,0,0),(0,0,80,80))
+        self.src.paste((0,255,0),(880,0,960,80))
+        self.src.paste((0,0,255),(0,460,80,540))
+        self.src.paste((255,255,0),(880,460,960,540))
+        post = {**POST,"layout":"card", "pt":{**POST["pt"],
+                "headline":"Um relato muito discutido sobre GTA VI precisa de confirmação antes da versão final"}}
+        with patch.object(gfx,"vice_grade",side_effect=lambda im,*a:im.copy()):
+            result = render.cover(post,"pt",today=TODAY)
+        self.assert_composition(result)
+        self.assert_safe(result)
+        card = next(layer.image for layer in result.layers if layer.name=="card")
+        arr=np.asarray(card)
+        red,green,blue=arr[...,0].astype(int),arr[...,1].astype(int),arr[...,2].astype(int)
+        opaque=arr[...,3]>240
+        masks=[(red>180)&(green<60)&(blue<60), (green>180)&(red<60)&(blue<60),
+               (blue>180)&(red<60)&(green<60),(red>180)&(green>180)&(blue<60)]
+        centers=[]
+        for mask in masks:
+            yy,xx=np.where(mask&opaque)
+            self.assertGreater(len(xx),50)
+            centers.append((xx.mean(),yy.mean()))
+        self.assertLess(centers[0][0],centers[1][0])
+        self.assertLess(centers[0][1],centers[2][1])
+        self.assertGreater(centers[3][0],centers[2][0])
+        headlines=[layer for layer in result.layers if layer.name.startswith('headline_')]
+        self.assertLessEqual(len(headlines),4)
+
+    def test_supporting_photo_uses_illustration_label_with_safe_text(self):
+        result=render.slide_foto(POST,"pt",label="Imagem oficial ilustrativa",context="Estas fotos são ilustrações; o relato ainda não comprova a versão final do jogo.",with_layers=True)
+        self.assert_composition(result)
+        self.assert_safe(result)
+        context=next(layer for layer in result.layers if layer.name=='visual_context')
+        credit=next(layer for layer in result.layers if layer.name=='credit')
+        self.assertGreater(core_box(context)[1],core_box(credit)[3])
+
+    def test_unbroken_text_cannot_be_silently_cropped_in_cover_or_supporting_photo(self):
+        post={**POST,'layout':'card','pt':{**POST['pt'],'headline':'W'*95}}
+        with self.assertRaisesRegex(ValueError,'Manchete longa'):
+            render.cover(post,'pt',today=TODAY)
+        with self.assertRaisesRegex(ValueError,'Texto da imagem'):
+            render.slide_foto(POST,'pt',context='W'*160,with_layers=True)
+
     def test_cutout_and_contact_shadow_are_part_of_the_same_composition(self):
         post = {**POST, "cutout": True}
         mask = Image.new("L", self.src.size, 0)

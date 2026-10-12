@@ -36,15 +36,18 @@ def run(cmd):
     return subprocess.run(cmd, check=True, capture_output=True)
 
 
-def check_layers(scenes, starts, target, output):
+def check_layers(scenes, starts, target, output, art_by_scene=None):
     frames = round(target * motion.FPS)
     start = motion.frame_at(scenes, starts, 0)
     end = motion.frame_at(scenes, starts, frames - 1)
     assert np.array_equal(np.asarray(start), np.asarray(end)), "loop fonte diferente"
     files = sorted(output.parent.parent.glob("*.png"))
-    assert len(files) == len(scenes)
+    if art_by_scene is None:
+        assert len(files) == len(scenes)
+        art_by_scene = {id(scene.bg): art for scene, art in zip(scenes, files)}
     details = []
-    for scene, st, art in zip(scenes, starts, files):
+    for scene, st in zip(scenes, starts):
+        art = art_by_scene[id(scene.bg)]
         t = (np.floor((st + scene.dur - motion.T - motion.OUTRO) * motion.FPS) - 1) / motion.FPS
         actual = motion.frame_at(scenes, starts, round(t * motion.FPS))
         with Image.open(art) as image:
@@ -71,20 +74,26 @@ def check_layers(scenes, starts, target, output):
             "carousel_source_match": True, "static_core_text_safe": True}
 
 
-def planned(scenes, target, seed, log=print):
+def planned(scenes, target, seed, log=print, **options):
     global DETAIL
-    starts = ORIGINAL_PLAN(scenes, target, seed, log)
+    originals = list(scenes)
+    files = sorted(CURRENT_OUTPUT.parent.parent.glob("*.png"))
+    assert len(files) == len(originals), "artes originais não correspondem às cenas"
+    art_by_scene = {id(scene.bg): art for scene, art in zip(originals, files)}
+    starts = ORIGINAL_PLAN(scenes, target, seed, log, **options)
     total = starts[-1] + scenes[-1].dur
     assert abs(total - float(target)) <= 1e-7, "duração fonte diferente do pedido"
-    DETAIL = check_layers(scenes, starts, float(target), CURRENT_OUTPUT)
+    DETAIL = check_layers(scenes, starts, float(target), CURRENT_OUTPUT, art_by_scene)
+    DETAIL["unique_art_count"] = len(art_by_scene)
+    DETAIL["maximum_scene_seconds"] = max(scene.dur for scene in scenes)
     return starts
 
 
-def wrapped(scenes, out, seed=None, target=None, log=print):
+def wrapped(scenes, out, seed=None, target=None, log=print, **options):
     global CURRENT_OUTPUT
     CURRENT_OUTPUT = out
     clock = time.monotonic()
-    result = ORIGINAL_BUILD(scenes, out, seed=seed, target=target, log=log)
+    result = ORIGINAL_BUILD(scenes, out, seed=seed, target=target, log=log, **options)
     DETAIL["encode_seconds_including_source_qa"] = time.monotonic() - clock
     RESULTS.append(DETAIL)
     return result
