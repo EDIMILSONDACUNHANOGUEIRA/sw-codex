@@ -175,6 +175,28 @@ def cmd_editar(a):
     gallery.build()
 
 
+def cmd_gameplay(a):
+    import json
+    from . import gameplay
+
+    if a.render:
+        result = gameplay.render_project(a.fonte_video,
+            json.loads(Path(a.plano).read_text(encoding="utf-8")) if a.plano else None,
+            music=not a.sem_musica, subtitles=a.legendas)
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return
+    if a.plano:
+        raise SystemExit("Use --plano junto de --render PROJETO")
+    markers = json.loads(Path(a.marcadores).read_text(encoding="utf-8")) if a.marcadores else None
+    result = gameplay.analyze(a.fonte_video, title=a.titulo, credit=a.credito, lang=a.lang,
+        max_long=a.minutos * 60, short_count=a.shorts, short_seconds=a.segundos, markers=markers)
+    print(f"Plano e quadros: {gameplay.project_path(result['project_id'])}")
+    print(f"Revise plan.json e storyboard.jpg. Para gerar: python -m leonida gameplay {result['project_id']} --render")
+    if a.gerar:
+        print(json.dumps(gameplay.render_project(result['project_id'],
+              music=not a.sem_musica, subtitles=a.legendas), ensure_ascii=False, indent=2))
+
+
 def cmd_publicacao(a):
     import json as _json
     from . import publish
@@ -324,6 +346,22 @@ def main(argv=None):
     r.add_argument("--sem-musica", action="store_true", help="não colocar a música tema")
     r.add_argument("--motor", default=None, choices=["auto", "hyperframes", "ffmpeg"])
     r.set_defaults(fn=cmd_editar)
+
+    r = sp.add_parser("gameplay", help="gameplay longa por link: plano de melhores momentos, YouTube e shorts")
+    r.add_argument("fonte_video", help="URL/arquivo para analisar, ou ID do projeto com --render")
+    r.add_argument("--titulo", default="Melhores momentos de GTA", help="título geral; ajuste títulos dos cortes no plano")
+    r.add_argument("--credito", default="", help="autor/canal do vídeo fonte")
+    r.add_argument("--minutos", type=float, default=11, help="limite do vídeo horizontal (até 11 minutos)")
+    r.add_argument("--shorts", type=int, default=3, help="quantidade de cortes verticais (0 a 10)")
+    r.add_argument("--segundos", type=float, default=45, help="duração de cada short (30 a 60)")
+    r.add_argument("--lang", choices=["pt", "en"], default="pt", help="PT por padrão; EN só por pedido explícito")
+    r.add_argument("--marcadores", help="JSON com [{start,end,title}] para priorizar momentos indicados")
+    r.add_argument("--render", action="store_true", help="gera uma nova versão do projeto analisado")
+    r.add_argument("--plano", help="JSON revisado, mantendo a fonte do projeto original")
+    r.add_argument("--gerar", action="store_true", help="analisa e gera direto; revise os resultados antes de publicar")
+    r.add_argument("--legendas", action="store_true", help="legendas de fala (faster-whisper opcional)")
+    r.add_argument("--sem-musica", action="store_true", help="exportar somente com o áudio original")
+    r.set_defaults(fn=cmd_gameplay)
 
     r = sp.add_parser("publicacao", help="pacote para publicar no TikTok via Metricool; 'publicacao cota' mostra o limite")
     r.add_argument("post_id")

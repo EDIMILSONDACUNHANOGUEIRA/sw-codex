@@ -81,6 +81,13 @@ Cortes de vídeo: `python -m leonida corte <url|arquivo> 0:10 0:25 --pt "..." --
 
 ## Quando chegar um link de vídeo ("edita esse vídeo")
 
+Para **gameplay longa e melhores momentos**, use a aba Gameplay ou `python -m leonida gameplay URL`.
+Leia `docs/CORTES-GAMEPLAY.md`: aceite fontes de 30 minutos ou mais; vídeo horizontal até 11 minutos,
+shorts 30–60 s (três de 45 s por padrão), capas de quadros reais. Analise, confira a fonte nos momentos
+sugeridos, ajuste títulos e intervalos no plano e só então exporte uma versão nova. Não confunda scores
+de movimento/áudio com compreensão da cena ou garantia de viralização. PT por padrão, crédito obrigatório,
+rostos preservados, entregue aqui, sem publicação externa. `--lang en` somente por pedido explícito.
+
 1. Descubra do que se trata (título/canal do vídeo, matéria relacionada) e **confirme os fatos** como
    num post normal. Escreva a manchete BR (≤ 70 caracteres, `*destaque*`) e escolha a tag.
 2. Rode a edição:

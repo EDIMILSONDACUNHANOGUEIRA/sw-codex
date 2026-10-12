@@ -14,6 +14,7 @@
     <button data-tab="editor">✍️ Editor</button>
     <button data-tab="prontos">✅ Prontos</button>
     <button data-tab="cortes">✂️ Cortes</button>
+    <button data-tab="gameplay">🎮 Gameplay</button>
   </nav>
   <div id="countdown" class="count"></div>
   <div id="sys" class="sys"></div>
@@ -131,6 +132,61 @@
       <pre id="music-log" class="log hidden"></pre>
       <p class="hint">Todo vídeo de notícia passa a sair com essa música e os cortes ganham ela por baixo do áudio original. Alternativa 100% licenciada: escolher a mesma música na biblioteca de sons do TikTok na hora de postar.</p>
     </form>
+  </section>
+  <!-- GAMEPLAY: fonte longa → seleção revisável → arquivos locais -->
+  <section id="tab-gameplay" class="tab">
+    <header class="bar">
+      <h1>Cortes de <span class="grad">gameplay</span></h1>
+      <button id="gameplay-refresh" type="button">Projetos salvos</button>
+    </header>
+    <p class="hint">Cole o link de uma gameplay longa, inclusive de 30 minutos ou mais. Receba um vídeo horizontal de até 11 minutos, cortes verticais para TikTok e Shorts e as respectivas capas.</p>
+    <form id="gameplay-form" class="form narrow">
+      <label>Link do vídeo
+        <input name="source" type="url" required placeholder="https://www.youtube.com/watch?v=...">
+      </label>
+      <div class="row">
+        <label>Título do projeto <input name="title" maxlength="100" placeholder="Melhores momentos da gameplay"></label>
+        <label>Crédito <input name="credit" maxlength="160" placeholder="Canal ou autor do vídeo"></label>
+      </div>
+      <div class="row">
+        <label>Vídeo horizontal: até (min)
+          <input name="max_long_minutes" type="number" value="11" min="1" max="11" step="0.5" required>
+        </label>
+        <label>Quantidade de cortes verticais
+          <input name="short_count" type="number" value="3" min="0" max="10" step="1" required>
+        </label>
+        <label>Duração de cada vertical (s)
+          <input name="short_seconds" type="number" value="45" min="30" max="60" step="1" required>
+        </label>
+        <label>Idioma dos títulos e capas
+          <select name="lang"><option value="pt" selected>Português · @leonidawirebrz</option><option value="en">Inglês · @leonidawireusa</option></select>
+        </label>
+      </div>
+      <div class="actions"><button id="gameplay-analyze" class="primary" type="submit">1. Analisar gameplay</button></div>
+      <p class="hint">A análise sugere momentos por movimento, mudanças de cena e áudio. Confira o contexto e ajuste os tempos e títulos antes de gerar. O interesse do público depende do conteúdo; a análise não garante viralização.</p>
+    </form>
+    <pre id="gameplay-log" class="log hidden" aria-live="polite"></pre>
+    <div id="gameplay-review" class="gameplay-panel hidden">
+      <header class="bar"><h2>2. Escolha os momentos</h2><span id="gameplay-source-info" class="hint"></span></header>
+      <label>Título do projeto <input id="gameplay-plan-title" maxlength="100"></label>
+      <a id="gameplay-storyboard-link" class="gameplay-storyboard hidden" target="_blank" rel="noopener"><img id="gameplay-storyboard" alt="Quadros da fonte para revisar os momentos sugeridos"></a>
+      <p class="hint">Os tempos se referem ao vídeo original. Use <code>00:42</code> ou <code>01:12:30</code>. Desmarque os trechos que não quer usar. Se houver poucos momentos, o sistema entrega a quantidade disponível sem repetir ou inventar cenas.</p>
+      <h3>Vídeo horizontal · 16:9</h3>
+      <p id="gameplay-long-duration" class="hint"></p>
+      <div id="gameplay-long" class="gameplay-moments"></div>
+      <h3>TikTok e YouTube Shorts · 9:16</h3>
+      <div id="gameplay-shorts" class="gameplay-moments"></div>
+      <div class="actions gameplay-render-actions">
+        <span class="hint">Áudio da gameplay com música tema por baixo. Capas usam quadros reais do vídeo.</span>
+        <button id="gameplay-render" class="primary" type="button">3. Gerar vídeos e capas</button>
+      </div>
+      <p id="gameplay-validation" class="gameplay-error hidden" role="alert"></p>
+    </div>
+    <div id="gameplay-output" class="gameplay-panel hidden" aria-live="polite"></div>
+    <div id="gameplay-projects" class="gameplay-panel hidden">
+      <h2>Projetos salvos</h2>
+      <div id="gameplay-project-list" class="gameplay-project-list"></div>
+    </div>
   </section>
 </main>
 

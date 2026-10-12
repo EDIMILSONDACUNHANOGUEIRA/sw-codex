@@ -36,11 +36,12 @@ def _ts(t: str | float) -> float:
 
 
 def download(url: str) -> Path:
-    """Baixa o vídeo (melhor MP4 até 1080p) para o cache."""
+    """Baixa o vídeo (preferência até 1440p) para o cache."""
     key = hashlib.sha1(url.encode()).hexdigest()[:14]
     out_dir = CACHE_DIR / "videos"
     out_dir.mkdir(parents=True, exist_ok=True)
-    found = [f for f in out_dir.glob(f"{key}.*") if not f.name.endswith(".json")]
+    found = [f for f in out_dir.glob(f"{key}.*")
+             if f.suffix.lower() in (".mp4", ".mkv", ".webm", ".mov", ".avi", ".m4v") and f.stat().st_size]
     if found:
         return found[0]
     import os

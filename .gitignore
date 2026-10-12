@@ -16,3 +16,6 @@ assets/music/*
 # temporários do vídeo de publicação
 prontos/**/tiktok/.work/
 prontos/**/.reveal/
+
+# Projetos de gameplay: vídeos fonte, exports, planos com caminhos locais e prévias.
+prontos/gameplay/

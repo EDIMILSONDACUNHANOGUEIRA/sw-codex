@@ -59,6 +59,7 @@ Sem novidade relevante, fique quieto. Compare sempre com posts/ e state/ para ev
 | `config/sources.yaml` | Feeds e termos de busca de GTA |
 | `docs/AUTOMACAO-GTA.md` | Prompt e referência do agendamento a recriar |
 | `docs/PROMPT-DIARIO.md` | Fluxo da pesquisa, produção e entrega |
+| `docs/CORTES-GAMEPLAY.md` | Edição por link: horizontal até 11 min, shorts e capas |
 | `posts/*/post.yaml` | Temas, fontes e versões já produzidas |
 | `state/seen.json` | Histórias já vistas/entregues e descarte |
 | `state/publicados.json` | Registro de publicação real, quando houver |
@@ -66,3 +67,10 @@ Sem novidade relevante, fique quieto. Compare sempre com posts/ e state/ para ev
 Notícias descobertas em fontes inglesas também são redigidas em português. O pedido explícito de
 um vídeo em inglês vale para aquela entrega; não muda o padrão dos vídeos seguintes. A rotina
 prepara arquivos compatíveis com TikTok e Shorts, sem depender de conectores de publicação.
+
+Para continuar **cortes de gameplay**, abra a aba Gameplay ou peça: “Leia
+`docs/CORTES-GAMEPLAY.md` e edite este link em até 11 minutos para YouTube, três shorts de
+45 segundos e capas, em português”. Projetos e versões ficam em `prontos/gameplay/`,
+localmente; vídeos, música e planos com caminhos locais não são enviados ao GitHub.
+Se o YouTube exigir verificação no download, o agente deve pedir o MP4 ou um link direto
+para o arquivo. Não deve inventar que analisou ou exportou o vídeo bloqueado.

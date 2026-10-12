@@ -19,6 +19,7 @@ notícias já entregues e não publica em redes automaticamente. Consulte
 | 🎬 **Vídeo** | Motor v2 local (Pillow + FFmpeg), 30–60 s, dissoluções de 0,50 s, textos legíveis e **música tema** de fundo. Sem modelo pesado de interpolação. |
 | 🎥 **Edição por link** | Mande um link: o app acha as cenas, reenquadra 9:16 no personagem e aplica movimentos de câmera estilo Higgsfield (crash zoom, dolly, câmera na mão, whip pan, câmera lenta) no HyperFrames, com grão de filme, marca e manchete BR/US. |
 | ✂️ **Cortes** | Trailer/gameplay/vídeo viral (baixado com **yt-dlp**) → corte 9:16 com fundo desfocado, moldura da marca, música tema por baixo e legenda automática. |
+| 🎮 **Gameplay longa** | Link de 30 minutos ou mais → plano revisável dos momentos, vídeo horizontal de até 11 minutos, três shorts de 30–60 s e capas de quadros reais. Abra a aba Gameplay; [guia completo](docs/CORTES-GAMEPLAY.md). |
 | ✍️ **Redação** | O Codex/Claude escreve no seu PC (veja `AGENTS.md`) ou o Claude API escreve sozinho na nuvem. |
 | 🌐 **Site** | Cada post oficial vira matéria no site **Leonida Wire** (Vercel): imagem oficial limpa, texto, galeria e fontes. `python -m leonida site` gera a pasta `site/`. |
 | 📲 **Entrega** | Pasta pronta por post + galeria com botão "copiar legenda" + envio opcional no Telegram/Discord. |
@@ -72,6 +73,7 @@ Abra a pasta no Codex e peça, por exemplo:
 - *"Faz os posts de hoje"* → roda o radar, confere as fontes, escreve em português e gera os arquivos.
 - *"Cria o post da notícia 2 do radar"*
 - *"Faz um corte do trailer de 1:12 a 1:24 com a manchete 'Jason em primeira pessoa'"*
+- *"Edite esta gameplay: LINK. Gere até 11 minutos para YouTube, três shorts de 45 segundos e as capas."*
 
 As regras de redação, o estilo e o formato dos arquivos estão no [`AGENTS.md`](AGENTS.md).
 

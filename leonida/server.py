@@ -26,7 +26,7 @@ config.ensure_dirs()
 JOBS: dict[str, dict] = {}
 
 
-def _job(fn, *args, **kw) -> str:
+def _job(fn, *args, structured: bool = False, **kw) -> str:
     jid = uuid.uuid4().hex[:10]
     JOBS[jid] = {"id": jid, "status": "running", "log": [], "result": None}
 
@@ -35,9 +35,11 @@ def _job(fn, *args, **kw) -> str:
 
     def run():
         try:
-            JOBS[jid]["result"] = str(fn(*args, log=log, **kw))
+            result = fn(*args, log=log, **kw)
+            JOBS[jid]["result"] = result if structured else str(result)
             JOBS[jid]["status"] = "done"
-            gallery.build()
+            if not structured:
+                gallery.build()
         except Exception as exc:  # noqa: BLE001
             JOBS[jid]["status"] = "error"
             JOBS[jid]["log"].append(f"ERRO: {exc}")
@@ -217,6 +219,47 @@ def make_clip(data: dict = Body(...)):
 def set_music(data: dict = Body(...)):
     from . import music
     return {"job": _job(music.download, data["url"], data.get("start") or 0)}
+
+
+# ------------------------------------------------------------------ gameplays longas
+@app.get("/api/gameplay/projects")
+def gameplay_projects():
+    from . import gameplay
+    return gameplay.projects()
+
+
+@app.post("/api/gameplay/analyze")
+def analyze_gameplay(data: dict = Body(...)):
+    from . import gameplay
+    try:
+        source = gameplay.source_url(data.get("source", ""))
+        settings = gameplay.options(
+            max_long=gameplay._number(data.get("max_long_minutes", 11), "Minutos do vídeo longo") * 60,
+            short_count=data.get("short_count", 3), short_seconds=data.get("short_seconds", 45),
+            title=data.get("title") or "Melhores momentos de GTA", credit=data.get("credit", ""),
+            lang=data.get("lang", "pt"))
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from None
+    return {"job": _job(gameplay.analyze, source, structured=True, **settings)}
+
+
+@app.post("/api/gameplay/render")
+def render_gameplay(data: dict = Body(...)):
+    import json
+    from . import gameplay
+    try:
+        project = gameplay.project_path(data.get("project_id", ""))
+        original = json.loads((project / "plan.json").read_text(encoding="utf-8"))
+        plan = gameplay.validate_plan(data.get("plan") or original, original=original)
+        if not plan["long"] and not plan["shorts"]:
+            raise ValueError("Selecione pelo menos um corte")
+        for field in ("music", "subtitles"):
+            if field in data and not isinstance(data[field], bool):
+                raise ValueError(f"{field}: use verdadeiro ou falso")
+    except (ValueError, FileNotFoundError) as exc:
+        raise HTTPException(400, str(exc)) from None
+    return {"job": _job(gameplay.render_project, data["project_id"], plan, structured=True,
+                        music=data.get("music", True), subtitles=data.get("subtitles", False))}
 
 
 # ------------------------------------------------------------------ jobs
