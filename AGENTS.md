@@ -14,6 +14,26 @@ A rotina do Codex precisa ser recriada na outra conta; veja
 GitHub são portáveis; a sessão e as conexões da conta não são. Prompt da automação:
 [`docs/AUTOMACAO-GTA.md`](docs/AUTOMACAO-GTA.md).
 
+## Aplicativos separados no mesmo repositório
+
+- **Leonida Notícias**: `apps/noticias/`, `scripts/abrir-noticias.bat`, porta **8768**.
+  Mantém rascunhos em `posts/`, histórico em `state/` e saídas em `prontos/<data>/`.
+- **Leonida Cortes**: `apps/gameplay/`, `scripts/abrir-gameplay.bat`, porta **8769**.
+  Fontes do formulário ficam em `apps/gameplay/uploads/`; planos e exports em
+  `apps/gameplay/prontos/`. Revisões manuais novas podem usar `apps/gameplay/prontos/revisoes/`.
+
+Preserve o fluxo e a automação das notícias ao trabalhar em cortes. Não mova entregas anteriores:
+os projetos legados em `prontos/gameplay/` e outros pacotes continuam nos caminhos originais.
+As pastas locais de fontes e exports do Cortes não entram no GitHub.
+
+No Cortes, respeite a escolha do usuário entre **Tema de GTA VI**, **Sem música adicional** e
+**Outra música**, feita na importação ou revisão e aplicada à exportação. O áudio original é
+preservado; a faixa adicional é misturada com volume de 0–100% (padrão 10%) e redução durante
+a fala. O formulário aceita MP3, WAV, M4A, AAC, FLAC e OGG até 512 MB. **Sem música adicional**
+não remove música já gravada na fonte nem separa as vozes e trilhas. Use somente a faixa local
+escolhida, sem substituir por uma faixa aleatória. A música tema continua obrigatória nas notícias
+diárias; essa escolha é específica do editor de cortes.
+
 ## Fluxo padrão ("faz os posts de hoje")
 
 Prompt completo e modelo do relatório de entrega: [`docs/PROMPT-DIARIO.md`](docs/PROMPT-DIARIO.md).
@@ -53,7 +73,7 @@ Use `--sem-video` para pular só a capa animada (HyperFrames); o vídeo de publi
    pessoais, músicas, cookies, `.env`, caches ou modelos. Preserve os trabalhos anteriores.
 
 Post diário de contagem regressiva: `python -m leonida contagem`.
-**Música: SEMPRE a música tema de GTA VI, em toda publicação.** Nunca música aleatória e nunca a
+**Música nas notícias: SEMPRE a música tema de GTA VI, em toda publicação da rotina diária.** Nunca música aleatória e nunca a
 "música automática" do TikTok (`autoAddMusic: false`). Por isso o post é publicado como VÍDEO
 (`br/tiktok/post.mp4`, gerado no build com a música tema embutida), não como post de fotos. As faixas
 ficam em `assets/music/`, fora do git: `python -m leonida musica <url-do-trailer> --inicio 0:12 --nome
@@ -81,12 +101,23 @@ Cortes de vídeo: `python -m leonida corte <url|arquivo> 0:10 0:25 --pt "..." --
 
 ## Quando chegar um link de vídeo ("edita esse vídeo")
 
-Para **gameplay longa e melhores momentos**, use a aba Gameplay ou `python -m leonida gameplay URL`.
+Para **gameplay longa e melhores momentos**, abra **Leonida Cortes** na porta 8769 ou use
+`python -m leonida gameplay URL` (CLI legado).
 Leia `docs/CORTES-GAMEPLAY.md`: aceite fontes de 30 minutos ou mais; vídeo horizontal até 11 minutos,
 shorts 30–60 s (três de 45 s por padrão), capas de quadros reais. Analise, confira a fonte nos momentos
 sugeridos, ajuste títulos e intervalos no plano e só então exporte uma versão nova. Não confunda scores
 de movimento/áudio com compreensão da cena ou garantia de viralização. PT por padrão, crédito obrigatório,
 rostos preservados, entregue aqui, sem publicação externa. `--lang en` somente por pedido explícito.
+
+No Leonida Cortes, as legendas da voz estão ativadas por padrão. Transcreva o áudio original
+antes de adicionar a música do editor; o texto visível do jogo não recupera a voz do criador.
+O idioma da fala é independente dos títulos e capas, com PT padrão. O reconhecimento é local,
+com `requirements-speech.txt` e runtime compatível, ou com SRT revisado fornecido pelo usuário.
+Um SRT fornecido tem prioridade e usa os tempos da fonte, remapeados aos cortes selecionados.
+Quando o áudio mistura comentarista e personagens, revise os erros e sobreposições: não prometa
+separação perfeita dos falantes nem preencha palavras incertas. Preserve a transcrição editável
+e informe a pendência se a voz não puder ser legendada. Veja a instalação em
+`docs/CORTES-GAMEPLAY.md`.
 
 1. Descubra do que se trata (título/canal do vídeo, matéria relacionada) e **confirme os fatos** como
    num post normal. Escreva a manchete BR (≤ 70 caracteres, `*destaque*`) e escolha a tag.
@@ -195,7 +226,11 @@ Tudo é configurável em `config/brand.yaml` (nome, @ dos perfis, paleta, selos,
 | `leonida/edit.py` | edição de vídeo por link: cenas, reenquadramento, movimentos de câmera, transições (HyperFrames) |
 | `leonida/writer.py` | redação automática via Claude API (opcional) |
 | `leonida/post.py` | `post.yaml` → `prontos/` (+ README.md por post) |
-| `leonida/server.py` + `web/` | app web (`python -m leonida serve`) |
+| `apps/noticias/` | app de notícias, porta 8768, com as saídas e o histórico existentes |
+| `apps/gameplay/` | app de cortes, porta 8769, com uploads e saídas próprios |
+| `leonida/gameplay.py` + `gameplay_render.py` | análise de momentos, planos e exports de gameplay |
+| `leonida/speech_captions.py` | reconhecimento local do áudio, SRT/ASS editáveis e remapeamento de falas |
+| `leonida/server.py` + `web/` | app web legado (`python -m leonida serve`) |
 | `leonida/notify.py` | envio para Telegram/Discord |
 
 Antes de commitar mudanças de código: `python -m leonida build <um-post> --sem-video` e confira a imagem.

@@ -1,0 +1,5 @@
+# Opcional: reconhecimento LOCAL de fala. Use um ambiente Python 3.12 no Windows.
+# python -m pip install -r requirements-speech.txt
+# Se o app usar outro runtime, configure LEONIDA_STT_PYTHON com o python deste ambiente.
+# LEONIDA_STT_DEPS só é necessário quando os pacotes foram instalados com --target.
+faster-whisper>=1.2,<2

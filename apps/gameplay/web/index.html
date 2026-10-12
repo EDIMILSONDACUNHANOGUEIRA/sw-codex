@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leonida Cortes</title><link rel="stylesheet" href="/static/style.css"></head>
+<body>
+<aside id="side">
+  <div class="logo"><span class="mark">LW</span><div><b>LEONIDA</b><small>CORTES</small></div></div>
+  <nav><a class="btn" href="#gameplay-form">1. Importar vídeo</a><a class="btn" href="#gameplay-review">2. Revisar momentos</a><a class="btn" href="#gameplay-output">3. Baixar arquivos</a></nav>
+  <a class="switch-app" href="http://127.0.0.1:8768/">Abrir Leonida Notícias ↗</a>
+  <p class="product-note">Seu editor de gameplay.<br>Vídeo longo + TikTok e Shorts.<br>Projetos separados dos posts diários.</p>
+  <div id="sys" class="sys" aria-live="polite"></div>
+</aside>
+<main>
+  <div class="product-banner"><span class="product-tag">LEONIDA CORTES</span><p>Importe a gameplay, revise a seleção e baixe os vídeos com capas e legendas.</p></div>
+  <section id="tab-gameplay" class="tab on">
+    <header class="bar">
+      <h1>Seu vídeo, os <span class="grad">melhores momentos</span></h1>
+      <button id="gameplay-refresh" type="button">Projetos salvos</button>
+    </header>
+    <p class="hint">Cole o link de uma gameplay longa, inclusive de 30 minutos ou mais. Receba um vídeo horizontal de até 11 minutos, cortes verticais para TikTok e Shorts e as respectivas capas.</p>
+    <section id="gameplay-revisions" class="gameplay-panel hidden" aria-live="polite">
+      <header class="bar"><h2>Vídeos revisados prontos</h2><button id="gameplay-revisions-refresh" type="button">Atualizar vídeos</button></header>
+      <p class="hint">Abra a versão revisada e baixe o vídeo, a capa e as legendas para sua publicação.</p>
+      <div id="gameplay-revision-list" class="gameplay-results"></div>
+    </section>
+    <form id="gameplay-form" class="form narrow">
+      <label>Link do vídeo
+        <input name="source" type="url" placeholder="https://www.youtube.com/watch?v=...">
+      </label>
+      <div class="source-upload"><span class="hint">Ou use um vídeo do computador</span>
+        <label class="file">Escolher MP4 / MOV<input type="file" id="gameplay-upload" accept="video/mp4,video/quicktime,video/webm,video/x-matroska,.mp4,.mov,.webm,.mkv"></label>
+        <span id="gameplay-upload-state" class="hint" aria-live="polite">Nenhum arquivo escolhido.</span>
+      </div>
+      <div class="row">
+        <label>Título do projeto <input name="title" maxlength="100" placeholder="Melhores momentos da gameplay"></label>
+        <label>Crédito <input name="credit" maxlength="160" placeholder="Canal ou autor do vídeo"></label>
+      </div>
+      <div class="row">
+        <label>Vídeo horizontal: até (min)
+          <input name="max_long_minutes" type="number" value="11" min="1" max="11" step="0.5" required>
+        </label>
+        <label>Quantidade de cortes verticais
+          <input name="short_count" type="number" value="3" min="0" max="10" step="1" required>
+        </label>
+        <label>Duração de cada vertical (s)
+          <input name="short_seconds" type="number" value="45" min="30" max="60" step="1" required>
+        </label>
+        <label>Idioma dos títulos e capas
+          <select name="lang"><option value="pt" selected>Português · @leonidawirebrz</option><option value="en">Inglês · @leonidawireusa</option></select>
+        </label>
+      </div>
+      <fieldset class="speech-panel"><legend>Música no vídeo</legend>
+        <div class="row"><label>Trilha de fundo
+          <select id="gameplay-music-mode"><option value="theme" selected>Tema do GTA 6</option><option value="none">Sem música adicional</option><option value="custom">Outra música</option></select>
+        </label>
+        <label id="gameplay-music-volume-label">Volume da música (%) <input id="gameplay-music-volume" type="number" min="0" max="100" step="1" value="10"></label></div>
+        <div id="gameplay-music-custom" class="source-upload hidden">
+          <label class="file">Escolher outra música<input id="gameplay-music-upload" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.flac,.ogg,.opus,.aiff,.aif"></label>
+          <span id="gameplay-music-state" class="hint" aria-live="polite">Nenhuma música escolhida.</span>
+        </div>
+        <p id="gameplay-music-hint" class="hint">O tema será aplicado aos vídeos, abaixo da voz e do som do jogo.</p>
+      </fieldset>
+      <div class="actions"><button id="gameplay-analyze" class="primary" type="submit">1. Analisar gameplay</button></div>
+      <p class="hint">A análise sugere momentos por movimento, mudanças de cena e áudio. Confira o contexto e ajuste os tempos e títulos antes de gerar. O interesse do público depende do conteúdo; a análise não garante viralização.</p>
+    </form>
+    <pre id="gameplay-log" class="log hidden" aria-live="polite"></pre>
+    <div id="gameplay-review" class="gameplay-panel hidden">
+      <header class="bar"><h2>2. Escolha os momentos</h2><span id="gameplay-source-info" class="hint"></span></header>
+      <label>Título do projeto <input id="gameplay-plan-title" maxlength="100"></label>
+      <a id="gameplay-storyboard-link" class="gameplay-storyboard hidden" target="_blank" rel="noopener"><img id="gameplay-storyboard" alt="Quadros da fonte para revisar os momentos sugeridos"></a>
+      <p class="hint">Os tempos se referem ao vídeo original. Use <code>00:42</code> ou <code>01:12:30</code>. Desmarque os trechos que não quer usar. Se houver poucos momentos, o sistema entrega a quantidade disponível sem repetir ou inventar cenas.</p>
+      <h3>Vídeo horizontal · 16:9</h3>
+      <p id="gameplay-long-duration" class="hint"></p>
+      <div id="gameplay-long" class="gameplay-moments"></div>
+      <h3>TikTok e YouTube Shorts · 9:16</h3>
+      <div id="gameplay-shorts" class="gameplay-moments"></div>
+      <fieldset class="speech-panel"><legend>Legendas da voz no vídeo</legend>
+        <div class="row"><label class="check"><input id="gameplay-subtitles" type="checkbox" checked> Legendar a voz do criador</label>
+          <label>Idioma da fala <select id="gameplay-speech-language"><option value="pt" selected>Português (fala do criador)</option><option value="auto">Detectar automaticamente</option><option value="en">Inglês</option></select></label></div>
+        <p class="hint">A legenda usa o áudio original, incluindo o comentário de quem está jogando. Quando há falas do jogo ao mesmo tempo, confira a transcrição antes de publicar.</p>
+        <details><summary>Usar legendas revisadas do criador</summary>
+          <label>SRT do áudio original (opcional)<textarea id="gameplay-creator-srt" class="mono" rows="6" placeholder="1&#10;00:00:10,000 --> 00:00:12,000&#10;Fala revisada do criador"></textarea></label>
+          <p class="hint">Use os tempos do vídeo de origem. Estas legendas substituem a transcrição automática e são ajustadas aos trechos selecionados.</p>
+        </details>
+      </fieldset>
+      <div class="actions gameplay-render-actions">
+        <span class="hint">A trilha escolhida será aplicada ao vídeo. Capas usam quadros reais da fonte.</span>
+        <button id="gameplay-render" class="primary" type="button">3. Gerar vídeos e capas</button>
+      </div>
+      <p id="gameplay-validation" class="gameplay-error hidden" role="alert"></p>
+    </div>
+    <div id="gameplay-output" class="gameplay-panel hidden" aria-live="polite"></div>
+    <div id="gameplay-projects" class="gameplay-panel hidden">
+      <h2>Projetos salvos</h2>
+      <div id="gameplay-project-list" class="gameplay-project-list"></div>
+    </div>
+  </section>
+</main><div id="toast" role="status" aria-live="polite"></div>
+<script src="/static/app.js"></script>
+</body></html>

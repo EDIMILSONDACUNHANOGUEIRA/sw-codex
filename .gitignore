@@ -19,3 +19,7 @@ prontos/**/.reveal/
 
 # Projetos de gameplay: vídeos fonte, exports, planos com caminhos locais e prévias.
 prontos/gameplay/
+
+# Apps separados: fontes de terceiros, planos com caminhos locais e exports.
+apps/gameplay/prontos/
+apps/gameplay/uploads/

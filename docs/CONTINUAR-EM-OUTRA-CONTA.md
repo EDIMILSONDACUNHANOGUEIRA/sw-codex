@@ -15,7 +15,8 @@ o serviço estiver indisponível. Os arquivos locais permanecem independentes do
    `seen.json` guarda IDs, títulos e tokens; o radar também compara títulos parecidos por um período
    limitado. Por isso a comparação com todo o histórico dos `post.yaml` continua necessária.
    Não confunda entregue com publicado e não apague o histórico ao trocar de conta.
-3. Mantenha os vídeos entregues em `prontos/` e os pacotes locais de saída. Preserve as faixas
+3. Mantenha os vídeos entregues em `prontos/`, os projetos/fontes de `apps/gameplay/prontos/`
+   e `apps/gameplay/uploads/` e os demais pacotes locais de saída. Preserve as faixas
    autorizadas de `assets/music/`, o cache e o ambiente virtual no PC: eles são ignorados pelo Git.
    Um clone novo exige recriar dependências, mas abrir o mesmo checkout pode reutilizá-las.
 4. Não versionar nem compartilhar `.env`, chaves, senhas, tokens, cookies ou arquivos pessoais.
@@ -36,6 +37,10 @@ o serviço estiver indisponível. Os arquivos locais permanecem independentes do
 4. Verifique Python/dependências, FFmpeg/ffprobe, música local e permissões de acesso. Se faltar
    algo, o agente deve informar a pendência e preservar os arquivos anteriores. Não considere uma
    pesquisa sem acesso às fontes, nem um render interrompido, como execução bem sucedida.
+5. Abra os aplicativos separados, no mesmo repositório: `scripts/abrir-noticias.bat`
+   (**8768**) para a rotina diária e `scripts/abrir-gameplay.bat` (**8769**) para o editor de cortes.
+   A troca de conta não exige mover as entregas antigas. Em um clone novo, o reconhecimento da
+   fala exige as dependências e modelos locais descritos em `docs/CORTES-GAMEPLAY.md`.
 
 Prompt curto para iniciar na conta nova:
 
@@ -59,7 +64,9 @@ Sem novidade relevante, fique quieto. Compare sempre com posts/ e state/ para ev
 | `config/sources.yaml` | Feeds e termos de busca de GTA |
 | `docs/AUTOMACAO-GTA.md` | Prompt e referência do agendamento a recriar |
 | `docs/PROMPT-DIARIO.md` | Fluxo da pesquisa, produção e entrega |
-| `docs/CORTES-GAMEPLAY.md` | Edição por link: horizontal até 11 min, shorts e capas |
+| `docs/CORTES-GAMEPLAY.md` | App de cortes: link/arquivo, horizontal até 11 min, shorts, capas e legendas da voz |
+| `apps/noticias/` + `apps/gameplay/` | Dois apps, com telas e saídas separadas no mesmo repositório |
+| `requirements-speech.txt` | Dependências opcionais do reconhecimento local da fala |
 | `posts/*/post.yaml` | Temas, fontes e versões já produzidas |
 | `state/seen.json` | Histórias já vistas/entregues e descarte |
 | `state/publicados.json` | Registro de publicação real, quando houver |
@@ -68,9 +75,19 @@ Notícias descobertas em fontes inglesas também são redigidas em português. O
 um vídeo em inglês vale para aquela entrega; não muda o padrão dos vídeos seguintes. A rotina
 prepara arquivos compatíveis com TikTok e Shorts, sem depender de conectores de publicação.
 
-Para continuar **cortes de gameplay**, abra a aba Gameplay ou peça: “Leia
+Para continuar **cortes de gameplay**, abra **Leonida Cortes**, porta 8769, ou peça: “Leia
 `docs/CORTES-GAMEPLAY.md` e edite este link em até 11 minutos para YouTube, três shorts de
-45 segundos e capas, em português”. Projetos e versões ficam em `prontos/gameplay/`,
-localmente; vídeos, música e planos com caminhos locais não são enviados ao GitHub.
+45 segundos e capas, em português. Legende também a fala do criador pelo áudio original”.
+Projetos e versões novos do app ficam em `apps/gameplay/prontos/`, e as fontes escolhidas no
+formulário em `apps/gameplay/uploads/`. Os projetos legados em `prontos/gameplay/` permanecem
+no caminho anterior. Vídeos, música e planos com caminhos locais não são enviados ao GitHub.
+Preserve também os SRTs revisados. O idioma da fala é independente das artes e as legendas de
+voz ficam ativadas no Cortes; revise a transcrição quando o áudio mistura criador e personagens.
+Na importação ou revisão, escolha tema de GTA VI, sem música adicional ou outra faixa local;
+a seleção entra na exportação, mantendo o áudio original. O volume da música adicional vai de
+0–100%, padrão 10%, com redução durante a fala. O upload de outra faixa aceita MP3, WAV, M4A,
+AAC, FLAC ou OGG até 512 MB. Sem música adicional preserva qualquer trilha já gravada na fonte,
+pois o editor não separa as faixas misturadas. Preserve também os arquivos locais de música
+escolhidos; a rotina de notícias continua usando o tema de GTA VI.
 Se o YouTube exigir verificação no download, o agente deve pedir o MP4 ou um link direto
 para o arquivo. Não deve inventar que analisou ou exportou o vídeo bloqueado.

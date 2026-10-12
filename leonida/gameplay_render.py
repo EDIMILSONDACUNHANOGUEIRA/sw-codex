@@ -5,7 +5,6 @@ rostos: os arquivos finais só aparecem quando todos os vídeos passam pela deco
 """
 from __future__ import annotations
 
-import importlib.util
 import json
 import math
 from pathlib import Path
@@ -136,7 +135,7 @@ def _line(draw, xy, text, width, *, size=30, color="white", kind="bold"):
     draw.text(xy, lines[0], font=font, fill=color)
 
 
-def _overlay(size: tuple[int, int], title: str, credit: str, lang: str) -> Image.Image:
+def _overlay(size: tuple[int, int], title: str, credit: str, lang: str, *, captioned: bool = False) -> Image.Image:
     w, h = size
     image = Image.new("RGBA", size)
     draw = ImageDraw.Draw(image)
@@ -155,7 +154,7 @@ def _overlay(size: tuple[int, int], title: str, credit: str, lang: str) -> Image
         draw.rectangle((0, 1260, w, h), fill=(11, 6, 20, 205))
         _line(draw, (64, 170), "LEONIDA WIRE", 866, size=48)
         draw.rectangle((64, 246, 206, 252), fill="#FF2E88")
-        label = "MOMENTO DA GAMEPLAY" if lang == "pt" else "GAMEPLAY MOMENT"
+        label = handle if captioned else ("MOMENTO DA GAMEPLAY" if lang == "pt" else "GAMEPLAY MOMENT")
         _line(draw, (64, 286), label, 866, size=28, color="#FFC857")
         font, lines = _fit_text(draw, title, 866, size=72, minimum=44, lines=3)
         for index, text in enumerate(lines):
@@ -163,9 +162,10 @@ def _overlay(size: tuple[int, int], title: str, credit: str, lang: str) -> Image
         draw.rectangle((x, y - 4, x + vw - 1, y + vh + 4), outline="#FFC857", width=3)
         credit_label = ("Crédito: " if lang == "pt" else "Credit: ") + credit
         _line(draw, (64, 1287), credit_label, 866, size=29, kind="body")
-        _line(draw, (64, 1378), handle, 866, size=42, color="#FFC857")
-        question = "QUAL FOI O MELHOR MOMENTO?" if lang == "pt" else "WHICH MOMENT WAS THE BEST?"
-        _line(draw, (64, 1480), question, 866, size=29)
+        if not captioned:
+            _line(draw, (64, 1378), handle, 866, size=42, color="#FFC857")
+            question = "QUAL FOI O MELHOR MOMENTO?" if lang == "pt" else "WHICH MOMENT WAS THE BEST?"
+            _line(draw, (64, 1480), question, 866, size=29)
     return image
 
 
@@ -209,7 +209,7 @@ def _cover(frame: Path, overlay: Image.Image, title: str, size: tuple[int, int],
 
 
 def _encode_clip(ff: str, source: Path, moment: dict, out: Path, overlay_path: Path,
-                 *, vertical: bool, has_audio: bool):
+                 *, vertical: bool, has_audio: bool, captioned: bool = False):
     duration = float(moment["end"]) - float(moment["start"])
     inputs = ["-ss", str(moment["start"]), "-t", str(duration), "-i", str(source),
               "-loop", "1", "-i", str(overlay_path)]
@@ -224,8 +224,10 @@ def _encode_clip(ff: str, source: Path, moment: dict, out: Path, overlay_path: P
               f"pad={w}:{h}:(ow-iw)/2:(oh-ih)/2:color=0x0B0614[game];"
               f"[bg][game]overlay={x}:{y}[base];[base][1:v]overlay=0:0,fps={FPS},setsar=1[v]")
     else:
-        vf = ("[0:v]scale=1920:1010:force_original_aspect_ratio=decrease:flags=lanczos,"
-              "pad=1920:1010:(ow-iw)/2:(oh-ih)/2:color=0x0B0614,"
+        # Keep the full game frame and HUD above a dedicated speech-caption strip.
+        game_height = 850 if captioned else 1010
+        vf = (f"[0:v]scale=1920:{game_height}:force_original_aspect_ratio=decrease:flags=lanczos,"
+              f"pad=1920:{game_height}:(ow-iw)/2:(oh-ih)/2:color=0x0B0614,"
               f"pad=1920:1080:0:70:color=0x0B0614[base];[base][1:v]overlay=0:0,fps={FPS},setsar=1[v]")
     fade = min(.06, duration / 4)
     audio_index = 0 if has_audio else 2
@@ -238,11 +240,12 @@ def _encode_clip(ff: str, source: Path, moment: dict, out: Path, overlay_path: P
           "-movflags", "+faststart", str(out)])
 
 
-def _finalize(ff: str, base: Path, out: Path, theme: Path | None, *, seconds: float, ass: Path | None = None):
+def _finalize(ff: str, base: Path, out: Path, theme: Path | None, *, seconds: float, ass: Path | None = None,
+              music_volume: float = .10):
     args = [ff, "-v", "error", "-nostdin", "-y", "-filter_complex_threads", "2", "-i", str(base)]
     if theme:
         args += ["-stream_loop", "-1", "-i", str(theme)]
-        audio = ("[0:a]asplit=2[dry][control];[1:a]aresample=48000,volume=0.10[bed];"
+        audio = (f"[0:a]asplit=2[dry][control];[1:a]aresample=48000,volume={music_volume:.6f}[bed];"
                  "[bed][control]sidechaincompress=threshold=0.025:ratio=8:attack=20:release=400[duck];"
                  "[dry][duck]amix=inputs=2:duration=first:normalize=0,alimiter=limit=0.95[a]")
         args += ["-filter_complex", audio, "-map", "0:v:0", "-map", "[a]", "-c:a", "aac", "-b:a", "192k"]
@@ -250,7 +253,13 @@ def _finalize(ff: str, base: Path, out: Path, theme: Path | None, *, seconds: fl
         args += ["-map", "0:v:0", "-map", "0:a:0", "-c:a", "copy"]
     if ass:
         # Relative filename avoids drive-letter/filter escaping on Windows.
-        args += ["-vf", f"subtitles=filename={ass.name}", "-c:v", "libx264", "-preset", "veryfast",
+        from .config import FONTS_DIR
+        fonts = ass.parent / "fonts"
+        fonts.mkdir(exist_ok=True)
+        for source_font in FONTS_DIR.iterdir():
+            if source_font.suffix.lower() in (".otf", ".ttf") and not (fonts / source_font.name).exists():
+                shutil.copy2(source_font, fonts / source_font.name)
+        args += ["-vf", f"subtitles=filename={ass.name}:fontsdir=fonts", "-c:v", "libx264", "-preset", "veryfast",
                  "-crf", "19", "-threads", "4"]
     else:
         args += ["-c:v", "copy"]
@@ -258,18 +267,48 @@ def _finalize(ff: str, base: Path, out: Path, theme: Path | None, *, seconds: fl
     _run(args, cwd=ass.parent if ass else None)
 
 
-def _subtitles(base: Path, language: str, out: Path, *, vertical: bool) -> Path:
-    from .clips import transcribe_ass
-    ass = transcribe_ass(base, language, out, 1450)
-    if not ass:
-        raise RuntimeError("Legendas solicitadas, mas a transcrição não encontrou fala. Exporte sem --legendas ou revise a origem.")
-    if not vertical:
-        content = ass.read_text(encoding="utf-8")
-        content = content.replace("PlayResX: 1080", "PlayResX: 1920").replace("PlayResY: 1920", "PlayResY: 1080")
-        content = content.replace("Style: Cap,Anton,86,", "Style: Cap,Anton,52,")
-        content = content.replace(",60,60,470,1", ",80,80,90,1")
-        ass.write_text(content, encoding="utf-8")
-    return ass
+def _parse_creator_srt(value: str) -> list[dict]:
+    """Legendas revisadas usam tempos do áudio fonte, nunca texto OCR do jogo."""
+    import re
+    if not isinstance(value, str) or len(value) > 1_000_000:
+        raise ValueError("SRT revisado inválido ou muito grande")
+    cues = []
+    def stamp(text):
+        match = re.fullmatch(r"(\d+):(\d{2}):(\d{2})[,.](\d{3})", text.strip())
+        if not match or int(match[2]) >= 60 or int(match[3]) >= 60:
+            raise ValueError("Timestamp inválido no SRT revisado")
+        return int(match[1]) * 3600 + int(match[2]) * 60 + int(match[3]) + int(match[4])/1000
+    for block in re.split(r"\n\s*\n", value.strip().replace("\r\n", "\n").replace("\r", "\n")):
+        lines = block.strip().splitlines()
+        if lines and lines[0].strip().isdigit():
+            lines = lines[1:]
+        if len(lines) < 2 or "-->" not in lines[0]:
+            raise ValueError("SRT revisado precisa conter timestamps e texto")
+        first, last = lines[0].split("-->", 1)
+        start, end = stamp(first), stamp(last)
+        text = " ".join(line.strip() for line in lines[1:]).strip()
+        if not text or not 0 <= start < end:
+            raise ValueError("Intervalo ou texto inválido no SRT revisado")
+        cues.append({"start":start, "end":end, "text":text})
+    return cues
+
+
+def _subtitles(base: Path, language: str, out: Path, *, vertical: bool,
+               source_cues=None, moments=None, log=print) -> Path:
+    from . import speech_captions
+    if source_cues is not None:
+        cues = speech_captions.remap_cues(source_cues, moments, frame_rate=FPS)
+        out.with_suffix(".json").write_text(json.dumps({"segments":cues,"review_status":"user_supplied"},ensure_ascii=False,indent=2),encoding="utf-8")
+    else:
+        # Base has the original voices; the theme is only mixed in _finalize.
+        result = speech_captions.transcribe(base, out.with_suffix(".json"), language=language, log=log)
+        cues = result["segments"]
+    if not cues:
+        raise RuntimeError("Não foi encontrada fala nos trechos selecionados. Revise o áudio ou o SRT.")
+    size = SHORT_SIZE if vertical else LONG_SIZE
+    return speech_captions.write_ass(cues, out, size=size, y=1360 if vertical else 948,
+                                    x=497 if vertical else 960,
+                                    font_size=60 if vertical else 44, max_width=866 if vertical else 1640)
 
 
 def _qa(ff: str, video: Path, folder: Path, size: tuple[int, int], expected: float) -> dict:
@@ -331,7 +370,10 @@ def _caption(plan: dict, title: str, moment: dict | None = None) -> str:
     return f"{title.replace('*', '')}\n\n{question}\n\n{prefix}{credit}\n{url}\n\n{tags}\n"
 
 
-def render(plan: dict, output: Path, *, music: bool = True, subtitles: bool = False, log=print) -> dict:
+def render(plan: dict, output: Path, *, music: bool = True, subtitles: bool = False,
+           speech_language: str = "pt", creator_srt: str | None = None,
+           music_mode: str | None = None, music_path: str | Path | None = None,
+           music_volume: float = .10, log=print) -> dict:
     """Exporta em uma pasta nova, com validação e promoção atômica ao terminar.
 
     Música é tema local, reduzida e comprimida pelo áudio da gameplay. A seleção
@@ -344,18 +386,41 @@ def render(plan: dict, output: Path, *, music: bool = True, subtitles: bool = Fa
     if not ff:
         raise RuntimeError("ffmpeg não encontrado; instale o FFmpeg antes de exportar.")
     source, meta = _validate(plan)
+    mode = music_mode if music_mode is not None else ("theme" if music else "none")
+    if mode not in ("theme", "none", "custom"):
+        raise ValueError("Música: tema GTA VI, nenhuma ou outra faixa")
+    if isinstance(music_volume, bool):
+        raise ValueError("Volume da música: informe um número entre 0 e 1")
+    try:
+        music_volume = float(music_volume)
+    except (TypeError, ValueError):
+        raise ValueError("Volume da música: informe um número entre 0 e 1") from None
+    if not math.isfinite(music_volume) or not 0 <= music_volume <= 1:
+        raise ValueError("Volume da música: informe um número entre 0 e 1")
     theme = None
-    if music:
+    if mode == "custom":
+        if not music_path or not Path(music_path).is_file():
+            raise ValueError("Selecione um arquivo para usar outra música")
+        theme = Path(music_path).resolve()
+    elif mode == "theme":
         from .music import theme_path
         theme = theme_path(seed=str(plan.get("title", "gameplay")))
         if not theme or not theme.is_file():
             raise RuntimeError("Música tema GTA VI não encontrada. Importe a faixa antes de exportar ou solicite explicitamente --sem-musica.")
+    if theme is not None:
         theme_meta = _probe(theme)
         if not any(s.get("codec_type") == "audio" for s in theme_meta.get("streams", [])):
-            raise RuntimeError("A música tema não contém áudio válido.")
+            raise ValueError("O arquivo da música não contém áudio válido.")
         _duration(theme_meta)
-    if subtitles and importlib.util.find_spec("faster_whisper") is None:
-        raise RuntimeError("Legendas solicitadas: instale faster-whisper ou exporte sem --legendas.")
+    if speech_language not in ("pt", "auto", "en"):
+        raise ValueError("Idioma da fala: pt, auto ou en")
+    source_cues = _parse_creator_srt(creator_srt) if creator_srt and subtitles else None
+    if source_cues is not None and any(c["end"] > _duration(meta) + .05 for c in source_cues):
+        raise ValueError("Legenda revisada fora da duração da fonte")
+    if subtitles and source_cues is None:
+        from . import speech_captions
+        if not speech_captions.available():
+            raise RuntimeError("Transcrição local indisponível. Configure faster-whisper ou forneça um SRT revisado da voz.")
     output.parent.mkdir(parents=True, exist_ok=True)
     staging = output.parent / f".{output.name}.staging-{uuid.uuid4().hex[:10]}"
     staging.mkdir()
@@ -367,20 +432,23 @@ def render(plan: dict, output: Path, *, music: bool = True, subtitles: bool = Fa
     has_audio = any(s.get("codec_type") == "audio" for s in meta.get("streams", []))
     results: dict = {"output": str(output), "long": None, "shorts": [], "plan": str(output / "plano.json"),
                      "manifest": str(output / "manifest.json"), "music": bool(theme), "subtitles": subtitles,
+                     "music_mode":mode, "music_volume":music_volume,
+                     "speech_language": speech_language, "caption_source":"original_audio" if source_cues is None else "user_srt",
                      "published": False, "visual_review": False}
     try:
         long_moments = plan.get("long") or []
         if long_moments:
             folder = staging / "longo"
             folder.mkdir()
-            overlay = _overlay(LONG_SIZE, title, credit, language)
+            overlay = _overlay(LONG_SIZE, title, credit, language, captioned=subtitles)
             ov_path = work / "overlay-longo.png"
             overlay.save(ov_path)
             pieces = []
             for index, moment in enumerate(long_moments):
                 log(f"  [gameplay] longo: momento {index + 1}/{len(long_moments)}")
                 piece = work / f"longo-{index + 1:03d}.mp4"
-                _encode_clip(ff, source, moment, piece, ov_path, vertical=False, has_audio=has_audio)
+                _encode_clip(ff, source, moment, piece, ov_path, vertical=False, has_audio=has_audio,
+                             captioned=subtitles)
                 pieces.append(piece)
             listing = work / "concat.txt"
             # File names are our own ASCII names; no user text reaches the concat syntax.
@@ -389,9 +457,15 @@ def render(plan: dict, output: Path, *, music: bool = True, subtitles: bool = Fa
             base = work / "longo-base.mp4"
             _run([ff, "-v", "error", "-nostdin", "-y", "-f", "concat", "-safe", "1", "-i", str(listing),
                   "-c", "copy", "-movflags", "+faststart", str(base)])
-            ass = _subtitles(base, language, work / "subs-longo.ass", vertical=False) if subtitles else None
+            ass = _subtitles(base, speech_language, work / "subs-longo.ass", vertical=False,
+                             source_cues=source_cues, moments=long_moments, log=log) if subtitles else None
+            if ass:
+                shutil.copy2(ass, folder / "legendas.ass")
+                shutil.copy2(ass.with_suffix(".json"), folder / "legendas.json")
+                from .speech_captions import write_srt
+                write_srt(json.loads(ass.with_suffix(".json").read_text(encoding="utf-8"))["segments"], folder / "legendas.srt")
             expected = sum(lengths)
-            _finalize(ff, base, folder / "video.mp4", theme, seconds=expected, ass=ass)
+            _finalize(ff, base, folder / "video.mp4", theme, seconds=expected, ass=ass, music_volume=music_volume)
             qa = _qa(ff, folder / "video.mp4", folder, LONG_SIZE, expected)
             if qa["duration"] > float(plan.get("max_long_seconds", 660)) + .05:
                 raise RuntimeError("QA: o vídeo longo ultrapassou o limite do plano.")
@@ -403,20 +477,29 @@ def render(plan: dict, output: Path, *, music: bool = True, subtitles: bool = Fa
             (folder / "legenda.txt").write_text(_caption(plan, title), encoding="utf-8")
             results["long"] = {"video": str(output / "longo/video.mp4"), "cover": str(output / "longo/capa.jpg"),
                                "caption": str(output / "longo/legenda.txt"), "preview": str(output / "longo/qa/previa.jpg"),
-                               "qa": qa, "cover_source_time": round(peak, 3), "moments": len(long_moments)}
+                               "qa": qa, "cover_source_time": round(peak, 3), "moments": len(long_moments),
+                               **({"subtitles":str(output / "longo/legendas.srt")} if subtitles else {})}
         for index, moment in enumerate(plan.get("shorts") or []):
             log(f"  [gameplay] short {index + 1}/{len(plan['shorts'])}")
             name = f"short-{index + 1:02d}"
             folder = staging / name
             folder.mkdir()
             short_title = str(moment.get("title") or title)
-            overlay = _overlay(SHORT_SIZE, short_title, credit, language)
+            overlay = _overlay(SHORT_SIZE, short_title, credit, language, captioned=subtitles)
             ov_path = work / f"overlay-{name}.png"
             overlay.save(ov_path)
             base = work / f"{name}-base.mp4"
-            _encode_clip(ff, source, moment, base, ov_path, vertical=True, has_audio=has_audio)
-            ass = _subtitles(base, language, work / f"subs-{name}.ass", vertical=True) if subtitles else None
-            _finalize(ff, base, folder / "video.mp4", theme, seconds=float(moment["end"]) - float(moment["start"]), ass=ass)
+            _encode_clip(ff, source, moment, base, ov_path, vertical=True, has_audio=has_audio,
+                         captioned=subtitles)
+            ass = _subtitles(base, speech_language, work / f"subs-{name}.ass", vertical=True,
+                             source_cues=source_cues, moments=[moment], log=log) if subtitles else None
+            if ass:
+                shutil.copy2(ass, folder / "legendas.ass")
+                shutil.copy2(ass.with_suffix(".json"), folder / "legendas.json")
+                from .speech_captions import write_srt
+                write_srt(json.loads(ass.with_suffix(".json").read_text(encoding="utf-8"))["segments"], folder / "legendas.srt")
+            _finalize(ff, base, folder / "video.mp4", theme, seconds=float(moment["end"]) - float(moment["start"]),
+                      ass=ass, music_volume=music_volume)
             qa = _qa(ff, folder / "video.mp4", folder, SHORT_SIZE, float(moment["end"]) - float(moment["start"]))
             peak = min(float(moment["end"]) - .1, max(float(moment["start"]), float(moment.get("peak", moment["start"]))))
             real = work / f"quadro-{name}.png"
@@ -426,7 +509,8 @@ def render(plan: dict, output: Path, *, music: bool = True, subtitles: bool = Fa
             results["shorts"].append({"id": moment.get("id", name), "title": short_title,
                                       "video": str(output / name / "video.mp4"), "cover": str(output / name / "capa.jpg"),
                                       "caption": str(output / name / "legenda.txt"), "preview": str(output / name / "qa/previa.jpg"),
-                                      "qa": qa, "cover_source_time": round(peak, 3)})
+                                      "qa": qa, "cover_source_time": round(peak, 3),
+                                      **({"subtitles":str(output / name / "legendas.srt")} if subtitles else {})})
         (staging / "plano.json").write_text(json.dumps(plan, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (staging / "manifest.json").write_text(json.dumps(results, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         # Only scratch data created in this invocation is removed, before the atomic promotion.

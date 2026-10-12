@@ -1,4 +1,4 @@
-# 🌴 Leonida Studio — notícias GTA para TikTok e YouTube Shorts
+# 🌴 Leonida Studio — notícias GTA e cortes de gameplay
 
 Produção de notícias verificadas de **GTA VI e da franquia GTA**: pesquisa os portais de games,
 gera vídeos verticais de **30 a 60 segundos** (padrão 45 s), capa e legenda. **Português por padrão**;
@@ -10,6 +10,24 @@ notícias já entregues e não publica em redes automaticamente. Consulte
 [o prompt da automação](docs/AUTOMACAO-GTA.md) e
 [o guia para outra conta](docs/CONTINUAR-EM-OUTRA-CONTA.md).
 
+Dois aplicativos usam o mesmo repositório, com telas e saídas separadas:
+
+| Aplicativo | Abrir no Windows | Endereço | Arquivos locais |
+|---|---|---|---|
+| **Leonida Notícias** | `scripts/abrir-noticias.bat` | <http://127.0.0.1:8768/> | Rascunhos em `posts/`, histórico em `state/`, entregas em `prontos/<data>/` |
+| **Leonida Cortes** | `scripts/abrir-gameplay.bat` | <http://127.0.0.1:8769/> | Fontes em `apps/gameplay/uploads/`, projetos e exports em `apps/gameplay/prontos/` |
+
+O editor de cortes aceita link ou arquivo do computador e legenda a fala do criador pelo áudio,
+inclusive fora da câmera. As legendas de voz ficam ativadas por padrão; revise a transcrição ou
+forneça um SRT corrigido. Os projetos antigos e os vídeos já entregues permanecem nos caminhos
+originais. A rotina diária de notícias continua independente dos cortes.
+
+No Cortes, escolha **Tema de GTA VI**, **Sem música adicional** ou **Outra música** na importação
+ou revisão. A faixa escolhida entra no vídeo exportado, mantendo o som original; o volume vai de
+0 a 100%, com padrão de 10% e redução durante a fala. Outra música pode ser enviada em
+MP3, WAV, M4A, AAC, FLAC ou OGG, até 512 MB. **Sem música adicional** preserva também qualquer
+música já gravada na fonte; o editor não separa as faixas desse áudio.
+
 **👉 Posts prontos:** [`prontos/`](prontos/) · Radar ao vivo: [`prontos/RADAR.md`](prontos/RADAR.md)
 
 | | |
@@ -18,8 +36,8 @@ notícias já entregues e não publica em redes automaticamente. Consulte
 | 🎨 **Estilo próprio** | Paleta "Vice" (pôr do sol de Leonida), palavra gigante **atrás do personagem recortado**, manchete com destaque em gradiente, cantos neon, contador "X dias para o GTA VI". |
 | 🎬 **Vídeo** | Motor v2 local (Pillow + FFmpeg), 30–60 s, dissoluções de 0,50 s, textos legíveis e **música tema** de fundo. Sem modelo pesado de interpolação. |
 | 🎥 **Edição por link** | Mande um link: o app acha as cenas, reenquadra 9:16 no personagem e aplica movimentos de câmera estilo Higgsfield (crash zoom, dolly, câmera na mão, whip pan, câmera lenta) no HyperFrames, com grão de filme, marca e manchete BR/US. |
-| ✂️ **Cortes** | Trailer/gameplay/vídeo viral (baixado com **yt-dlp**) → corte 9:16 com fundo desfocado, moldura da marca, música tema por baixo e legenda automática. |
-| 🎮 **Gameplay longa** | Link de 30 minutos ou mais → plano revisável dos momentos, vídeo horizontal de até 11 minutos, três shorts de 30–60 s e capas de quadros reais. Abra a aba Gameplay; [guia completo](docs/CORTES-GAMEPLAY.md). |
+| ✂️ **Cortes** | Trailer/gameplay/vídeo viral (baixado com **yt-dlp**) → corte 9:16 com fundo desfocado, moldura da marca, escolha de música adicional e legenda automática. |
+| 🎮 **Gameplay longa** | Link ou arquivo de 30 minutos ou mais → plano revisável dos momentos, vídeo horizontal de até 11 minutos, três shorts de 30–60 s e capas de quadros reais. Abra **Leonida Cortes**; [guia completo](docs/CORTES-GAMEPLAY.md). |
 | ✍️ **Redação** | O Codex/Claude escreve no seu PC (veja `AGENTS.md`) ou o Claude API escreve sozinho na nuvem. |
 | 🌐 **Site** | Cada post oficial vira matéria no site **Leonida Wire** (Vercel): imagem oficial limpa, texto, galeria e fontes. `python -m leonida site` gera a pasta `site/`. |
 | 📲 **Entrega** | Pasta pronta por post + galeria com botão "copiar legenda" + envio opcional no Telegram/Discord. |
@@ -28,7 +46,7 @@ notícias já entregues e não publica em redes automaticamente. Consulte
 
 ![Capas geradas](docs/exemplo-capas.jpg)
 
-O app (`python -m leonida serve`):
+O app de notícias (as imagens abaixo mostram a interface anterior):
 
 | Radar | Editor com prévia |
 |---|---|
@@ -56,10 +74,20 @@ prontos/2026-10-08/2026-10-08-gta6-radios-reveladas/
    python -m venv .venv; .venv\Scripts\activate
    pip install -r requirements.txt
    ```
-3. Abra o app: `python -m leonida serve` → **http://localhost:8000**
-   (ou dois cliques em `scripts\abrir-studio.bat`)
-4. (Opcional) Radar automático no próprio PC, de hora em hora:
-   `powershell -ExecutionPolicy Bypass -File scripts\agendar-windows.ps1`
+3. Abra `scripts\abrir-noticias.bat` ou `scripts\abrir-gameplay.bat`. Para iniciar pelo terminal,
+   execute, da raiz, cada comando em um terminal separado:
+   ```powershell
+   .venv\Scripts\python.exe -m uvicorn apps.noticias.app:app --host 127.0.0.1 --port 8768
+   .venv\Scripts\python.exe -m uvicorn apps.gameplay.app:app --host 127.0.0.1 --port 8769
+   ```
+4. Para as legendas automáticas da fala, configure as dependências locais de reconhecimento
+   descritas em [Cortes de gameplay](docs/CORTES-GAMEPLAY.md#legendas-da-fala). Um SRT revisado
+   pode ser usado sem o modelo de reconhecimento.
+5. Para a rotina de notícias às 11h e 17h de Cuiabá, siga
+   [a configuração da automação](docs/AUTOMACAO-GTA.md). O editor de cortes não agenda vídeos.
+
+`python -m leonida serve` e `scripts/abrir-studio.bat` mantêm o aplicativo legado; use os dois
+iniciadores acima para trabalhar com os aplicativos separados.
 
 (macOS/Linux: `brew install python node ffmpeg` ou `apt install ffmpeg nodejs`, e `source .venv/bin/activate`.)
 
@@ -92,12 +120,14 @@ python -m leonida musica URL --inicio 0:12 --nome trailer-1   # música tema (ob
 python -m leonida auto                   # radar → redação (Claude) → render → envio
 python -m leonida site                   # gera o site de notícias (site/, publicado na Vercel)
 python -m leonida galeria                # atualiza prontos/index.html
-python -m leonida serve                  # app web
+python -m uvicorn apps.noticias.app:app --host 127.0.0.1 --port 8768  # notícias
+python -m uvicorn apps.gameplay.app:app --host 127.0.0.1 --port 8769  # cortes de gameplay
+python -m leonida serve                  # app web legado
 ```
 
-## 🎵 Música tema em todas as publicações (obrigatório)
+## 🎵 Música das notícias e dos cortes
 
-Todo post sai com a **música tema de GTA VI**, nunca com música aleatória. Como a API do TikTok não
+Todo post da rotina de notícias sai com a **música tema de GTA VI**, nunca com música aleatória. Como a API do TikTok não
 deixa escolher a música de um post de fotos, o carrossel é publicado como **vídeo**
 (`prontos/<data>/<post>/br/tiktok/post.mp4`): a capa e os slides em sequência, com a música tema
 embutida. A "música automática" do TikTok fica sempre desligada.
@@ -113,8 +143,11 @@ python -m leonida musica --listar
 ```
 
 Os arquivos ficam só no seu PC (`assets/music/`, fora do GitHub). **Sem nenhuma música tema, o vídeo do
-post não é gerado e nada é publicado automaticamente.** Os cortes e edições de vídeo também recebem a
-música por baixo do áudio original (volumes em `config/brand.yaml → music`).
+post não é gerado e nada é publicado automaticamente.** Essa regra permanece na rotina diária.
+O **Leonida Cortes** usa a escolha de música e volume feita na importação ou revisão:
+tema, nenhuma faixa adicional ou outra faixa local. O áudio original permanece na exportação,
+e a música adicional é misturada por baixo, com redução durante a fala. Veja
+[as opções de música dos cortes](docs/CORTES-GAMEPLAY.md).
 
 > ⚠️ A música dos trailers é protegida por direitos autorais e o TikTok pode silenciar um vídeo. Se
 > acontecer, poste o mesmo vídeo à mão e escolha o **som oficial do trailer de GTA VI na biblioteca do
@@ -144,24 +177,24 @@ $env:LEONIDA_YTDLP_BROWSER="chrome"   # usa os cookies do seu navegador (chrome,
 - O redator automático só aceita imagem de matéria com ≥ 1600 px; senão usa screenshot oficial em 4K.
 - Vídeos em qualidade alta, 12 Mbps (`LEONIDA_VIDEO_BITRATE` para mudar).
 
-## Automático 24h (GitHub Actions)
+## Automação e GitHub Actions
 
-Já configurado em `.github/workflows/`:
+A rotina atual pesquisa às **11h e 17h de Cuiabá** e entrega os arquivos localmente para
+publicação manual. Ela precisa ser recriada no Codex ao trocar de conta, conforme
+[docs/AUTOMACAO-GTA.md](docs/AUTOMACAO-GTA.md). Não depende de notificações ou publicação externa.
 
-- **radar.yml** — a cada 2 h procura notícia nova. Com `ANTHROPIC_API_KEY` ele escreve, gera e te envia
-  o post pronto; sem a chave, te manda um alerta "notícia nova" para pedir ao Codex.
-- **contagem.yml** — todo dia às 07:52 (Brasília) gera o post "faltam X dias".
-- **pages.yml** — publica a galeria `prontos/` no GitHub Pages para você revisar no celular.
+Os workflows em `.github/workflows/` têm escopos diferentes:
 
-Configure em **Settings → Secrets and variables → Actions**:
+- **radar.yml** — consulta apenas feeds públicos às 15h e 21h UTC e atualiza `state/radar.json`
+  e `prontos/RADAR.md`. Não gera vídeos nem envia notificações; a geração e revisão são locais.
+- **contagem.yml** — fluxo legado de contagem às 07h52 de Brasília, com opção de envio por
+  integrações. Ele não faz parte da rotina atual de entrega local.
+- **pages.yml** — fluxo legado de publicação da galeria `prontos/` no GitHub Pages.
 
-| Secret | Para quê |
-|---|---|
-| `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` | Receber as artes, o vídeo e a legenda no Telegram (crie o bot no @BotFather; o chat id vem do @userinfobot). |
-| `DISCORD_WEBHOOK_URL` | (opcional) mesma coisa num canal do Discord. |
-| `ANTHROPIC_API_KEY` | (opcional) redação automática com Claude. |
-
-E em **Settings → Pages → Source: GitHub Actions** para a galeria.
+Uma agenda do Actions só funciona quando o workflow está no branch padrão e o Actions está
+habilitado. A presença dos arquivos nesta branch não comprova execução. Envio por integrações,
+publicação da galeria e deploy exigem autorização explícita; não são necessários para os dois apps.
+Credenciais opcionais ficam em variáveis de ambiente ou Secrets do GitHub, nunca no código.
 
 ## Personalizar
 

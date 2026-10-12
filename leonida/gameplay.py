@@ -8,15 +8,33 @@ import copy
 import datetime as dt
 import json
 import math
+import os
 import re
 import unicodedata
 import uuid
 from pathlib import Path
+from contextlib import contextmanager
+from contextvars import ContextVar
 from urllib.parse import quote, urlsplit
 
 from .config import OUT_DIR
 
-PROJECTS = OUT_DIR / "gameplay"
+PROJECTS = Path(os.environ.get("LEONIDA_GAMEPLAY_HOME", OUT_DIR / "gameplay"))
+_PROJECT_HOME: ContextVar[Path | None] = ContextVar("leonida_gameplay_home", default=None)
+
+
+@contextmanager
+def project_home(path: str | Path):
+    """Isola os projetos de uma requisição/job sem alterar saídas das notícias."""
+    token = _PROJECT_HOME.set(Path(path).resolve())
+    try:
+        yield
+    finally:
+        _PROJECT_HOME.reset(token)
+
+
+def project_root() -> Path:
+    return _PROJECT_HOME.get() or PROJECTS
 
 
 def _number(value, label: str) -> float:
@@ -75,13 +93,17 @@ def _write_new(path: Path, data: dict) -> None:
 def project_path(project_id: str) -> Path:
     if not isinstance(project_id, str) or not re.fullmatch(r"[a-z0-9-]{1,120}", project_id):
         raise ValueError("Projeto inválido")
-    path = (PROJECTS / project_id).resolve()
-    if path.parent != PROJECTS.resolve() or not (path / "plan.json").is_file():
+    root = project_root().resolve()
+    path = (root / project_id).resolve()
+    if path.parent != root or not (path / "plan.json").is_file():
         raise FileNotFoundError("Projeto de gameplay não encontrado")
     return path
 
 
 def url_for(path: str | Path) -> str:
+    if _PROJECT_HOME.get() is not None or os.environ.get("LEONIDA_GAMEPLAY_HOME"):
+        relative = Path(path).resolve().relative_to(project_root().resolve())
+        return "/gameplay-files/" + quote(relative.as_posix(), safe="/")
     relative = Path(path).resolve().relative_to(OUT_DIR.resolve())
     return "/prontos/" + quote(relative.as_posix(), safe="/")
 
@@ -95,7 +117,7 @@ def analyze(source: str, *, max_long=660, short_count=3, short_seconds=45,
     normalized = unicodedata.normalize("NFKD", settings["title"]).encode("ascii", "ignore").decode().lower()
     slug = re.sub(r"[^a-z0-9]+", "-", normalized).strip("-")[:60] or "gameplay"
     project_id = f"{dt.date.today().isoformat()}-{slug}-{uuid.uuid4().hex[:8]}"
-    output = PROJECTS / project_id
+    output = project_root() / project_id
     output.mkdir(parents=True, exist_ok=False)
     plan = inspect(source, output, markers=markers, log=log, **settings)
     validate_plan(plan)
@@ -160,7 +182,9 @@ def validate_plan(plan: dict, *, original: dict | None = None) -> dict:
     return result
 
 
-def render_project(project_id: str, plan: dict | None = None, *, music=True, subtitles=False, log=print) -> dict:
+def render_project(project_id: str, plan: dict | None = None, *, music=True, subtitles=False,
+                   speech_language="pt", creator_srt=None, music_mode=None, music_path=None,
+                   music_volume=.10, log=print) -> dict:
     from .gameplay_render import render
 
     project = project_path(project_id)
@@ -170,10 +194,13 @@ def render_project(project_id: str, plan: dict | None = None, *, music=True, sub
         raise ValueError("Selecione pelo menos um corte")
     output = project / "exports" / f"export-{uuid.uuid4().hex[:10]}"
     output.parent.mkdir(parents=True, exist_ok=True)
-    files = render(selected, output, music=music, subtitles=subtitles, log=log)
+    files = render(selected, output, music=music, subtitles=subtitles,
+                   speech_language=speech_language, creator_srt=creator_srt, music_mode=music_mode,
+                   music_path=music_path, music_volume=music_volume, log=log)
     _write_new(output / "selection.json", selected)
     result = {"project_id": project_id, "long": None, "shorts": [],
-              "plan_url": url_for(output / "selection.json"), "output": str(output)}
+              "plan_url": url_for(output / "selection.json"), "output": str(output),
+              "music_mode":files.get("music_mode"), "music_volume":files.get("music_volume")}
     for kind in ("long", "shorts"):
         items = files.get(kind)
         if kind == "long":
@@ -184,7 +211,7 @@ def render_project(project_id: str, plan: dict | None = None, *, music=True, sub
             checks = item.get("qa")
             if isinstance(checks, dict):
                 record.update({k: v for k, v in checks.items() if k in ("duration", "width", "height")})
-            for name in ("video", "cover", "caption", "qa", "preview"):
+            for name in ("video", "cover", "caption", "subtitles", "qa", "preview"):
                 if isinstance(item.get(name), (str, Path)):
                     record[name + "_url"] = url_for(item[name])
             if isinstance(checks, dict) and item.get("video"):
@@ -198,7 +225,7 @@ def render_project(project_id: str, plan: dict | None = None, *, music=True, sub
 
 def projects() -> list[dict]:
     saved = []
-    for file in sorted(PROJECTS.glob("*/project.json"), reverse=True):
+    for file in sorted(project_root().glob("*/project.json"), reverse=True):
         try:
             record = json.loads(file.read_text(encoding="utf-8"))
             project = project_path(record["project_id"])

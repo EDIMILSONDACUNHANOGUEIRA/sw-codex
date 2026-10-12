@@ -178,11 +178,24 @@ def cmd_editar(a):
 def cmd_gameplay(a):
     import json
     from . import gameplay
+    speech_options = {"speech_language": a.idioma_fala,
+                      "creator_srt": Path(a.srt_fala).read_text(encoding="utf-8-sig") if a.srt_fala else None}
+    if a.srt_fala and not a.legendas:
+        raise SystemExit("Use --srt-fala junto de --legendas")
+    mode = {"tema":"theme", "nenhuma":"none", "outra":"custom"}.get(a.musica)
+    if a.sem_musica and mode not in (None, "none"):
+        raise SystemExit("--sem-musica não combina com --musica tema/outra")
+    if a.arquivo_musica and mode != "custom":
+        raise SystemExit("Use --arquivo-musica junto de --musica outra")
+    if mode == "custom" and not a.arquivo_musica:
+        raise SystemExit("--musica outra exige --arquivo-musica")
+    speech_options.update(music_mode=mode, music_path=a.arquivo_musica,
+                          music_volume=a.volume_musica / 100)
 
     if a.render:
         result = gameplay.render_project(a.fonte_video,
             json.loads(Path(a.plano).read_text(encoding="utf-8")) if a.plano else None,
-            music=not a.sem_musica, subtitles=a.legendas)
+            music=not a.sem_musica, subtitles=a.legendas, **speech_options)
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return
     if a.plano:
@@ -194,7 +207,7 @@ def cmd_gameplay(a):
     print(f"Revise plan.json e storyboard.jpg. Para gerar: python -m leonida gameplay {result['project_id']} --render")
     if a.gerar:
         print(json.dumps(gameplay.render_project(result['project_id'],
-              music=not a.sem_musica, subtitles=a.legendas), ensure_ascii=False, indent=2))
+              music=not a.sem_musica, subtitles=a.legendas, **speech_options), ensure_ascii=False, indent=2))
 
 
 def cmd_publicacao(a):
@@ -360,7 +373,12 @@ def main(argv=None):
     r.add_argument("--plano", help="JSON revisado, mantendo a fonte do projeto original")
     r.add_argument("--gerar", action="store_true", help="analisa e gera direto; revise os resultados antes de publicar")
     r.add_argument("--legendas", action="store_true", help="legendas de fala (faster-whisper opcional)")
+    r.add_argument("--idioma-fala", choices=["pt", "auto", "en"], default="pt", help="idioma falado no áudio, independente de --lang")
+    r.add_argument("--srt-fala", help="SRT revisado da voz com tempos do vídeo original; exige --legendas")
     r.add_argument("--sem-musica", action="store_true", help="exportar somente com o áudio original")
+    r.add_argument("--musica", choices=["tema", "nenhuma", "outra"], help="tema GTA VI, somente áudio original ou faixa escolhida")
+    r.add_argument("--arquivo-musica", help="arquivo local de áudio para --musica outra")
+    r.add_argument("--volume-musica", type=float, default=10, help="volume da trilha adicional de 0 a 100%% (padrão: 10%%)")
     r.set_defaults(fn=cmd_gameplay)
 
     r = sp.add_parser("publicacao", help="pacote para publicar no TikTok via Metricool; 'publicacao cota' mostra o limite")
