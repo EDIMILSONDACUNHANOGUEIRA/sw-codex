@@ -7,6 +7,7 @@ import unittest
 from unittest.mock import patch
 
 from PIL import Image
+import yaml
 
 from leonida import motion, post, postvideo, render
 
@@ -32,13 +33,13 @@ class PostV2Tests(unittest.TestCase):
             p.start()
             self.addCleanup(p.stop)
 
-    def build_with(self, fn, style=None):
+    def build_with(self, fn, style=None, **build_options):
         with patch.object(render, "cover", return_value=self.scene), \
              patch("leonida.publish.cfg", return_value={"formato": "video"}), \
              patch("leonida.publish.export_jpegs"), \
              patch.object(motion, "build", side_effect=fn), \
              patch.object(postvideo, "build", side_effect=fn):
-            return post.build("fixture", video=False, langs=("pt",), estilo=style,
+            return post.build("fixture", video=False, estilo=style, **build_options,
                               today=dt.date(2026, 10, 11), log=lambda _: None)
 
     def test_failure_preserves_all_styles_and_missing_music(self):
@@ -56,6 +57,7 @@ class PostV2Tests(unittest.TestCase):
 
     def test_v2_override_manifest_and_no_hyperframes(self):
         self.data["estilo"] = "classico"
+        self.data["video_segundos"] = 20  # revisões preservam a duração explícita de posts antigos
         def encode(scenes, target_file, **kwargs):
             self.assertIsInstance(scenes[0], motion.Scene)
             self.assertEqual(kwargs["target"], 20)
@@ -85,6 +87,107 @@ class PostV2Tests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "estilo desconhecido"):
             self.build_with(lambda *args, **kwargs: None, "invalido")
         self.assertEqual(self.old.read_bytes(), b"previous valid delivery")
+
+    def test_english_only_build_and_readme_without_changing_br_defaults(self):
+        self.data["en"] = {"headline": "English *news*", "caption": "Reported information."}
+        del self.data["pt"]
+        self.data["video_segundos"] = 40
+
+        def encode(scenes, target_file, **kwargs):
+            self.assertEqual(kwargs["target"], 40)
+            self.assertEqual(target_file.parent.parent.name, "us")
+            target_file.parent.mkdir(exist_ok=True)
+            target_file.write_bytes(b"English delivery")
+            return target_file
+
+        self.build_with(encode, "v2", langs=("en",))
+        self.assertEqual(post.LANGS, ("pt",))
+        self.assertEqual(self.old.read_bytes(), b"previous valid delivery")
+        self.assertEqual((self.out / "us" / "tiktok" / "post.mp4").read_bytes(), b"English delivery")
+        caption = (self.out / "us" / "caption.txt").read_text(encoding="utf-8")
+        self.assertIn("Reported information.", caption)
+        self.assertNotIn("#gta6brasil", caption)
+        readme = (self.out / "README.md").read_text(encoding="utf-8")
+        self.assertTrue(readme.startswith("# English news"))
+        self.assertIn("us/tiktok/post.mp4", readme)
+        self.assertIn("Reported information.", readme)
+        self.assertNotIn("br/tiktok/post.mp4", readme)
+        # The next default build still requires the configured BR copy.
+        with self.assertRaisesRegex(ValueError, "pt.headline vazio"):
+            self.build_with(encode, "v2")
+
+    def test_explicit_language_validation_rejects_missing_english_copy(self):
+        self.assertEqual(post.validate(self.data), [])
+        self.assertIn("en.headline vazio", post.validate(self.data, ("en",)))
+        with self.assertRaisesRegex(ValueError, "en.headline vazio"):
+            self.build_with(lambda *args, **kwargs: self.fail("rendered"), "v2", langs=("en",))
+        self.assertEqual(self.old.read_bytes(), b"previous valid delivery")
+
+    def assert_rejected_before_render(self, expected):
+        with patch.object(render, "cover") as cover:
+            with self.assertRaisesRegex(ValueError, expected):
+                post.build("fixture", video=False, estilo="v2", log=lambda _: None)
+        cover.assert_not_called()
+        self.assertEqual(self.old.read_bytes(), b"previous valid delivery")
+        self.assertEqual((self.out / "br" / "legenda.txt").read_text(encoding="utf-8"),
+                         "Legenda anterior")
+        self.assertFalse(list(self.out.parent.glob(".build-*")))
+
+    def test_yaml_colon_in_list_item_rejected_before_render(self):
+        self.data["pt"]["slides"] = yaml.safe_load("""
+- type: list
+  title: Fonte da informação
+  items:
+    - Game Informer: 29 de setembro
+""")
+        self.assert_rejected_before_render(r"pt\.slides\[0\]\.items\[0\] deve ser texto")
+        self.assertTrue(any("use aspas no YAML" in error for error in post.validate(self.data)))
+
+    def test_slide_containers_and_titles_rejected_before_render(self):
+        cases = [
+            ("slide como texto", r"pt\.slides deve ser uma lista"),
+            ({"type": "list"}, r"pt\.slides deve ser uma lista"),
+            (["slide como texto"], r"pt\.slides\[0\] deve ser um objeto"),
+            ([{"type": "list", "title": {"Título": "inválido"}, "items": ["Item"]}],
+             r"pt\.slides\[0\]\.title deve ser texto"),
+            ([{"type": "list", "title": "Título", "items": "Não iterar letras"}],
+             r"pt\.slides\[0\]\.items deve ser uma lista"),
+            ([{"type": "list", "title": "Título", "items": {"Item": "inválido"}}],
+             r"pt\.slides\[0\]\.items deve ser uma lista"),
+            ([{"type": "list", "title": "Título", "items": [123]}],
+             r"pt\.slides\[0\]\.items\[0\] deve ser texto"),
+        ]
+        for slides, error in cases:
+            with self.subTest(slides=slides):
+                self.data["pt"]["slides"] = slides
+                self.assert_rejected_before_render(error)
+
+    def test_headline_and_caption_types_rejected_before_render(self):
+        for field in ("headline", "caption"):
+            original = self.data["pt"][field]
+            for value in (123, {"Texto": "inválido"}, ["Texto"], False):
+                with self.subTest(field=field, value=value):
+                    self.data["pt"][field] = value
+                    self.assert_rejected_before_render(rf"pt\.{field} deve ser texto")
+            self.data["pt"][field] = original
+
+    def test_grid_objects_and_quoted_list_text_remain_valid(self):
+        self.data["pt"]["slides"] = yaml.safe_load("""
+- type: list
+  title: Fonte da informação
+  items: ["Game Informer: 29 de setembro"]
+- type: grid
+  title: Imagens oficiais
+  items:
+    - image: fixture.jpg
+      label: Rockstar Games
+      sub: Arte oficial
+""")
+        self.assertEqual(post.validate(self.data), [])
+        # Explicit EN checks must ignore malformed data for an unselected locale.
+        self.data["en"] = self.data.pop("pt")
+        self.data["pt"] = {"headline": 123, "caption": {"malformed": True}}
+        self.assertEqual(post.validate(self.data, ("en",)), [])
 
 
 if __name__ == "__main__":

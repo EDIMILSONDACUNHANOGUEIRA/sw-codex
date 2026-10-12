@@ -7,7 +7,8 @@ handle:
   pt: "@leonidawirebrz"        # perfil brasileiro (TikTok)
   en: "@leonidawireusa"        # perfil americano (TikTok)
 
-# Perfis produzidos: pt = BR (@leonidawirebrz). Para voltar a fazer o US, use [pt, en].
+# Idioma padrão: português. Gere inglês somente em uma solicitação explícita do usuário,
+# usando langs=("en",) no build daquele post, sem mudar este padrão para as próximas rodadas.
 idiomas: [pt]
 
 # Data oficial de lançamento (usada no contador "faltam X dias")
@@ -51,7 +52,8 @@ site:
   descricao: "Notícias oficiais de GTA VI todos os dias, em português: anúncios da Rockstar, imagens novas, trailers e entrevistas."
   tiktok: "https://www.tiktok.com/@leonidawirebrz"
 
-# Publicação no TikTok via Metricool (python -m leonida publicacao <id>)
+# Pacote opcional de publicação no TikTok via Metricool (python -m leonida publicacao <id>).
+# A rotina atual entrega arquivos para o usuário publicar; estes dados NÃO autorizam agendamento.
 publicar:
   repo_raw: "https://raw.githubusercontent.com/EDIMILSONDACUNHANOGUEIRA/sw-codex"
   metricool:               # blogId da marca no Metricool com cada TikTok conectado
@@ -63,7 +65,7 @@ publicar:
   revisao_manual: [vazamento, rumor]   # essas tags não publicam sozinhas: vão como rascunho
   limite_mensal: 20        # plano grátis do Metricool: 20 publicações/mês (rascunhos não contam)
   limite_diario: 2         # um post em cada horário abaixo, até acabar a cota do mês
-  horarios: ["11:00", "17:00"]   # horários de postagem (fuso da marca no Metricool)
+  horarios: ["11:00", "17:00"]   # referência da rotina no fuso abaixo; não dispara publicação
   fuso: America/Cuiaba
 
 # Logo do topo (capa, slides e "siga")
@@ -71,9 +73,11 @@ logo:
   versao: v2                      # v2 = sol de Vice + LEONIDA WIRE + ponto "ao vivo" | v1 = selo antigo "LW"
   arquivo: assets/brand/logo.png  # opcional: se existir (ex.: a foto de perfil), entra no lugar do sol
 
-# Vídeo de publicação (br/tiktok/post.mp4)
+# Vídeo vertical para TikTok e YouTube Shorts (br/tiktok/post.mp4).
+# Na rotina de notícias novas: 30–60 s; escolha a duração pelo tempo real de leitura.
+# Posts antigos mantêm sua própria video_segundos. O padrão abaixo é para novos builds.
 video:
-  segundos: 20       # duração exata a 30 fps; conteúdo demais é recusado sem apagar a entrega anterior
+  segundos: 45       # duração exata a 30 fps; conteúdo demais é recusado sem apagar a entrega anterior
   estilo_padrao: v2   # v2 = textos animados + transições + loop (leonida/motion.py) | dinamico | classico
                       # (um post pode trocar com "estilo:" no post.yaml)
 

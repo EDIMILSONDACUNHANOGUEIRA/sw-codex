@@ -76,6 +76,42 @@ class RenderV2Tests(unittest.TestCase):
         self.assert_composition(result)
         self.assert_safe(result)
 
+    def controlled_cutout(self, alpha, zoom=1.0):
+        """Isola a composição da máscara de grading, exposição e iluminação."""
+        post = {**POST, "cutout": True, "zoom": zoom, "focus": (0.5, 0.5),
+                "pt": {**POST["pt"], "kicker": None}}
+        mask = Image.new("L", self.src.size, alpha)
+        look = {**gfx.look(), "light_wrap": False, "neon": False, "scanlines": False}
+        with patch.object(render.cut, "available", return_value=True), \
+                patch.object(render.cut, "subject_mask", return_value=mask), \
+                patch.object(gfx, "refine_mask", side_effect=lambda im, m: m), \
+                patch.object(render.upscale, "sharpen", side_effect=lambda im, *a: im.copy()), \
+                patch.object(gfx, "vice_grade", side_effect=lambda im, *a: im.copy()), \
+                patch.object(gfx, "finish", side_effect=lambda im, *a, **k: im.copy()), \
+                patch.object(gfx, "look", return_value=look), \
+                patch.object(render, "lift_dark_subject", side_effect=lambda im, *a: im):
+            return render.cover(post, "pt", today=TODAY)
+
+    def test_partial_cutout_alpha_does_not_darken_source_rgb(self):
+        self.src = Image.new("RGB", (960, 540), (200, 160, 120))
+        for zoom in (1.0, 0.76):
+            with self.subTest(zoom=zoom):
+                result = self.controlled_cutout(128, zoom)
+                subject = next(layer.image for layer in result.layers if layer.name == "subject")
+                pixel = subject.getpixel((540, 1000))
+                self.assertEqual(pixel, (200, 160, 120, 128))
+                composite = Image.alpha_composite(Image.new("RGBA", (1, 1), (100, 100, 100, 255)),
+                                                  Image.new("RGBA", (1, 1), pixel))
+                self.assertEqual(composite.getpixel((0, 0)), (150, 130, 110, 255))
+
+    def test_background_top_fade_does_not_alter_opaque_subject(self):
+        self.src = Image.new("RGB", (960, 540), (200, 160, 120))
+        result = self.controlled_cutout(255)
+        subject = next(layer.image for layer in result.layers if layer.name == "subject")
+        background = next(layer.image for layer in result.layers if layer.name == "bg")
+        self.assertEqual(subject.getpixel((540, 10)), (200, 160, 120, 255))
+        self.assertLess(background.getpixel((540, 10))[0], 200)
+
     def test_countdown_and_logo_have_safe_gap_for_zero_and_three_digits(self):
         release = dt.date(2026, 11, 19)
         for days in (0, 1, 39, 365):

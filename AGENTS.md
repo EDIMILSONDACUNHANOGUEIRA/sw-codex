@@ -1,9 +1,18 @@
 # AGENTS.md — instruções para o Codex (e Claude Code) neste projeto
 
-Este repositório é o **Leonida Studio**: uma fábrica de posts de notícias de **GTA VI** para TikTok,
-para o perfil **BR @leonidawirebrz** (português do Brasil). O perfil US está desativado
-(`idiomas: [pt]` em `config/brand.yaml`): não escreva a parte `en`. O agente é o redator e
-editor-chefe: encontra a notícia, escreve o post, gera as artes e agenda no TikTok pelo Metricool.
+Este repositório é o **Leonida Studio**: produção de notícias de **GTA VI e da franquia GTA**
+para TikTok e YouTube Shorts, com prioridade para GTA VI. O padrão é **português do Brasil**, perfil
+**@leonidawirebrz** (`idiomas: [pt]` em `config/brand.yaml`). Só produza em inglês quando o usuário
+pedir explicitamente; nesse caso use **@leonidawireusa** no post solicitado, mantendo o padrão PT
+para as próximas rodadas. O agente pesquisa, confirma os fatos, escreve e edita os vídeos.
+
+**Entrega atual: arquivos locais neste chat para o usuário publicar.** Não agende nem publique em
+redes sociais, não envie notificações externas e não faça deploy do site sem autorização explícita
+para essa ação. A rotina pesquisa às **11h e 17h, America/Cuiaba**; sem novidade relevante, fica quieta.
+A rotina do Codex precisa ser recriada na outra conta; veja
+[`docs/CONTINUAR-EM-OUTRA-CONTA.md`](docs/CONTINUAR-EM-OUTRA-CONTA.md). Código, prompts e histórico no
+GitHub são portáveis; a sessão e as conexões da conta não são. Prompt da automação:
+[`docs/AUTOMACAO-GTA.md`](docs/AUTOMACAO-GTA.md).
 
 ## Fluxo padrão ("faz os posts de hoje")
 
@@ -11,21 +20,37 @@ Prompt completo e modelo do relatório de entrega: [`docs/PROMPT-DIARIO.md`](doc
 Use `--sem-video` para pular só a capa animada (HyperFrames); o vídeo de publicação
 `br/tiktok/post.mp4`, com a música tema, é gerado do mesmo jeito.
 
-1. `python -m leonida radar` — lista as histórias do momento (já agrupadas e ranqueadas).
+1. `python -m leonida radar --hours 72` — lista as histórias do momento (já agrupadas e ranqueadas).
    Também grava `state/radar.json` e `prontos/RADAR.md`.
 2. Para cada história relevante e ainda não coberta (veja `posts/` e `state/seen.json`):
-   - Leia 1–2 matérias das fontes listadas para **confirmar os fatos**.
+   - Consulte TecMundo/Voxel, Flow Games, IGN e as demais fontes de `config/sources.yaml`.
+     Leia a matéria original e confira a data do fato e a data da publicação. RSS/Google são descoberta,
+     não prova: valide na Rockstar/Take-Two, na entrevista original ou em duas fontes independentes.
+   - Compare o assunto com `posts/*/post.yaml`, `state/seen.json` e `state/publicados.json`.
+     A mesma notícia em outro site ou idioma não é nova. Só refaça um assunto com fato novo relevante.
    - Crie `posts/<AAAA-MM-DD>-<slug>/post.yaml` (modelo abaixo ou `python -m leonida novo "título"`).
+     Faça até dois vídeos por rodada, priorizando a relevância; deixe as demais pautas novas para a
+     próxima rodada. Cada vídeo novo tem **30–60 segundos**, padrão **45 s**, definido explicitamente
+     em `video_segundos` pelo tempo de leitura. Não aumente a duração de vídeos antigos ao refazê-los.
    - Escolha a imagem: prefira **screenshots oficiais da Rockstar** (`python -m leonida biblioteca`
      lista todas; URLs do tipo `https://www.rockstargames.com/VI/_next/static/media/...`) ou a
      `og:image` da matéria se for oficial e tiver ≥ 1200 px de largura.
-3. `python -m leonida build <post-id>` — gera capa, carrossel, vídeo e legendas em
+3. `python -m leonida build <post-id> --sem-video` — gera capa, carrossel, vídeo e legendas em
    `prontos/<data>/<post-id>/{br,us}/`. Use `--sem-video` para iterar rápido.
+   Para um pedido explícito em inglês, use `post.build('<id>', langs=('en',), video=False, estilo='v2')`
+   pela API Python; o comando CLI padrão continua em português.
 4. **Abra as imagens geradas e revise** (texto cortado, palavra gigante ilegível, rosto escondido).
-   Ajuste `zoom`, `focus`, `layout` ou o texto e rode de novo.
-5. `python -m leonida galeria` atualiza `prontos/index.html`. Marque as histórias usadas:
-   `python -c "from leonida import radar; radar.mark_seen(['<id>'], 'published')"`.
-6. Commit + push (a galeria e os arquivos ficam visíveis no GitHub).
+   Ajuste `zoom`, `focus`, `layout` ou o texto e rode de novo. Preserve anatomia e rosto do material
+   oficial; se o recorte falhar, use `layout: card`. Confira a capa e as transições no vídeo exportado,
+   texto legível entre movimentos, áreas seguras, duração real, resolução e áudio. Nunca declare QA
+   que não foi executada. Preserve as entregas existentes; crie uma versão nova para revisões.
+5. `python -m leonida galeria` atualiza `prontos/index.html`. Só depois de exportação e revisão bem
+   sucedidas, marque as histórias entregues com `radar.mark_seen(['<id>'], 'entregue')`.
+   `published` ou `state/publicados.json` exige evidência de publicação real, não apenas geração.
+   Falha de pesquisa/render/QA deve continuar pendente e ser relatada, sem anunciar sucesso.
+6. Entregue links locais dos MP4, capas e legendas, com fontes verificadas. Commit/push só com
+   autorização; antes, revise `git diff` e os arquivos selecionados. Não inclua segredos, dados
+   pessoais, músicas, cookies, `.env`, caches ou modelos. Preserve os trabalhos anteriores.
 
 Post diário de contagem regressiva: `python -m leonida contagem`.
 **Música: SEMPRE a música tema de GTA VI, em toda publicação.** Nunca música aleatória e nunca a
@@ -34,8 +59,9 @@ Post diário de contagem regressiva: `python -m leonida contagem`.
 ficam em `assets/music/`, fora do git: `python -m leonida musica <url-do-trailer> --inicio 0:12 --nome
 trailer-2` e `python -m leonida musica --listar`. Sem música tema, não publique: avise e peça a música.
 Downloads de vídeo: sempre via **yt-dlp**.
-Perfil ativo: BR **@leonidawirebrz** (Metricool, marca 7317240). Publicação: passo 10 de
-`docs/PROMPT-DIARIO.md` e `python -m leonida publicacao <id>`.
+Perfil padrão: BR **@leonidawirebrz**. O MP4 vertical serve para TikTok e YouTube Shorts;
+`python -m leonida publicacao <id>` prepara o pacote do TikTok, não comprova publicação. A integração
+do YouTube Shorts não está implementada nesse comando. Publicação externa exige autorização explícita.
 Cortes de vídeo: `python -m leonida corte <url|arquivo> 0:10 0:25 --pt "..." --en "..." --credito "..."`.
 
 ## Site (Leonida Wire) e imagens oficiais
@@ -85,7 +111,7 @@ image: "https://www.rockstargames.com/VI/_next/static/media/Lucia_Caminos_06....
 # layout: card          # use 'card' para cenários/prints sem personagem em destaque
 # zoom: 0.85            # recua o enquadramento (o recuo automático costuma acertar)
 # focus: [0.6, 0.5]     # ponto de foco do recorte 9:16
-# video_segundos: 20    # duração exata do vídeo do TikTok a 30 fps (padrão 20 s no v2).
+# video_segundos: 45    # rotina de notícias novas: 30–60 s; padrão 45 s, a 30 fps.
 #                       # se faltar tempo para leitura, o build falha e preserva a entrega anterior
 # estilo: v2            # padrão (config/brand.yaml → video.estilo_padrao): textos animados, transições
 #                       # zoom/whip/luz, ritmo na batida e loop na capa (leonida/motion.py).
@@ -114,7 +140,7 @@ pt:
     - type: grid                                   # grade de imagens (logos, prints)
       title: "As 6 *rádios*"
       items: [{ image: "URL", label: "Cocoteo FM", sub: "Bad Bunny & RaiNao" }]
-# en: (só se o perfil US for reativado em brand.yaml -> idiomas)
+# en: (só se o usuário pedir inglês; build explícito com langs=('en',))
 ```
 
 ## Regras editoriais (obrigatórias)
@@ -124,12 +150,13 @@ pt:
 - **Nada explícito** (nudez, sexo, violência gráfica) — mesmo que a matéria cite. O TikTok derruba.
   Não use imagens vazadas; use screenshots oficiais.
 - Sempre credite a fonte (`source`). A legenda ganha "Fonte: X" automaticamente.
-- Português do Brasil, tom de gamer, direto e empolgado, sem exagero.
+- Português do Brasil por padrão, tom de gamer, direto e empolgado, sem exagero. Inglês apenas
+  por pedido explícito do usuário, sem mudar `idiomas: [pt]` para futuras rodadas.
 - Manchete ≤ 70 caracteres, 2–4 palavras em `*destaque*`. "GTA VI" nunca quebra linha (automático).
 - Legenda: gancho na 1ª linha, fatos em linhas curtas, pergunta no final, no máx. 3 emojis.
   **Sem hashtags dentro da legenda** (vão no campo `hashtags`).
-- Lançamento oficial: **19/11/2026**, PS5 e Xbox Series X|S (sem PC anunciado). Preço e edições:
-  confirme na fonte do dia antes de citar.
+- Data/plataformas de lançamento, preço e edições: confirme na fonte oficial atual antes de citar.
+  `release_date` em `config/brand.yaml` é o valor do contador, não prova de que a data continua válida.
 
 ## Estilo visual (não mude sem pedir)
 

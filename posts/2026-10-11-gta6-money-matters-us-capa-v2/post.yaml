@@ -1,0 +1,63 @@
+id: 2026-10-11-gta6-money-matters-us-capa-v2
+date: '2026-10-11'
+tag: oficial
+site: false
+estilo: v2
+video_segundos: 40
+foto_limpa: false
+zoom: 0.88
+focus:
+- 0.7
+- 0.5
+image: https://www.rockstargames.com/VI/_next/static/media/Jason_Duval_01.07m377xeb6jhq.jpg
+source:
+  name: IGN / GamesRadar+
+  url: https://www.gamesradar.com/games/grand-theft-auto/gta-6-boss-says-we-have-made-money-matter-more-in-this-story-than-in-previous-grand-theft-auto-games/
+fontes:
+- name: IGN interview with Rockstar
+  url: https://www.ign.com/articles/gta-6-the-big-interview
+- name: GamesRadar+ report, October 7
+  url: https://www.gamesradar.com/games/grand-theft-auto/gta-6-boss-says-we-have-made-money-matter-more-in-this-story-than-in-previous-grand-theft-auto-games/
+en:
+  kicker: MONEY
+  selo: ROCKSTAR INTERVIEW
+  headline: 'GTA VI: *money matters*'
+  summary: Rockstar says earning in-game cash will be required at some points in the story.
+  caption: 'Your in-game wallet will matter in GTA VI.
+
+
+    Rob Nelson told IGN that money plays a bigger role in this story. GamesRadar+''s October 7 report highlights his examples: selling stolen cars and carrying out robberies to earn cash at certain points before progressing.
+
+
+    This describes money earned through gameplay. The comments do not say every mission has a cash requirement or announce real-money payments to continue the story.
+
+
+    Official Rockstar images illustrate this report.
+
+
+    Would you enjoy earning your way through the story? Follow @leonidawireusa for GTA VI updates.
+
+    '
+  hashtags:
+  - '#gta6news'
+  - '#vicecity'
+  - '#leonidawireusa'
+  slides:
+  - type: list
+    title: Rockstar on *money*
+    items:
+    - Rob Nelson spoke to IGN
+    - Cash has a bigger story role
+    - Some story points require earnings
+  - type: list
+    title: Nelson's *examples*
+    items:
+    - Sell stolen cars in the game
+    - Carry out in-game robberies
+    - Earn cash to continue at some points
+  - type: list
+    title: What the remarks *mean*
+    items:
+    - The cash is earned through gameplay
+    - No claim that every mission needs it
+    - No real-money story fee announced

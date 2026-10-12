@@ -1,0 +1,63 @@
+id: 2026-10-11-gta6-npc-dialogue-us-capa-v2
+date: '2026-10-11'
+tag: oficial
+site: false
+estilo: v2
+video_segundos: 40
+foto_limpa: false
+zoom: 0.88
+focus:
+- 0.5
+- 0.5
+image: https://www.rockstargames.com/VI/_next/static/media/Lucia_Caminos_09.0pd.ppokmi8-n.jpg
+source:
+  name: LOVE / GamesRadar+
+  url: https://lovemagazine.net/articles/gta-vi-the-american-dream
+fontes:
+- name: LOVE interview, October 5
+  url: https://lovemagazine.net/articles/gta-vi-the-american-dream
+- name: GamesRadar+ report, October 11
+  url: https://www.gamesradar.com/games/grand-theft-auto/rockstar-has-a-whole-team-of-gta-6-writers-dedicated-to-pedestrian-dialogue-there-are-no-shortcuts-when-it-comes-to-building-a-world-like-this/
+en:
+  kicker: VOICES
+  selo: ROCKSTAR INTERVIEW
+  headline: 'GTA VI: *street stories*'
+  summary: Rockstar has a dedicated writing team for the conversations you hear around the city.
+  caption: 'GTA VI''s street conversations have their own writing team.
+
+
+    In LOVE''s October 5 interview, Rupert Humphries describes dedicated pedestrian dialogue writers in Los Angeles, plus advertising and comedy writers across New York, LA and London.
+
+
+    GamesRadar+''s October 11 coverage also highlights James Horton''s goal: conversations should work whether you pass by quickly or stop to listen closely.
+
+
+    These comments describe Rockstar''s writing approach. They do not promise unlimited AI dialogue or a quest from every pedestrian.
+
+
+    Official Rockstar images illustrate this report. Will you stop and listen? Follow @leonidawireusa.
+
+    '
+  hashtags:
+  - '#gta6news'
+  - '#gtanpcs'
+  - '#leonidawireusa'
+  slides:
+  - type: list
+    title: The *writing team*
+    items:
+    - Humphries explained it to LOVE
+    - Pedestrian dialogue writers in LA
+    - A dedicated team for city voices
+  - type: list
+    title: Beyond the *street*
+    items:
+    - Advertising and comedy writers too
+    - Based in New York, LA and London
+    - Satire helps shape the world's voice
+  - type: list
+    title: Built for *listening*
+    items:
+    - Horton described the dialogue goal
+    - Catch conversations while passing
+    - Or stop and listen more closely

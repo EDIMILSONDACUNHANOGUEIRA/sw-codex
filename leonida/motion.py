@@ -9,9 +9,9 @@ Linguagem visual:
     parallax no personagem, palavra gigante derivando), brilho passando nas palavras em destaque;
   - textos dos outros slides: linhas sobem de dentro de uma máscara, selos dão "pop", itens de lista
     entram um por batida da música (número pula, texto desliza com máscara);
-  - transições: capa -> próximo = zoom punch com flash; entre slides = whip pan com borrão de movimento;
-    para o "siga" e no fim = flash de luz quente; o vídeo termina no 1º quadro da capa (loop perfeito);
-  - topo fixo (logo + contador) e o ponto "ao vivo" piscando.
+  - transições: dissolução suave de 0,50 s, mantendo o texto anterior até a próxima manchete entrar;
+    câmera discreta na mídia, sem deslocar letras ou clarear a tela; último quadro = primeiro (loop);
+  - topo e assinatura fixos, compostos uma única vez durante cada troca.
 """
 from __future__ import annotations
 
@@ -24,18 +24,18 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageChops, ImageDraw
+from PIL import Image
 
 from . import gfx, music
 from .config import ROOT
 
 FPS = 30
 W, H = 1080, 1920
-T = 0.40                    # duração das transições
-OUTRO = 0.25                # saída do texto acontece ANTES da transição
+T = 0.50                    # dissolução suave (15 quadros a 30 fps)
+OUTRO = 0.25                # margem após a leitura; texto permanece até a dissolução
 SETTLED_HOLD = 0.15         # alguns quadros com a composição exata da arte
-CAMERA_SETTLE = 0.60        # recuo suave para a composição estática
-ENTER = T                  # textos entram quando o whip já assentou, dentro da área segura
+CAMERA_SETTLE = 1.00        # recuo suave para a composição estática
+ENTER = 0.08               # próxima manchete começa dentro da dissolução, na área segura
 HUD = {"brand", "live", "countdown", "frame", "handle"}   # topo fixo e @ discreto (o @ grande do "siga" é cta_handle)
 CONTENT_ANIMS = {"line", "pop", "pop_first", "up", "slide", "wipe", "photo"}
 
@@ -207,7 +207,7 @@ def _plan_entries(sc: Scene, beats_local: list[float] | None = None,
     if sc.kind == "foto":
         for s in sc.sprites:
             if s.anim == "photo":
-                s.start, s.dur = ENTER - 0.1, 0.5
+                s.start, s.dur = max(0.0, ENTER - 0.1), 0.5
         t_after = ENTER + 0.35
     steps = sorted({s.step for s in sc.sprites if s.step is not None})
     times: list[float] = []
@@ -273,7 +273,7 @@ def plan(scenes: list[Scene], target: float | None, seed: str | None, log=print)
     required = sum(minimum) - T * (len(scenes) - 1)
     if target < required - 1e-7:
         raise ValueError(f"video_segundos={target:g} é curto para estas cenas: mínimo {required:.2f}s "
-                         "para revelar todo o conteúdo, manter a lista legível por 2,5s e sair em 0,25s")
+                         "para revelar todo o conteúdo, manter a lista legível por 2,5s e reservar a troca")
     beats = beat_grid(seed, target + 1)
     weights = [{"cover": 1.2, "list": 1.6, "grid": 1.2, "foto": 0.6, "cta": 0.25}.get(s.kind, 1.0)
                for s in scenes]
@@ -363,7 +363,7 @@ def static_frame(sc: Scene) -> Image.Image:
 
 
 def _cam(sc: Scene, t: float) -> float:
-    return 1.0 + (0.05 * in_out_sine(t / max(sc.dur, 0.1)) + _pulse(sc, t)) * _camera_weight(sc, t)
+    return 1.0 + (0.025 * in_out_sine(t / max(sc.dur, 0.1)) + _pulse(sc, t)) * _camera_weight(sc, t)
 
 
 def _bg_frame(sc: Scene, t: float, punch: float = 1.0) -> Image.Image:
@@ -377,30 +377,24 @@ def _bg_frame(sc: Scene, t: float, punch: float = 1.0) -> Image.Image:
 
 
 def _pulse(sc: Scene, t: float) -> float:
-    """Pulso curto do fundo na batida da música (decai em ~0,25 s)."""
+    """Pulso discreto com ataque e retorno contínuos, sem salto de escala na batida."""
     g = sc.t0 + t
     k = 0.0
     for b in sc.pulses:
-        if 0 <= g - b < 0.6:
-            k = max(k, math.exp(-(g - b) / 0.12))
-    return 0.012 * k
+        phase = (g - b) / 0.4
+        if 0 < phase < 1:
+            k = max(k, math.sin(math.pi * phase) ** 2)
+    return 0.004 * k
 
 
 def _content(sc: Scene, t: float, punch: float = 1.0) -> Image.Image:
     """Fundo + camadas de conteúdo (sem o topo fixo) no tempo local t."""
     canvas = _bg_frame(sc, t, punch).convert("RGBA")
     life = t / max(sc.dur, 0.1)
-    opacity = _clamp((sc.dur - T - t) / OUTRO)
     for sp in sc.sprites:
         if sp.name in HUD:
             continue
         a = sp.anim
-        media = a in ("kicker", "subject", "photo", "shade", "fade", "static")
-        if not media and opacity < 1:
-            # Entrada já terminou: só texto/números saem; a mídia continua e o
-            # punch nunca escala conteúdo que ocupa a área segura do TikTok.
-            _blit(canvas, sp.img, sp.x, sp.y - 30 * (1 - opacity), opacity)
-            continue
         if a in ("shade", "fade", "static"):
             _blit(canvas, sp.img, sp.x, sp.y)
         elif a == "kicker" or sp.name == "subject_shadow":
@@ -445,7 +439,7 @@ def _enter(canvas: Image.Image, sp: Sprite, p: float) -> None:
     a = sp.anim
     w, h = sp.img.size
     if a == "line":                       # sobe de dentro da máscara (a área da própria linha)
-        e = out_expo(p)
+        e = out_cubic(p)
         dy = (1 - e) * h * 0.95
         visible = int(round(h - dy))
         if visible <= 0:
@@ -453,7 +447,7 @@ def _enter(canvas: Image.Image, sp: Sprite, p: float) -> None:
         part = sp.img.crop((0, 0, w, visible))
         _blit(canvas, part, sp.x, sp.y + dy, min(1.0, p * 3))
     elif a == "slide":                    # desliza da esquerda revelando da esquerda p/ direita
-        e = out_expo(p)
+        e = out_cubic(p)
         vis = int(round(w * (0.15 + 0.85 * e)))
         part = sp.img.crop((0, 0, max(1, vis), h))
         feather = min(60, vis)
@@ -463,9 +457,9 @@ def _enter(canvas: Image.Image, sp: Sprite, p: float) -> None:
             al = (np.asarray(part.getchannel("A"), dtype=np.float32) * ramp[None, :]).astype(np.uint8)
             part = part.copy()
             part.putalpha(Image.fromarray(al))
-        _blit(canvas, part, sp.x - 60 * (1 - e), sp.y, min(1.0, p * 2.5))
+        _blit(canvas, part, sp.x - 24 * (1 - e), sp.y, min(1.0, p * 2.5))
     elif a in ("pop", "pop_first"):
-        s = 0.55 + 0.45 * out_back(p)
+        s = 0.90 + 0.10 * out_back(p)
         im, x, y = _scaled(sp, s, (sp.x + w / 2, sp.y + h / 2))
         _blit(canvas, im, x, y, min(1.0, p * 3))
     elif a == "up":
@@ -485,88 +479,28 @@ def _enter(canvas: Image.Image, sp: Sprite, p: float) -> None:
 
 
 def _hud(sc: Scene, t_global: float, t_local: float) -> Image.Image:
+    """Logo, contador e assinatura estáveis; nenhuma escala ou cintilação nas letras."""
     layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     for sp in sc.sprites:
         if sp.name not in HUD:
             continue
-        if sp.name == "live":
-            pulse = 0.35 + 0.65 * (0.5 + 0.5 * math.cos(2 * math.pi * t_global / 1.1))
-            _blit(layer, sp.img, sp.x, sp.y, 1 - (1 - pulse) * _camera_weight(sc, t_local))
-        elif sp.name == "countdown" and sc.kind == "cover" and 0.45 < t_local < 0.95:
-            k = math.sin(math.pi * (t_local - 0.45) / 0.5)
-            # Ancora na borda direita: o pop não avança na coluna de botões.
-            im, x, y = _scaled(sp, 1 + 0.07 * k, (sp.x + sp.img.width, sp.y + sp.img.height / 2))
-            _blit(layer, im, x, y)
-        else:
-            _blit(layer, sp.img, sp.x, sp.y)
+        _blit(layer, sp.img, sp.x, sp.y)
     return layer
 
 
 # ------------------------------------------------------------------ transições
 
-def _hblur(im: Image.Image, amount: float) -> Image.Image:
-    """Borrão de movimento horizontal (reduz e amplia só na largura)."""
-    k = int(1 + amount * 26)
-    if k <= 1:
-        return im
-    return im.resize((max(8, W // k), H), Image.BILINEAR).resize((W, H), Image.BILINEAR)
-
-
-_WARM = None
-
-
-def _warm() -> Image.Image:
-    global _WARM
-    if _WARM is None:
-        _WARM = gfx.linear_gradient((W, H), [(0.0, "#FFD27A"), (0.5, "#FF8A3D"), (1.0, "#FF2E88")], 120).convert("RGB")
-    return _WARM
-
-
-def _flash(im: Image.Image, amount: float, warm: bool = True, p: float = 0.5) -> Image.Image:
-    """warm=False: flash branco uniforme (zoom punch). warm=True: vazamento de luz quente que atravessa a
-    tela na diagonal (mancha suave, não pinta a tela inteira)."""
-    if amount <= 0.003:
-        return im
-    if not warm:
-        return Image.blend(im, ImageChops.screen(im, Image.new("RGB", (W, H), (255, 255, 255))), min(1.0, amount))
-    sw, sh = 108, 192
-    yy, xx = np.mgrid[0:sh, 0:sw].astype(np.float32)
-    cx, cy = (-0.3 + 1.6 * p) * sw, (0.15 + 0.5 * p) * sh
-    r = 0.75 + 0.35 * math.sin(math.pi * p)              # a mancha cresce no meio da transição
-    d = np.sqrt(((xx - cx) / (sw * r)) ** 2 + ((yy - cy) / (sh * r * 0.75)) ** 2)
-    m = np.clip(1 - d, 0, 1) ** 1.6 * min(1.0, amount)
-    m = np.maximum(m, 0.92 * max(0.0, 1 - abs(p - 0.5) / 0.14))     # no pico a luz cobre tudo
-    mask = Image.fromarray((m * 255).astype(np.uint8)).resize((W, H), Image.BILINEAR)
-    return Image.composite(ImageChops.screen(im, _warm()), im, mask)
-
-
 def _transition(kind: str, a: Image.Image, b: Image.Image, p: float) -> Image.Image:
-    """a = conteúdo que sai, b = conteúdo que entra (RGB), p de 0 a 1."""
-    if kind == "whip":
-        e = in_out_cubic(p)
-        dx = int(round(e * W))
-        canvas = Image.new("RGB", (W, H))
-        canvas.paste(a, (-dx, 0))
-        canvas.paste(b, (W - dx, 0))
-        speed = math.sin(math.pi * p)              # mais borrão no meio do movimento
-        return _hblur(canvas, speed)
-    if kind == "punch":
-        if p < 0.5:
-            q = p / 0.5
-            return _flash(a, 0.95 * q ** 4, warm=False)
-        q = (p - 0.5) / 0.5
-        return _flash(b, 0.95 * (1 - q) ** 3, warm=False)
-    # flash: luz quente cruzando
-    src = a if p < 0.5 else b              # troca seca escondida no pico da luz (sem texto sobre texto)
-    return _flash(src, min(1.0, 1.15 * math.sin(math.pi * p)), True, p)
+    """Dissolve RGB com velocidade zero nas pontas e cores limitadas aos dois quadros.
+
+    Não desloca letras, não cria picos de luz e usa apenas um blend nativo do Pillow.
+    O parâmetro kind permanece na API interna para inspeção do roteiro.
+    """
+    return Image.blend(a, b, in_out_sine(p))
 
 
 def _kind_between(a: Scene, b: Scene) -> str:
-    if a.kind == "cover":
-        return "punch"
-    if b.kind in ("cta", "cover"):
-        return "flash"
-    return "whip"
+    return "dissolve"
 
 
 # ------------------------------------------------------------------ montagem
@@ -605,24 +539,15 @@ def frame_at(scenes: list[Scene], starts: list[float], frame_no: int,
         hud_b = _hud(nxt, g, tn)
         kind = _kind_between(sc, nxt)
     else:                                   # loop: volta para o 1º quadro da capa
-        nxt, b, kind = first, _content(first, 0.0).convert("RGB"), "flash"
+        nxt, b, kind = first, _content(first, 0.0).convert("RGB"), "dissolve"
         hud_b = _hud(first, 0.0, 0.0)
-    if kind == "punch":
-        # Escala exclusivamente fundo/personagem/palavra gigante. O
-        # texto que entra continua nas coordenadas originais da arte.
-        za = 1 + 0.35 * (min(1, p * 2)) ** 3
-        zb = 1.12 - 0.12 * out_expo(max(0, (p - 0.5) * 2))
-        a = _content(sc, t, za).convert("RGB")
-        b = _content(nxt, tn, zb).convert("RGB")
-    else:
-        a = _content(sc, t).convert("RGB")
+    a = _content(sc, t).convert("RGB")
     frame = _transition(kind, a, b, p).convert("RGBA")
-    fa = frame.copy()
-    fa.alpha_composite(_hud(sc, g, t))
-    if p <= 0:
-        return fa.convert("RGB")
-    frame.alpha_composite(hud_b)
-    return Image.blend(fa, frame, p).convert("RGB")
+    # Dissolve as camadas do HUD, depois as compõe UMA vez. Textos iguais
+    # permanecem idênticos, inclusive quando o fundo muda de luminosidade.
+    hud = Image.blend(_hud(sc, g, t), hud_b, in_out_sine(p))
+    frame.alpha_composite(hud)
+    return frame.convert("RGB")
 
 
 def render_frames(scenes: list[Scene], starts: list[float]):

@@ -103,18 +103,52 @@ def new(title: str, date: str | None = None) -> Path:
     return f
 
 
-def validate(post: dict) -> list[str]:
+def validate(post: dict, langs=LANGS) -> list[str]:
     errs = []
+
+    def text_field(value, path):
+        if value is None or (isinstance(value, str) and not value.strip()):
+            errs.append(f"{path} vazio")
+            return False
+        if not isinstance(value, str):
+            errs.append(f"{path} deve ser texto (string)")
+            return False
+        return True
+
     if not post.get("image"):
         errs.append("image vazio")
-    for lang in LANGS:
-        loc = post.get(lang) or {}
-        if not loc.get("headline"):
-            errs.append(f"{lang}.headline vazio")
-        if not (loc.get("caption") or "").strip():
-            errs.append(f"{lang}.caption vazio")
-        if len(loc.get("headline", "").replace("*", "")) > 95:
+    for lang in langs:
+        loc = post.get(lang)
+        if loc is None:
+            loc = {}
+        if not isinstance(loc, dict):
+            errs.append(f"{lang} deve ser um objeto com headline e caption")
+            continue
+        headline_ok = text_field(loc.get("headline"), f"{lang}.headline")
+        text_field(loc.get("caption"), f"{lang}.caption")
+        if headline_ok and len(loc["headline"].replace("*", "")) > 95:
             errs.append(f"{lang}.headline longo demais (>95)")
+        slides = loc.get("slides")
+        if slides is None:
+            continue
+        if not isinstance(slides, list):
+            errs.append(f"{lang}.slides deve ser uma lista de slides")
+            continue
+        for index, slide in enumerate(slides):
+            path = f"{lang}.slides[{index}]"
+            if not isinstance(slide, dict):
+                errs.append(f"{path} deve ser um objeto com title e items")
+                continue
+            text_field(slide.get("title"), f"{path}.title")
+            items = slide.get("items")
+            if not isinstance(items, list):
+                errs.append(f"{path}.items deve ser uma lista")
+                continue
+            if slide.get("type") != "grid":
+                for item_index, item in enumerate(items):
+                    item_path = f"{path}.items[{item_index}]"
+                    if not text_field(item, item_path) and isinstance(item, dict):
+                        errs.append(f"{item_path}: use aspas no YAML para texto que contenha ': '")
     return errs
 
 
@@ -142,7 +176,10 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
     estilo = estilo or post.get("estilo") or (brand().get("video") or {}).get("estilo_padrao", "v2")
     if estilo not in {"v2", "dinamico", "classico"}:
         raise ValueError(f"estilo desconhecido: {estilo}")
-    errs = validate(post)
+    langs = tuple(langs)
+    if not langs or any(lang not in LANG_FOLDER for lang in langs):
+        raise ValueError(f"idiomas inválidos: {langs!r}")
+    errs = validate(post, langs)
     if errs:
         raise ValueError(f"{post['id']}: " + "; ".join(errs))
     date = str(post.get("date") or dt.date.today().isoformat())[:10]
@@ -269,12 +306,15 @@ def _render_post(post, base_dir, out, estilo, video, langs, today, log):
 
 def _write_readme(post: dict, out: Path, manifest: dict) -> None:
     """README.md da pasta — o GitHub mostra as imagens e legendas direto no navegador."""
-    lines = [f"# {post['pt']['headline'].replace('*', '')}", ""]
+    built_langs = [lang for lang, folder in LANG_FOLDER.items()
+                   if manifest["files"].get(folder)]
+    title_lang = built_langs[0]
+    lines = [f"# {post[title_lang]['headline'].replace('*', '')}", ""]
     src = post.get("source") or {}
     if src.get("url"):
         lines += [f"Fonte: [{src.get('name', src['url'])}]({src['url']})", ""]
     for lang, label in (("pt", "🇧🇷 Perfil BR"), ("en", "🇺🇸 Perfil US")):
-        if lang not in LANGS:
+        if lang not in built_langs:
             continue
         folder = LANG_FOLDER[lang]
         files = manifest["files"].get(folder, [])

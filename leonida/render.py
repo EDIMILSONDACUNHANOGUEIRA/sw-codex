@@ -600,7 +600,7 @@ def cover(post: dict, lang: str, base_dir: Path | None = None, today: dt.date | 
                 ImageDraw.Draw(face).ellipse([cx - r, cy - r * 1.3, cx + r, cy + r * 1.3], fill=255)
                 lifted = lift_dark_subject(bg, face, whole=True)
                 bg = Image.composite(lifted, bg, face.filter(ImageFilter.GaussianBlur(60)))
-        subj_src = bg
+        subj_src = bg.copy()
         if zoom < 0.999 and mask is not None:
             # personagem vem da foto nítida, sem a mistura com o fundo desfocado
             hz = int(H * zoom)
@@ -618,8 +618,9 @@ def cover(post: dict, lang: str, base_dir: Path | None = None, today: dt.date | 
         layers.append(Layer("kicker", kl, "kicker", 1))
     if mask is not None:
         fin = gfx.look()
-        subj = _blank(size)
-        subj.paste(subj_src, (0, 0), mask)
+        # Alpha não premultiplicado: preserve o RGB e aplique a máscara uma única vez.
+        subj = subj_src.convert("RGBA").copy()
+        subj.putalpha(mask)
         subj = lift_dark_subject(subj, mask)      # rosto escuro some no feed: clareia só o personagem
         if fin["neon"]:   # visual antigo: contorno rosa em volta do personagem
             glow_l = gfx.glow(mask, "#FF2E88", 26, 1.15, spread=4)
@@ -636,7 +637,7 @@ def cover(post: dict, lang: str, base_dir: Path | None = None, today: dt.date | 
             behind = bg.copy()
             if kl is not None:
                 behind.alpha_composite(kl)
-            subj = gfx.light_wrap(subj, behind, mask, 8, 0.35)
+            subj = gfx.light_wrap(subj, behind, mask, 4, 0.15)
             subj.putalpha(mask)
         layers.append(Layer("subject", subj, "subject", 3))
 

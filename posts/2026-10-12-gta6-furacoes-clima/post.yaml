@@ -1,0 +1,51 @@
+id: 2026-10-12-gta6-furacoes-clima
+date: '2026-10-12'
+tag: oficial
+site: false
+estilo: v2
+video_segundos: 45
+foto_limpa: false
+zoom: 0.88
+focus: [0.5, 0.5]
+image: https://www.rockstargames.com/VI/_next/static/media/Lucia_Caminos_09.0pd.ppokmi8-n.jpg
+source:
+  name: Game Informer — entrevista com a Rockstar
+  url: https://gameinformer.com/exclusive/2026/09/29/exclusive-grand-theft-auto-vi-features-tropical-storms-and-hurricanes
+fontes:
+  - name: Game Informer — 29/09/2026
+    url: https://gameinformer.com/exclusive/2026/09/29/exclusive-grand-theft-auto-vi-features-tropical-storms-and-hurricanes
+pt:
+  kicker: CLIMA
+  selo: DETALHES DO JOGO
+  headline: 'GTA VI terá *furacões*'
+  summary: Tempestades locais, poças persistentes e arco-íris fazem parte do clima de Leonida.
+  caption: |
+    O clima de Leonida vai muito além de sol e praia.
+
+    Na reportagem de 29 de setembro da Game Informer, a Rockstar confirmou tempestades tropicais e furacões em GTA VI.
+
+    A chuva pode acontecer em uma região enquanto outra continua ensolarada. Depois da tempestade, poças e superfícies molhadas permanecem. Sob a iluminação certa, também pode surgir um arco-íris.
+
+    A frequência dos furacões e seus efeitos nas missões ainda não foram detalhados. Imagens oficiais da Rockstar ilustram a notícia.
+
+    Você vai encarar a tempestade ou procurar abrigo? Siga @leonidawirebrz.
+  hashtags: ['#gta6clima', '#leonida', '#leonidawirebrz']
+  slides:
+    - type: list
+      title: Clima *confirmado*
+      items:
+        - Game Informer publicou em 29 de setembro
+        - Rockstar descreveu o clima de Leonida
+        - Tempestades tropicais e furacões
+    - type: list
+      title: Chuva *localizada*
+      items:
+        - Sol e chuva em regiões diferentes
+        - Tempestades visíveis à distância
+        - Nuvens atravessam o céu de Leonida
+    - type: list
+      title: Depois da *tempestade*
+      items:
+        - Poças e superfícies continuam molhadas
+        - Arco-íris sob a iluminação certa
+        - Frequência dos furacões ainda em aberto

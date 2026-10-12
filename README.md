@@ -1,8 +1,14 @@
-# 🌴 Leonida Studio — notícias de GTA VI prontas para o TikTok (BR + US)
+# 🌴 Leonida Studio — notícias GTA para TikTok e YouTube Shorts
 
-Fábrica de posts de **GTA VI**: monitora os portais de games, encontra a notícia nova, escreve em
-**português e inglês**, gera a **arte 9:16**, o **carrossel**, um **vídeo animado** e a **legenda** —
-tudo pronto para você só baixar e postar no perfil brasileiro e no americano.
+Produção de notícias verificadas de **GTA VI e da franquia GTA**: pesquisa os portais de games,
+gera vídeos verticais de **30 a 60 segundos** (padrão 45 s), capa e legenda. **Português por padrão**;
+inglês somente quando solicitado. A entrega é local no chat, para publicação manual no TikTok
+e YouTube Shorts. As transições usam dissolução suave e o recorte dos personagens preserva as cores.
+
+Rotina: **11h e 17h, America/Cuiaba**, até dois vídeos novos por rodada. O fluxo não repete
+notícias já entregues e não publica em redes automaticamente. Consulte
+[o prompt da automação](docs/AUTOMACAO-GTA.md) e
+[o guia para outra conta](docs/CONTINUAR-EM-OUTRA-CONTA.md).
 
 **👉 Posts prontos:** [`prontos/`](prontos/) · Radar ao vivo: [`prontos/RADAR.md`](prontos/RADAR.md)
 
@@ -10,7 +16,7 @@ tudo pronto para você só baixar e postar no perfil brasileiro e no americano.
 |---|---|
 | 📡 **Radar** | IGN, IGN Brasil, Flow Games, TecMundo/Voxel, GameSpot, Game Informer, Kotaku, Eurogamer, PC Gamer, Push Square, Insider Gaming, Polygon, Google Notícias, Reddit r/GTA6 e YouTube da Rockstar. Junta a mesma notícia de vários sites e ranqueia por relevância. |
 | 🎨 **Estilo próprio** | Paleta "Vice" (pôr do sol de Leonida), palavra gigante **atrás do personagem recortado**, manchete com destaque em gradiente, cantos neon, contador "X dias para o GTA VI". |
-| 🎬 **Vídeo** | Capa animada de 8 s (HyperFrames + GSAP): flash, palavra entrando, personagem subindo, manchete linha a linha — com a **música tema** de fundo. |
+| 🎬 **Vídeo** | Motor v2 local (Pillow + FFmpeg), 30–60 s, dissoluções de 0,50 s, textos legíveis e **música tema** de fundo. Sem modelo pesado de interpolação. |
 | 🎥 **Edição por link** | Mande um link: o app acha as cenas, reenquadra 9:16 no personagem e aplica movimentos de câmera estilo Higgsfield (crash zoom, dolly, câmera na mão, whip pan, câmera lenta) no HyperFrames, com grão de filme, marca e manchete BR/US. |
 | ✂️ **Cortes** | Trailer/gameplay/vídeo viral (baixado com **yt-dlp**) → corte 9:16 com fundo desfocado, moldura da marca, música tema por baixo e legenda automática. |
 | ✍️ **Redação** | O Codex/Claude escreve no seu PC (veja `AGENTS.md`) ou o Claude API escreve sozinho na nuvem. |
@@ -63,7 +69,7 @@ prontos/2026-10-08/2026-10-08-gta6-radios-reveladas/
 
 Abra a pasta no Codex e peça, por exemplo:
 
-- *"Faz os posts de hoje"* → ele roda o radar, confere as fontes, escreve BR+US e gera tudo.
+- *"Faz os posts de hoje"* → roda o radar, confere as fontes, escreve em português e gera os arquivos.
 - *"Cria o post da notícia 2 do radar"*
 - *"Faz um corte do trailer de 1:12 a 1:24 com a manchete 'Jason em primeira pessoa'"*
 
@@ -74,7 +80,8 @@ As regras de redação, o estilo e o formato dos arquivos estão no [`AGENTS.md`
 ```bash
 python -m leonida radar                  # notícias do momento (ranking)
 python -m leonida rascunho 1             # cria posts/<id>/post.yaml da notícia nº 1
-python -m leonida build <post-id>        # gera capa + carrossel + vídeo + legendas (BR e US)
+python scripts/produzir_rotina.py <post-id>  # PT, 30–60 s e QA; inglês somente com --lang en
+python -m leonida build <post-id>        # comando geral de renderização (idiomas configurados)
 python -m leonida build <post-id> --sem-video   # sem capa animada; ainda gera tiktok/post.mp4 com a música tema
 python -m leonida contagem               # post "faltam X dias" com screenshot oficial
 python -m leonida corte URL 0:42 1:05 --pt "Manchete *destaque*" --en "Headline *highlight*" --credito "Rockstar Games"

@@ -1,0 +1,53 @@
+id: 2026-10-11-gta6-mission-freedom-us
+date: "2026-10-11"
+tag: oficial
+site: false
+estilo: v2
+video_segundos: 40
+foto_limpa: false
+zoom: 0.76
+focus: [0.5, 0.5]
+image: "https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_03.15z-.c0tptrzs.jpg"
+source:
+  name: "IGN / GamesRadar+"
+  url: "https://www.gamesradar.com/games/grand-theft-auto/with-gta-6-missions-rockstar-has-made-a-very-conscious-effort-to-open-things-up/"
+fontes:
+  - name: "IGN interview with Rockstar, October 7"
+    url: "https://www.ign.com/articles/gta-6-the-big-interview"
+  - name: "GamesRadar+ report, October 8"
+    url: "https://www.gamesradar.com/games/grand-theft-auto/with-gta-6-missions-rockstar-has-made-a-very-conscious-effort-to-open-things-up/"
+en:
+  kicker: CHOICE
+  selo: "ROCKSTAR INTERVIEW"
+  headline: "GTA VI: *more freedom*"
+  summary: "Rockstar describes alternative routes in missions, with story moments still guiding the action."
+  caption: |
+    GTA VI missions are opening up.
+
+    In an IGN interview covered by GamesRadar+ on October 8, Rob Nelson describes a tower-block escape with multiple exits and a police chase where you can take a different route from the one suggested.
+
+    Rockstar wants mission systems to feel consistent with the open world. Story moments still sometimes need a guided sequence, so the goal is more choice where it fits the narrative.
+
+    Official Rockstar images illustrate this report.
+
+    Will you follow the route or improvise? Follow @leonidawireusa.
+  hashtags: ["#gta6news", "#gta6gameplay", "#leonidawireusa"]
+  slides:
+    - type: list
+      title: "More *ways out*"
+      items:
+        - "Rob Nelson explained it to IGN"
+        - "A tower-block escape has options"
+        - "Multiple exits from the building"
+    - type: list
+      title: "Choose your *escape*"
+      items:
+        - "A police chase suggests a route"
+        - "Another route can still work"
+        - "You decide where to drive"
+    - type: list
+      title: "Freedom meets *story*"
+      items:
+        - "Story moments can still guide you"
+        - "More choices where they fit"
+        - "Systems aim to match free roaming"

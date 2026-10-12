@@ -1,0 +1,53 @@
+id: 2026-10-12-gta6-fauna-170-especies
+date: '2026-10-12'
+tag: oficial
+site: false
+estilo: v2
+video_segundos: 45
+foto_limpa: false
+zoom: 0.88
+focus: [0.7, 0.5]
+image: https://www.rockstargames.com/VI/_next/static/media/Jason_Duval_01.07m377xeb6jhq.jpg
+source:
+  name: Game Informer — entrevista com a Rockstar
+  url: https://gameinformer.com/exclusive/2026/09/29/exclusive-grand-theft-auto-vi-includes-over-170-animal-species
+fontes:
+  - name: Game Informer — 29/09/2026
+    url: https://gameinformer.com/exclusive/2026/09/29/exclusive-grand-theft-auto-vi-includes-over-170-animal-species
+pt:
+  kicker: FAUNA
+  selo: DETALHES DO JOGO
+  headline: 'GTA VI: *170+ espécies*'
+  summary: A Rockstar detalhou a fauna de Leonida à Game Informer em 29 de setembro.
+  caption: |
+    Mais de 170 espécies de animais em GTA VI.
+
+    A Game Informer publicou os detalhes da Rockstar em 29 de setembro: Leonida terá fauna terrestre, aérea e marinha inspirada na Flórida.
+
+    Flamingos, peixes-boi e jacarés estarão junto de espécies invasoras, como iguanas-verdes, sapos-cururus e macacos rhesus.
+
+    Certos animais poderão ser rastreados em categorias que incluem raros e lendários. A identidade dessas criaturas especiais segue em segredo.
+
+    Imagens oficiais da Rockstar ilustram esta notícia.
+
+    Qual animal você quer encontrar primeiro? Siga @leonidawirebrz.
+  hashtags: ['#gta6animais', '#leonida', '#leonidawirebrz']
+  slides:
+    - type: list
+      title: Uma fauna *enorme*
+      items:
+        - Mais de 170 espécies em Leonida
+        - Animais da terra, do ar e do mar
+        - "Game Informer: 29 de setembro"
+    - type: list
+      title: Olha quem *vai aparecer*
+      items:
+        - Flamingos, peixes-boi e jacarés
+        - Iguanas-verdes e sapos-cururus
+        - Até macacos rhesus, invasores na Flórida
+    - type: list
+      title: Em busca dos *especiais*
+      items:
+        - Categorias incluem raros e lendários
+        - Certos animais poderão ser rastreados
+        - Identidades especiais seguem em segredo

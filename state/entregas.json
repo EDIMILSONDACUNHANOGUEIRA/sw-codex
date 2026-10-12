@@ -1,0 +1,60 @@
+{
+  "2026-10-12-gta6-furacoes-clima": {
+    "status": "delivered",
+    "date": "2026-10-12",
+    "language": "pt",
+    "headline": "GTA VI terá furacões",
+    "sources": [
+      "https://gameinformer.com/exclusive/2026/09/29/exclusive-grand-theft-auto-vi-features-tropical-storms-and-hurricanes"
+    ],
+    "duration": 45,
+    "published": false
+  },
+  "2026-10-12-gta6-fauna-170-especies": {
+    "status": "delivered",
+    "date": "2026-10-12",
+    "language": "pt",
+    "headline": "GTA VI: 170+ espécies",
+    "sources": [
+      "https://gameinformer.com/exclusive/2026/09/29/exclusive-grand-theft-auto-vi-includes-over-170-animal-species"
+    ],
+    "duration": 45,
+    "published": false
+  },
+  "2026-10-11-gta6-money-matters-us": {
+    "status": "delivered",
+    "date": "2026-10-11",
+    "language": "en",
+    "headline": "GTA VI: money matters",
+    "sources": [
+      "https://www.ign.com/articles/gta-6-the-big-interview",
+      "https://www.gamesradar.com/games/grand-theft-auto/gta-6-boss-says-we-have-made-money-matter-more-in-this-story-than-in-previous-grand-theft-auto-games/"
+    ],
+    "duration": 40,
+    "published": false
+  },
+  "2026-10-11-gta6-npc-dialogue-us": {
+    "status": "delivered",
+    "date": "2026-10-11",
+    "language": "en",
+    "headline": "GTA VI: street stories",
+    "sources": [
+      "https://lovemagazine.net/articles/gta-vi-the-american-dream",
+      "https://www.gamesradar.com/games/grand-theft-auto/rockstar-has-a-whole-team-of-gta-6-writers-dedicated-to-pedestrian-dialogue-there-are-no-shortcuts-when-it-comes-to-building-a-world-like-this/"
+    ],
+    "duration": 40,
+    "published": false
+  },
+  "2026-10-11-gta6-mission-freedom-us": {
+    "status": "delivered",
+    "date": "2026-10-11",
+    "language": "en",
+    "headline": "GTA VI: more freedom",
+    "sources": [
+      "https://www.ign.com/articles/gta-6-the-big-interview",
+      "https://www.gamesradar.com/games/grand-theft-auto/with-gta-6-missions-rockstar-has-made-a-very-conscious-effort-to-open-things-up/"
+    ],
+    "duration": 40,
+    "published": false
+  }
+}

@@ -38,7 +38,7 @@ def scene(kind="cover", items=0, notes=0):
 
 class SmallCanvas(unittest.TestCase):
     def setUp(self):
-        for name, value in (("W", TEST_SIZE[0]), ("H", TEST_SIZE[1]), ("CAM_ANCHOR", (90, 144)), ("_WARM", None)):
+        for name, value in (("W", TEST_SIZE[0]), ("H", TEST_SIZE[1]), ("CAM_ANCHOR", (90, 144))):
             p = patch.object(motion, name, value)
             p.start()
             self.addCleanup(p.stop)
@@ -139,7 +139,19 @@ class DrawingTests(SmallCanvas):
             box = motion._hud(sc, float(t), float(t)).getbbox()
             self.assertLessEqual(box[2],140)
 
-    def test_whip_and_punch_do_not_carry_text_across_right_safe_area(self):
+    def test_live_countdown_and_signature_remain_pixel_stable(self):
+        sc = scene()
+        sc.dur = 5
+        sc.sprites.extend([
+            motion.Sprite("live", "static", 3, Image.new("RGBA", (8, 8), (255, 70, 30, 160)), 60, 12),
+            motion.Sprite("countdown", "pop", 6, Image.new("RGBA", (45, 12), (255, 255, 255, 190)), 90, 10),
+            motion.Sprite("handle", "static", 90, Image.new("RGBA", (70, 9), (220, 220, 220, 180)), 15, 290),
+        ])
+        expected = np.asarray(motion._hud(sc, 0, 0))
+        for t in (0.3, 0.46, 0.7, 0.94, 1.1, 2.3, 4.9):
+            np.testing.assert_array_equal(np.asarray(motion._hud(sc, t, t)), expected)
+
+    def test_dissolve_does_not_carry_text_across_right_safe_area(self):
         scenes = [scene(), scene("list", 3), scene("list", 2)]
         with patch.object(motion, "beat_grid", return_value=[]):
             starts = motion.plan(scenes, 20, None)
@@ -148,6 +160,54 @@ class DrawingTests(SmallCanvas):
                 a = np.asarray(motion.frame_at(scenes, starts, f)).astype(int)
                 text = (a[:,:,1] > a[:,:,0] + 80) & (a[:,:,1] > a[:,:,2] + 80)
                 self.assertFalse(text[:,143:].any(), (start, f))
+
+    def test_dissolve_endpoints_and_midpoint_never_flash_or_blank(self):
+        a = Image.new("RGB", TEST_SIZE, (25, 20, 80))
+        b = Image.new("RGB", TEST_SIZE, (160, 90, 40))
+        np.testing.assert_array_equal(np.asarray(motion._transition("dissolve", a, b, -0.1)), np.asarray(a))
+        np.testing.assert_array_equal(np.asarray(motion._transition("dissolve", a, b, 1.1)), np.asarray(b))
+        previous = None
+        for p in np.linspace(0, 1, round(motion.T * motion.FPS) + 1):
+            actual = np.asarray(motion._transition("dissolve", a, b, float(p))).astype(int)
+            self.assertTrue(np.all(actual >= np.minimum(np.asarray(a), np.asarray(b))))
+            self.assertTrue(np.all(actual <= np.maximum(np.asarray(a), np.asarray(b))))
+            if previous is not None:
+                self.assertLessEqual(np.abs(actual - previous).max(), 15)
+            previous = actual
+
+    def test_transition_retains_title_and_fixed_hud_in_every_frame(self):
+        scenes = [scene(), scene("list", 3), scene("list", 2), scene("cta")]
+        with patch.object(motion, "beat_grid", return_value=[]):
+            starts = motion.plan(scenes, 30, None)
+        brand = np.asarray(motion.static_frame(scenes[0]))[12:20, 10:55]
+        for start in starts[1:]:
+            # Covers the former blank outro as well as all dissolve frames.
+            for f in range(math.ceil((start - motion.OUTRO) * 30), math.ceil((start + motion.T) * 30)):
+                actual = np.asarray(motion.frame_at(scenes, starts, f)).astype(int)
+                title = (actual[55:64,:,1] > actual[55:64,:,0] + 50)
+                self.assertGreater(title.sum(), 35, (start, f))
+                np.testing.assert_array_equal(actual[12:20, 10:55], brand)
+
+    def test_short_form_targets_keep_exact_loop_and_settled_composition(self):
+        for target in (30, 40, 60):
+            scenes = [scene(), scene("list", 3), scene("cta")]
+            with patch.object(motion, "beat_grid", return_value=[]):
+                starts = motion.plan(scenes, target, None)
+            np.testing.assert_array_equal(np.asarray(motion.frame_at(scenes, starts, 0)),
+                                          np.asarray(motion.frame_at(scenes, starts, target * 30 - 1)))
+            for sc, start in zip(scenes, starts):
+                f = math.floor((start + sc.dur - motion.T - motion.OUTRO) * 30) - 1
+                np.testing.assert_array_equal(np.asarray(motion.frame_at(scenes, starts, f)),
+                                              np.asarray(motion.static_frame(sc)))
+
+    def test_music_pulse_has_continuous_attack_and_return(self):
+        sc = scene()
+        sc.pulses = [1.0]
+        self.assertEqual(motion._pulse(sc, 1.0), 0)
+        self.assertAlmostEqual(motion._pulse(sc, 1.4), 0)
+        self.assertLess(motion._pulse(sc, 1.0 + 1e-4), 1e-8)
+        self.assertLess(motion._pulse(sc, 1.4 - 1e-4), 1e-8)
+        self.assertAlmostEqual(motion._pulse(sc, 1.2), 0.004)
 
     def test_scene_from_uses_finished_background_without_reprocessing(self):
         bg = Image.new("RGBA", TEST_SIZE, (40, 25, 60))
