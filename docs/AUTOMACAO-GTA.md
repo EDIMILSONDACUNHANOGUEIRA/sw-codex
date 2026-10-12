@@ -68,3 +68,7 @@ O workflow `.github/workflows/radar.yml` pesquisa apenas feeds públicos às 15h
 Ele atualiza `state/radar.json` e `prontos/RADAR.md`. A geração e revisão dos vídeos
 ficam na rotina local. O agendamento do Actions depende de o workflow estar no
 branch padrão e de o Actions estar habilitado; pode haver atrasos de execução.
+
+A versão desta rotina está no branch `codex/gta-rotina-2026-10-12`. O agendamento
+local já foi criado no aplicativo. O workflow do GitHub fica preparado nesse branch;
+sua agenda de feeds só será ativada se for integrado ao branch padrão `main`.

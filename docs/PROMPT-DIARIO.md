@@ -15,7 +15,7 @@ Abra o mesmo repositório no Codex. Se precisar de outro checkout:
 ```powershell
 git clone https://github.com/EDIMILSONDACUNHANOGUEIRA/sw-codex.git
 cd sw-codex
-git checkout claude/gta6-content-automation-app-bubnzu
+git checkout codex/gta-rotina-2026-10-12
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 $env:PYTHONUTF8 = '1'

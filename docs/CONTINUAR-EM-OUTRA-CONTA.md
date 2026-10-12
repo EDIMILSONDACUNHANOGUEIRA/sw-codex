@@ -26,7 +26,7 @@ o serviço estiver indisponível. Os arquivos locais permanecem independentes do
 
 1. Abra o mesmo aplicativo Codex e adicione/abra a pasta deste repositório. Se usar outro computador,
    clone o repositório e escolha o branch com a versão atual. O branch deste checkout é
-   `claude/gta6-content-automation-app-bubnzu`; confira se ele ainda é o branch adequado.
+   `codex/gta-rotina-2026-10-12`; confira se ele ainda é o branch adequado.
 2. Peça ao agente para ler `AGENTS.md`, `docs/PROMPT-DIARIO.md`, `docs/AUTOMACAO-GTA.md`,
    `config/brand.yaml`, `config/sources.yaml` e o histórico em `posts/` e `state/`.
 3. Recrie a rotina na conta nova para **11h e 17h, America/Cuiaba**, usando o prompt de
