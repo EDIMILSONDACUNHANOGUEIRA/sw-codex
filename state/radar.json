@@ -1,9 +1,8 @@
 {
- "generated_at": "2026-10-12T01:23:39.259064+00:00",
+ "generated_at": "2026-10-12T06:52:24.017000+00:00",
  "count": 40,
  "errors": [
   "Reddit r/GTA6 (hot): 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/GTA6/hot/.rss",
-  "Reddit r/GTA6 (top do dia): 429 Client Error: Too Many Requests for url: https://www.reddit.com/r/GTA6/top/.rss?t=day",
   "YouTube Rockstar Games: 404 Client Error: Not Found for url: https://www.youtube.com/feeds/videos.xml?user=RockstarGames"
  ],
  "stories": [
@@ -13,12 +12,12 @@
    "title_pt": "Cyberleek vaza gameplay de GTA 6 com Lucia nua e ameaça liberar build completa do jogo",
    "title_en": "GTA 6 Leaker Threatens to Release Build With Full Story Mode Played to the End, Ties Lucia's Clothing to Crypto Scheme",
    "summary": "The GTA 6 leaker has reportedly threatened to release a build of the game with the full story mode played to the end, as part of their heavily criticized crypto scheme.",
-   "score": 177.0,
-   "coverage": 69,
+   "score": 168.3,
+   "coverage": 68,
    "official": false,
    "video": false,
    "community": false,
-   "published": "2026-10-12T01:00:00+00:00",
+   "published": "2026-10-12T06:07:00+00:00",
    "first_seen": "2026-10-10T15:02:16+00:00",
    "thumb": "https://assets-prd.ignimgs.com/2026/08/27/mega-9-1787855280117.jpeg",
    "sources": [
@@ -72,6 +71,12 @@
     },
     {
      "name": "Google News US",
+     "title": "GTA 6 Leak: CYBERLEEK Ties Build to $30M Crypto Bet",
+     "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTFAwWDhBNUhSRnV0UWNKWFNWeWlaaXFfMzdMR25ucUxicmVNVllJR3VreG43eVZ0VGY5b0RiWWFrYmJEQlc3MTlnd1ctU2FPYUd4V3BFdGRGcnRpZV9oWG92QXRjYTZ2bkxqUnBmQUdhUDlWd0U?oc=5",
+     "lang": "en"
+    },
+    {
+     "name": "Google News US",
      "title": "GTA 6 leaker Cyberleek threatens to leak full playable build if Take-Two doesn't bring back physical discs",
      "url": "https://news.google.com/rss/articles/CBMi6gFBVV95cUxNTW0ycTlLZFFjZEc1bzNWSFA5S1o2VTdpR0RPVzdnTWlCeEJfenc4eUpzQllUZG1wQnltcm1fZE52XzR2ZE1iS2MydGFqSFpLMEVZQy1SaGZOVm5RVkxoM1A4TWlvWmNhcmNoR1A2MlJmUDRHeFA3aUJMXzFwOHhKVlBCa05Vcmgxek9GblhGYTNRRUt4Mi1paHdBeEdwYUtQekpvTDMzUlAtdnBjTjFzbFhLRFlucC14d21DZW9yS2VJd1k3Szd5R01wNElsT0JxaHpqYnYtLWVKTHgxalk5N184R2hySm1Ta3c?oc=5",
      "lang": "en"
@@ -87,35 +92,29 @@
      "title": "'GTA 6' Leaker Posts Nude Lucia Video As Threat To Release Full Game Early Looms",
      "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQcUU2ai14cGliOUdvRWhMd2Jma3lZN0JyemZMWXI5RkZOSVViYWp2SVZOMWxYSmQ4U3JQQ0pOTklDc2hUSkVoNUpMaGxhUTNKam11QjAyamc5djhxU0Q5UlNfN0dRa3kzTUJRZWU0RjNQemdfUW12T0dmUFJOR25IblIwbzBldnE1bWlkZFhEREtBd3J5dlZkeGhR?oc=5",
      "lang": "en"
-    },
-    {
-     "name": "Google News US",
-     "title": "GTA 6 Leaker Threatens To Release Full Game Build Before November Launch",
-     "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxOeVptcUEyMnhIOU0xT3ZkRDQ0RnBUdFhVMmlwRUppdmlvZkNxZUxLUnNsX3BlalN0RmdMVHhuMnpPNHFaeXVudzUta3hhcmo5dUZLN0x0RTJ2RmZkTHpuNW1DNGlxX3BXRGQ1LVdGWmRwNEpwTDQ1eGU4dDZPUkRuTEdaYlBwQ3hIMU4w?oc=5",
-     "lang": "en"
     }
    ],
    "is_new": false
   },
   {
-   "id": "3c850ff98a",
-   "title": "GTA 6 revela as primeiras seis estações de rádio e os podcasts sob demanda",
+   "id": "d22bd16f88",
+   "title": "GTA 6 Previews Some Of Its Radio Stations, Including Slayer As The Metal Station's DJ",
    "title_pt": "A música de Leonida: As rádios, os hosts e os podcasts de GTA VI",
-   "title_en": "Turn up the radio: 6 stations in 'GTA 6' that bring Leonida to life",
-   "summary": "GTA 6 revela as primeiras seis estações de rádio e os podcasts sob demanda Pasquale Pillitteri",
-   "score": 71.8,
-   "coverage": 7,
+   "title_en": "Confirmed: You can listen to the radio and podcasts outside cars in ‘GTA 6’",
+   "summary": "GTA 6 Previews Some Of Its Radio Stations, Including Slayer As The Metal Station's DJ MMORPG.com",
+   "score": 66.4,
+   "coverage": 6,
    "official": false,
    "video": false,
    "community": false,
-   "published": "2026-10-11T18:49:21+00:00",
-   "first_seen": "2026-10-10T13:39:37+00:00",
+   "published": "2026-10-12T02:41:00+00:00",
+   "first_seen": "2026-10-10T19:30:00+00:00",
    "thumb": null,
    "sources": [
     {
      "name": "Google News US",
-     "title": "Turn up the radio: 6 stations in 'GTA 6' that bring Leonida to life",
-     "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPZGdqdTY2MkJTVkJJYUhkQ3hlM25CQ1dqLS1iLXVjaVVtMU1PRkp0aFplZnkxUW1GdllaR21wd1pNMkpBdEs4TXN1UDBkd3hrWGEyR0hVSklrck5uTWxQVnc1NEhBWnJBWHN2WmZBNE1xV3JaZ2pQZktwWnd1ZHl0RmRrSHo5ZHctRjFqcUNCMFhNRDlrOGdoOW5WVmYwYXhzOFkxUm5Bamp6RVQ0S1ItWXFuamMySFh20gG-AUFVX3lxTE9heFV0ckVhNmFra0l3V0lNTUpPZndhZVVGSHdlNUNYd1QwWE5wY2ZibWVIT3dncndsOElCc2tFdE5MOXNBQVBORzBjUEVOU0xUS2Zzc2x6b3hsSTdPR040NjBGUGk5ZFdJTGlXUDBqa0pMbGhvR3JqYWRDMmJVNWhDWGFLVG1rSXd4c0ppcUdmOER0dVQ3b1E5LWtPZWJyVm1wWUF4ZHJpejNvai1YTlc3Xy1Fc195dXJkNXVqb0E?oc=5",
+     "title": "Confirmed: You can listen to the radio and podcasts outside cars in ‘GTA 6’",
+     "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNNGlFQThuR1lVUTBFMmxtLVFfTkJOV1ZwMXR0enR6SkpvYlNJT3I2WmJYUHBmSjFJQnY0NHg3b29VYnNyZWc2aWMxYUhMM1dyLVpCaUZGN013Z1JWb0lSMDRGLVEwcGZma3ZRMzRVXzNkcHZzOFdLN0Uza0EyYjdTNXFYNlloU0VWZmFIcFlNdmF0R3puUUMzdHZ6dmg?oc=5",
      "lang": "en"
     },
     {
@@ -126,20 +125,14 @@
     },
     {
      "name": "Google News US",
-     "title": "GTA 6 NEW Radio Previews! 🎧 All the Latest Station Reveals in One Video",
-     "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE9qUDNOaDNlVmphaXNDWGt2dEFvb0U5SUE3bV91a2Y0SU9xdGpnU0Q3MjBlNkhpSk90djJRdmtnaTlLQk1JblU5LWhhWUhxamhsZHRCZjFEckZldmw2?oc=5",
+     "title": "Turn up the radio: 6 stations in 'GTA 6' that bring Leonida to life",
+     "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPZGdqdTY2MkJTVkJJYUhkQ3hlM25CQ1dqLS1iLXVjaVVtMU1PRkp0aFplZnkxUW1GdllaR21wd1pNMkpBdEs4TXN1UDBkd3hrWGEyR0hVSklrck5uTWxQVnc1NEhBWnJBWHN2WmZBNE1xV3JaZ2pQZktwWnd1ZHl0RmRrSHo5ZHctRjFqcUNCMFhNRDlrOGdoOW5WVmYwYXhzOFkxUm5Bamp6RVQ0S1ItWXFuamMySFh20gG-AUFVX3lxTE9heFV0ckVhNmFra0l3V0lNTUpPZndhZVVGSHdlNUNYd1QwWE5wY2ZibWVIT3dncndsOElCc2tFdE5MOXNBQVBORzBjUEVOU0xUS2Zzc2x6b3hsSTdPR040NjBGUGk5ZFdJTGlXUDBqa0pMbGhvR3JqYWRDMmJVNWhDWGFLVG1rSXd4c0ppcUdmOER0dVQ3b1E5LWtPZWJyVm1wWUF4ZHJpejNvai1YTlc3Xy1Fc195dXJkNXVqb0E?oc=5",
      "lang": "en"
     },
     {
      "name": "Google Notícias BR",
      "title": "GTA 6 revela seis rádios e confirma podcasts inéditos",
      "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE80dnZzQnpTLUZzT0xwdXl4Vk1GdkNFZ2lGRUVodHk5RmI0ejBULVNoV1pGUjFEZ01NeVE0aFZDcS1oY1VieDRmWWZESklYajdsMldaSUFZd2NqQU1FbWR5Y29MOWU2TGFxMWIxdU5aX1dOM2s?oc=5",
-     "lang": "pt"
-    },
-    {
-     "name": "Google Notícias BR",
-     "title": "GTA 6 revela as primeiras seis estações de rádio e os podcasts sob demanda",
-     "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxNNWNBc0tMVmFpXzZySmxGOVFEZWpoV0JiQWtnNkN1VzRrX2dkT0R4RmdJUWM2LVg0SFJpRUg5ckVIU014bnBkaWw3c1duaHh6R1RxY2d2YllsMG9EN1B2MmJURm5lcmZ1N3NYUXdzNGlVbWFUcXZHZk1jRmE0dXZIYmxYQVM0dURnXzMwU2pucTNuNXlTWEpRREJsMWV5bG02RkE?oc=5",
      "lang": "pt"
     },
     {
@@ -163,7 +156,7 @@
    "title_pt": null,
    "title_en": "Games Inbox: Will there be a new GTA 6 trailer before launch?",
    "summary": "Games Inbox: Will there be a new GTA 6 trailer before launch? Metro.co.uk",
-   "score": 71.0,
+   "score": 62.3,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -179,7 +172,7 @@
      "lang": "en"
     }
    ],
-   "is_new": true
+   "is_new": false
   },
   {
    "id": "c6d5d6d1fc",
@@ -187,7 +180,7 @@
    "title_pt": null,
    "title_en": "Australian Government Helps Workers Take Time Off for GTA 6 Launch",
    "summary": "Can You Take Leave on the GTA 6 Release Date? Australian Labor Authority Weighs In with Answers Inven Global",
-   "score": 68.7,
+   "score": 59.9,
    "coverage": 2,
    "official": false,
    "video": false,
@@ -217,7 +210,7 @@
    "title_pt": "Rockstar confirma que mapa de GTA 6 será duas vezes maior que o de GTA 5",
    "title_en": null,
    "summary": "Rockstar confirma que mapa de GTA 6 será duas vezes maior que o de GTA 5 Tenho Mais Discos Que Amigos",
-   "score": 62.8,
+   "score": 54.1,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -236,12 +229,84 @@
    "is_new": false
   },
   {
+   "id": "d37942bcf8",
+   "title": "Skyrim gets a GTA 6 feature that completely changes its NPCs",
+   "title_pt": null,
+   "title_en": "Skyrim gets a GTA 6 feature that completely changes its NPCs",
+   "summary": "Skyrim gets a GTA 6 feature that completely changes its NPCs GAMINGbible",
+   "score": 52.0,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-12T05:00:00+00:00",
+   "first_seen": "2026-10-12T05:00:00+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google News US",
+     "title": "Skyrim gets a GTA 6 feature that completely changes its NPCs",
+     "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQN1VaNFV1VTJyVkczNHE5NU9qNTdydnZPVHNUd0k0NTl1QVpnNWZkSDJxU3ZNOGg3N25FYnhIekdTOFRlR0FiWktELUpnTnV6VmZPTzI1ekFDSTdlcGx0RGdVVWtjZUdmVnB4ZG92RE9yMlRtOHZIMmZsZEg0OTdiczBkX2NZNi1W?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": true
+  },
+  {
+   "id": "05380c8201",
+   "title": "I feel like we still don't really know much about the game?",
+   "title_pt": null,
+   "title_en": "I feel like we still don't really know much about the game?",
+   "summary": "Just wanted to ask if anyone else feels like they still don't know what they're getting into yet as far as GTA 6 goes? I am buying it, there's a lot of excitement, but it's as thought I don't really have a grasp on the depth of the game. Even from the leaks. Not enough marketing or something. submit",
+   "score": 50.2,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": true,
+   "published": "2026-10-12T05:27:33+00:00",
+   "first_seen": "2026-10-12T05:27:33+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Reddit r/GTA6 (top do dia)",
+     "title": "I feel like we still don't really know much about the game?",
+     "url": "https://www.reddit.com/r/GTA6/comments/1x3ti1k/i_feel_like_we_still_dont_really_know_much_about/",
+     "lang": "en"
+    }
+   ],
+   "is_new": true
+  },
+  {
+   "id": "48a01cee99",
+   "title": "Emulação de PS5 evolui com 'efeito GTA 6' sem data para PC",
+   "title_pt": "Emulação de PS5 evolui com 'efeito GTA 6' sem data para PC",
+   "title_en": null,
+   "summary": "Emulação de PS5 evolui com 'efeito GTA 6' sem data para PC Estadão",
+   "score": 47.6,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-12T02:13:09+00:00",
+   "first_seen": "2026-10-12T02:13:09+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google Notícias BR",
+     "title": "Emulação de PS5 evolui com 'efeito GTA 6' sem data para PC",
+     "url": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxQdzFPdF9LMG83LTEwZ2U2cWZ0cENwam03cVNJRVIyNWFRUUVqSGtyNEJnaTk0UzdOZjczY3hLMHQydVJJWndIUXZ1TWhVVkVYTEZsWHo3UEZtQXdua2ppZVkzbmUwTDJrcENGWlAtNlF2OUgxUVpDSWF3WXBLWVJCZy1ReTNuQTNxYkV0TzVXUzE4RkMtVjZ0OXJQSzRpd2c5aUIwZU56b2tKVHlKZUlaS1lCajJ5c2kyLTJDS1J5NDNIZUdDZ3RidWF6QWdCbU1oWTdKcHJ2cGpNUQ?oc=5",
+     "lang": "pt"
+    }
+   ],
+   "is_new": false
+  },
+  {
    "id": "e4311ca5b6",
    "title": "GTA 6 poderá ser jogado no celular e direto na TV via nuvem? Entenda",
    "title_pt": "GTA 6 poderá ser jogado no celular e direto na TV via nuvem? Entenda",
    "title_en": null,
    "summary": "Microsoft não confirmou a possibilidade de jogar GTA 6 no Xbox Cloud até o momento.",
-   "score": 55.3,
+   "score": 46.5,
    "coverage": 3,
    "official": false,
    "video": false,
@@ -269,7 +334,7 @@
      "lang": "pt"
     }
    ],
-   "is_new": true
+   "is_new": false
   },
   {
    "id": "ef660d533f",
@@ -277,7 +342,7 @@
    "title_pt": "Lançamento de GTA 6 é ótimo para a indústria, dizem criadores de Call of Duty",
    "title_en": null,
    "summary": "Call of Duty Modern Warfare 4 está presente nos estandes da Nintendo e Monster na Brasil Game Show 2026.",
-   "score": 55.0,
+   "score": 46.2,
    "coverage": 3,
    "official": false,
    "video": false,
@@ -305,39 +370,39 @@
      "lang": "pt"
     }
    ],
-   "is_new": true
-  },
-  {
-   "id": "50b973bf82",
-   "title": "How to Claim the Free GTA+ Month With Your GTA 6 Pre-Order",
-   "title_pt": null,
-   "title_en": "How to Claim the Free GTA+ Month With Your GTA 6 Pre-Order",
-   "summary": "How to Claim the Free GTA+ Month With Your GTA 6 Pre-Order GTA BOOM",
-   "score": 50.0,
-   "coverage": 1,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-11T17:15:59+00:00",
-   "first_seen": "2026-10-11T17:15:59+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google News US",
-     "title": "How to Claim the Free GTA+ Month With Your GTA 6 Pre-Order",
-     "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOVGdjUVhqQTBPUXRydDJHTy1Lc0JTc1MwNWd5aTR5ZlJlem1TdFJaNVFYb3BwU080T0tLYVNNcEprWjhkTDJ1aEJEbF9YQVU2c0JmZUQ5RTJ5TlZ1RWFKaFRqYXFCbFpBZDhSUDAwWXhuTjVaMmV6SUZMTkdlSWk4VDZqcWFndHdqMW1YdGNPUQ?oc=5",
-     "lang": "en"
-    }
-   ],
    "is_new": false
   },
   {
-   "id": "510d87a74d",
-   "title": "Rockstar Mailed a GTA 6 Fan a Poster After He Simply Asked for One",
+   "id": "f79eb980db",
+   "title": "GTA 6 is currently sold out on Amazon",
    "title_pt": null,
-   "title_en": "Rockstar Mailed a GTA 6 Fan a Poster After He Simply Asked for One",
-   "summary": "Rockstar Mailed a GTA 6 Fan a Poster After He Simply Asked for One GTA BOOM",
-   "score": 48.0,
+   "title_en": "GTA 6 is currently sold out on Amazon",
+   "summary": "Apparently they can run out of pre-order inventory. submitted by /u/Light_Yagami72 [link] [comments]",
+   "score": 40.0,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": true,
+   "published": "2026-10-11T21:49:08+00:00",
+   "first_seen": "2026-10-11T21:49:08+00:00",
+   "thumb": "https://preview.redd.it/3acerjbfswuh1.png?width=640&crop=smart&auto=webp&s=80e0eba7b81caaecdccaa276c029815eb2c2635d",
+   "sources": [
+    {
+     "name": "Reddit r/GTA6 (top do dia)",
+     "title": "GTA 6 is currently sold out on Amazon",
+     "url": "https://www.reddit.com/r/GTA6/comments/1x3kisr/gta_6_is_currently_sold_out_on_amazon/",
+     "lang": "en"
+    }
+   ],
+   "is_new": true
+  },
+  {
+   "id": "b589ee3b22",
+   "title": "What Happens if You Just Ask Rockstar for a GTA 6 Poster?",
+   "title_pt": null,
+   "title_en": "What Happens if You Just Ask Rockstar for a GTA 6 Poster?",
+   "summary": "What Happens if You Just Ask Rockstar for a GTA 6 Poster? GTA BOOM",
+   "score": 39.3,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -348,7 +413,7 @@
    "sources": [
     {
      "name": "Google News US",
-     "title": "Rockstar Mailed a GTA 6 Fan a Poster After He Simply Asked for One",
+     "title": "What Happens if You Just Ask Rockstar for a GTA 6 Poster?",
      "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxNcThLZ0hWTFltcjFWR1lKUjJ1OG9LQW5pNjd0MUpqZXJKWElTajVQM1ktQ0V2VGtZaDdyOXZhYkh4Mld1QklWQzdFS09vbDQ3RVlORUtIY3hKQ2NGYmtLRDV6NzQ3MWM1M1paYmdmeFBncVlOQUl5WDVEM1ViYmpZd1RPajBhcHcwQmlvVnZBeGhEcHU5S1JQVndqNA?oc=5",
      "lang": "en"
     }
@@ -361,7 +426,7 @@
    "title_pt": "Vazador ameaça divulgar GTA 6 inteiro e exige discos físicos e pedido público de desculpas",
    "title_en": null,
    "summary": "Vazador ameaça divulgar GTA 6 inteiro e exige discos físicos e pedido público de desculpas Hardware.com.br",
-   "score": 41.1,
+   "score": 32.3,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -380,12 +445,36 @@
    "is_new": false
   },
   {
+   "id": "fee5e59acb",
+   "title": "Nina’s What’s Trending: First Dates, Candy Complaints & GTA 6 Chatter - Nina's What's Trending on The Jubal Show",
+   "title_pt": null,
+   "title_en": "Nina’s What’s Trending: First Dates, Candy Complaints & GTA 6 Chatter - Nina's What's Trending on The Jubal Show",
+   "summary": "Nina’s What’s Trending: First Dates, Candy Complaints & GTA 6 Chatter - Nina's What's Trending on The Jubal Show iHeart",
+   "score": 32.0,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-12T00:00:51+00:00",
+   "first_seen": "2026-10-12T00:00:51+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google News US",
+     "title": "Nina’s What’s Trending: First Dates, Candy Complaints & GTA 6 Chatter - Nina's What's Trending on The Jubal Show",
+     "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQUEJTaTJYcjZ0N1pzWlpZbVlwdFM4YzJWZ3Jjd0hJYlNObXlLWE40X0tPTFgzR3NiMFEyV1hRN29QV1pSd3p0SW9pNjhrME96SV9BYzNMSUMtejM0UXBtbS1yeURiSzlrX1YzUVhTNTZ0eUVRbzFzS3dFTkxmSjdXTG80cmlIVTJkeWJOMVBCSmtwdG5sdHFwYUk4U2VrMHhjampYaFN2S0tua2ZQdDVz?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": true
+  },
+  {
    "id": "9ed2fc4125",
    "title": "GTA 6 pode trazer muitas referências a filmes clássicos durante o gameplay! Entenda",
    "title_pt": "GTA 6 pode trazer muitas referências a filmes clássicos durante o gameplay! Entenda",
    "title_en": null,
    "summary": "Rockstar traz referência a clássico de Quentin Tarantino em GTA 6.",
-   "score": 38.9,
+   "score": 30.1,
    "coverage": 2,
    "official": false,
    "video": false,
@@ -410,12 +499,36 @@
    "is_new": false
   },
   {
+   "id": "184bc482a2",
+   "title": "GTA VI ganha novas músicas de Cardi B e Fuerza Regida",
+   "title_pt": "GTA VI ganha novas músicas de Cardi B e Fuerza Regida",
+   "title_en": null,
+   "summary": "GTA VI ganha novas músicas de Cardi B e Fuerza Regida Portal Rap Dab",
+   "score": 30.1,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-11T22:49:01+00:00",
+   "first_seen": "2026-10-11T22:49:01+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google Notícias BR",
+     "title": "GTA VI ganha novas músicas de Cardi B e Fuerza Regida",
+     "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPQ0xFWXdXRUk5V3NiMlVzbF9sRG1iNTJYTTRmUEVyWGd2Q3J1anBHVU9ReHpmamM3ekZkQ212VDFhLWozbERUbjBGSDd2RUNfZzRXVURxc19PckdHaGVZQkJ6TXJxN01pRHBQOUYxZlRMX3JHLVctQmJNWEduVUw5VUtzekdjMHPSAYcBQVVfeXFMT0NMRVl3V0VJOVdzYjJVc2xfbERtYjUyWE00ZlBFclhndkNydWpwR1VPUXh6ZmpjN3pGZENtdlQxYS1qM2xEVG4wRkg3dkVDX2c0V1VEcXNfT3JHR2hlWUJCek1ycTdNaURwUDlGMWZUTF9yRy1XLUJiTVhHblVMOVVLc3pHYzBz?oc=5",
+     "lang": "pt"
+    }
+   ],
+   "is_new": true
+  },
+  {
    "id": "fdc01a781d",
    "title": "GTA 6: por que a caixa sem disco virou polêmica",
    "title_pt": "GTA 6: por que a caixa sem disco virou polêmica",
    "title_en": null,
    "summary": "GTA 6: por que a caixa sem disco virou polêmica einerd.com",
-   "score": 38.4,
+   "score": 29.6,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -431,7 +544,7 @@
      "lang": "pt"
     }
    ],
-   "is_new": true
+   "is_new": false
   },
   {
    "id": "c025a77199",
@@ -439,7 +552,7 @@
    "title_pt": "GTA 6: O que os jogadores precisam saber antes de começar sua jornada em Vice City?",
    "title_en": null,
    "summary": "GTA 6: O que os jogadores precisam saber antes de começar sua jornada em Vice City? Observatório do Cinema",
-   "score": 36.8,
+   "score": 28.1,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -455,7 +568,7 @@
      "lang": "pt"
     }
    ],
-   "is_new": true
+   "is_new": false
   },
   {
    "id": "0f83c44aa3",
@@ -463,7 +576,7 @@
    "title_pt": "GTA 6 será incrivelmente rico em detalhes, e as colisões com cones de trânsito são o melhor exemplo disso",
    "title_en": null,
    "summary": "A prévia mais recente deixa entrever no que ainda se está trabalhando nas últimas semanas antes do lançamento — e, ao que tudo indica, trata-se sobretudo de detalhes especiais e impressionantes como este",
-   "score": 36.3,
+   "score": 27.5,
    "coverage": 2,
    "official": false,
    "video": false,
@@ -493,7 +606,7 @@
    "title_pt": "Magazine Luiza libera cupom com R$ 60 de desconto no jogo GTA 6; saiba como aproveitar",
    "title_en": null,
    "summary": "Magazine Luiza libera cupom com R$ 60 de desconto no jogo GTA 6; saiba como aproveitar Estadão",
-   "score": 35.9,
+   "score": 27.2,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -517,7 +630,7 @@
    "title_pt": "GTA 6 é tão grande que surpreende até a Rockstar",
    "title_en": null,
    "summary": "GTA 6 é tão grande que surpreende até a Rockstar Estadão",
-   "score": 33.9,
+   "score": 25.2,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -536,36 +649,12 @@
    "is_new": false
   },
   {
-   "id": "27fd00a2da",
-   "title": "GTA 6 Official Rating Revealed",
-   "title_pt": null,
-   "title_en": "GTA 6 Official Rating Revealed",
-   "summary": "GTA 6 Official Rating Revealed OpenCritic",
-   "score": 33.8,
-   "coverage": 1,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-11T10:14:52+00:00",
-   "first_seen": "2026-10-11T10:14:52+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google News US",
-     "title": "GTA 6 Official Rating Revealed",
-     "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5ZcnRSR2ViN3ZINmQwMFZGanhQRDRoZktCNmJwTTVhWHI1ZjRyb0tsWFk4RnBpLU9HaTlZN0VzTkJrWThhUWdzdnhER0h4MHU4bXMzVEVVcHhIYXljXzI4TncwZDVTZjc0aFIyOC1LN2JVUQ?oc=5",
-     "lang": "en"
-    }
-   ],
-   "is_new": false
-  },
-  {
    "id": "6ba24b5209",
    "title": "Rockstar has a whole team of GTA 6 writers dedicated to pedestrian dialogue: \"There are no shortcuts when it comes to building a world like this\"",
    "title_pt": null,
    "title_en": "Rockstar has a whole team of GTA 6 writers dedicated to pedestrian dialogue: \"There are no shortcuts when it comes to building a world like this\"",
    "summary": "Rockstar has a whole team of GTA 6 writers dedicated to pedestrian dialogue: \"There are no shortcuts when it comes to building a world like this\" GamesRadar+",
-   "score": 33.7,
+   "score": 25.0,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -584,12 +673,36 @@
    "is_new": false
   },
   {
+   "id": "27fd00a2da",
+   "title": "GTA 6 Official Rating Revealed",
+   "title_pt": null,
+   "title_en": "GTA 6 Official Rating Revealed",
+   "summary": "GTA 6 Official Rating Revealed OpenCritic",
+   "score": 25.0,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-11T10:14:52+00:00",
+   "first_seen": "2026-10-11T10:14:52+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google News US",
+     "title": "GTA 6 Official Rating Revealed",
+     "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5ZcnRSR2ViN3ZINmQwMFZGanhQRDRoZktCNmJwTTVhWHI1ZjRyb0tsWFk4RnBpLU9HaTlZN0VzTkJrWThhUWdzdnhER0h4MHU4bXMzVEVVcHhIYXljXzI4TncwZDVTZjc0aFIyOC1LN2JVUQ?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": false
+  },
+  {
    "id": "75a3c40ba6",
    "title": "Why GTA 6 Can Show Nudity When Indie Games Get Delisted",
    "title_pt": null,
    "title_en": "Why GTA 6 Can Show Nudity When Indie Games Get Delisted",
    "summary": "Why GTA 6 Can Show Nudity When Indie Games Get Delisted eGamers.io",
-   "score": 33.5,
+   "score": 24.7,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -608,12 +721,36 @@
    "is_new": false
   },
   {
+   "id": "db2dc25d6c",
+   "title": "Has anyone change their Xbox region to New Zealand for GTA 6 because the country gets it early? 🤣",
+   "title_pt": null,
+   "title_en": "Has anyone change their Xbox region to New Zealand for GTA 6 because the country gets it early? 🤣",
+   "summary": "Xbox users gets the game early than ps fans submitted by /u/Express_Medium_7468 [link] [comments]",
+   "score": 24.3,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": true,
+   "published": "2026-10-12T00:29:39+00:00",
+   "first_seen": "2026-10-12T00:29:39+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Reddit r/GTA6 (top do dia)",
+     "title": "Has anyone change their Xbox region to New Zealand for GTA 6 because the country gets it early? 🤣",
+     "url": "https://www.reddit.com/r/GTA6/comments/1x3nxbm/has_anyone_change_their_xbox_region_to_new/",
+     "lang": "en"
+    }
+   ],
+   "is_new": true
+  },
+  {
    "id": "aef5b973ee",
    "title": "GTA 6 Hacker Says Full Game Build Will Go Public If Its Crypto Token Reaches $30M Market Cap",
    "title_pt": null,
    "title_en": "GTA 6 Hacker Says Full Game Build Will Go Public If Its Crypto Token Reaches $30M Market Cap",
    "summary": "GTA 6 Hacker Says Full Game Build Will Go Public If Its Crypto Token Reaches $30M Market Cap eGamers.io",
-   "score": 31.9,
+   "score": 23.1,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -637,7 +774,7 @@
    "title_pt": null,
    "title_en": "I Turned Off Friction, Help! - Modding GTA 5 Into GTA 6",
    "summary": "I Turned Off Friction, Help! - Modding GTA 5 Into GTA 6 Yahoo Tech",
-   "score": 31.4,
+   "score": 22.7,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -661,7 +798,7 @@
    "title_pt": "GTA 6 começa a tomar conta de Miami: caminhão temático de Vice City surge nas ruas da cidade",
    "title_en": null,
    "summary": "GTA 6 começa a tomar conta de Miami: caminhão temático de Vice City surge nas ruas da cidade Hardware.com.br",
-   "score": 30.6,
+   "score": 21.8,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -677,7 +814,31 @@
      "lang": "pt"
     }
    ],
-   "is_new": true
+   "is_new": false
+  },
+  {
+   "id": "21a28b0bb3",
+   "title": "How to Claim the Free GTA+ Month With Your GTA 6 Digital Purchase",
+   "title_pt": null,
+   "title_en": "How to Claim the Free GTA+ Month With Your GTA 6 Digital Purchase",
+   "summary": "How to Claim the Free GTA+ Month With Your GTA 6 Digital Purchase GTA BOOM",
+   "score": 21.2,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-11T17:15:59+00:00",
+   "first_seen": "2026-10-11T17:15:59+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google News US",
+     "title": "How to Claim the Free GTA+ Month With Your GTA 6 Digital Purchase",
+     "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOVGdjUVhqQTBPUXRydDJHTy1Lc0JTc1MwNWd5aTR5ZlJlem1TdFJaNVFYb3BwU080T0tLYVNNcEprWjhkTDJ1aEJEbF9YQVU2c0JmZUQ5RTJ5TlZ1RWFKaFRqYXFCbFpBZDhSUDAwWXhuTjVaMmV6SUZMTkdlSWk4VDZqcWFndHdqMW1YdGNPUQ?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": false
   },
   {
    "id": "7cbfcada6c",
@@ -685,7 +846,7 @@
    "title_pt": "Roteiristas de ‘GTA 6’ explicam a sátira do jogo: ‘Se você vai criar uma versão do mundo de hoje, ela precisa ser mais insana que o mundo real’",
    "title_en": null,
    "summary": "Roteiristas de ‘GTA 6’ explicam a sátira do jogo: ‘Se você vai criar uma versão do mundo de hoje, ela precisa ser mais insana que o mundo real’ Rolling Stone Brasil",
-   "score": 30.0,
+   "score": 21.2,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -701,7 +862,7 @@
      "lang": "pt"
     }
    ],
-   "is_new": true
+   "is_new": false
   },
   {
    "id": "9649c2aa62",
@@ -709,7 +870,7 @@
    "title_pt": null,
    "title_en": "‘I’m Shocked That People Are Still Playing’",
    "summary": "Could GTA 6 be as big as its predecessor? We take a look at how GTA 5 became one of the biggest games in history, selling over 230m copies and being played by millions of people every week for over a decade.",
-   "score": 29.6,
+   "score": 20.8,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -725,6 +886,30 @@
      "lang": "en"
     }
    ],
+   "is_new": false
+  },
+  {
+   "id": "896bb4c8d1",
+   "title": "GTA VI lightbox",
+   "title_pt": null,
+   "title_en": "GTA VI lightbox",
+   "summary": "I designed and made the lightbox in anticipation of the game's release. Project available on makerworld submitted by /u/AppealPlus [link] [comments]",
+   "score": 19.2,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": true,
+   "published": "2026-10-11T21:20:01+00:00",
+   "first_seen": "2026-10-11T21:20:01+00:00",
+   "thumb": "https://preview.redd.it/2pdhn87cnwuh1.jpg?width=140&height=140&crop=1:1,smart&auto=webp&s=dad84715b087a228e444994805276c110260d0ea",
+   "sources": [
+    {
+     "name": "Reddit r/GTA6 (top do dia)",
+     "title": "GTA VI lightbox",
+     "url": "https://www.reddit.com/r/GTA6/comments/1x3juqv/gta_vi_lightbox/",
+     "lang": "en"
+    }
+   ],
    "is_new": true
   },
   {
@@ -733,7 +918,7 @@
    "title_pt": null,
    "title_en": "Cyberleek’s Alleged GTA 6 Threat Hinges on a $30M Token Target",
    "summary": "Cyberleek’s Alleged GTA 6 Threat Hinges on a $30M Token Target GamesHub",
-   "score": 27.7,
+   "score": 19.0,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -752,12 +937,60 @@
    "is_new": false
   },
   {
+   "id": "06be4cc941",
+   "title": "What will be controversial in GTA6?",
+   "title_pt": null,
+   "title_en": "What will be controversial in GTA6?",
+   "summary": "GTA has always shocked and made headlines, like the Hot Coffee Scenes and the torture mission. What do we think will be controversial on GTA6 and make headlines? Or is the world too crazy to be shocked by games anymore? submitted by /u/mazeking [link] [comments]",
+   "score": 18.4,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": true,
+   "published": "2026-10-11T20:47:25+00:00",
+   "first_seen": "2026-10-11T20:47:25+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Reddit r/GTA6 (top do dia)",
+     "title": "What will be controversial in GTA6?",
+     "url": "https://www.reddit.com/r/GTA6/comments/1x3j2bk/what_will_be_controversial_in_gta6/",
+     "lang": "en"
+    }
+   ],
+   "is_new": true
+  },
+  {
+   "id": "b7b2d47b0f",
+   "title": "Take-Two Stock Prediction: Can GTA 6 Push TTWO Above $250 Again?",
+   "title_pt": null,
+   "title_en": "Take-Two Stock Prediction: Can GTA 6 Push TTWO Above $250 Again?",
+   "summary": "Take-Two Stock Prediction: Can GTA 6 Push TTWO Above $250 Again? TradingKey",
+   "score": 18.3,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": false,
+   "published": "2026-10-11T15:24:33+00:00",
+   "first_seen": "2026-10-11T15:24:33+00:00",
+   "thumb": null,
+   "sources": [
+    {
+     "name": "Google News US",
+     "title": "Take-Two Stock Prediction: Can GTA 6 Push TTWO Above $250 Again?",
+     "url": "https://news.google.com/rss/articles/CBMiigJBVV95cUxNMjdQQVlhSDFpeHlCdjJvUXhYaklxeW5ISVhVbGdtZ1drZnJUcEJFQ3RHWWt6bkd1V25GMnY3T1FYNDBPMTlleVJac0FvTHd1TTNaeENkeVZ1elhDbzBwa2gwRWMwRUxJUnVDZFBtYTNuYkNBT0tuck1SQlVBc0RpT292TEpicUF6dDJmOWp2azRNaHlvaFFYR1h5VXhYdkd0WHhoLWllMTJTRkpYUGk1aWZ2UEU5SUhXcGR5aWFHc0diRE1WTndtQjM0NWttSWoyUmdhVkF4eDJxbkNIQnlQSWRzcGtfSmxRSnlqbW9GYTNJOUVibTVqOVJmMDdvaE90ai01anpobEdFZw?oc=5",
+     "lang": "en"
+    }
+   ],
+   "is_new": false
+  },
+  {
    "id": "db762007ba",
    "title": "We're In The Middle Of A PS5 Pro Shortage And GTA 6 Will Only Make It Worse",
    "title_pt": null,
    "title_en": "We're In The Middle Of A PS5 Pro Shortage And GTA 6 Will Only Make It Worse",
    "summary": "We're In The Middle Of A PS5 Pro Shortage And GTA 6 Will Only Make It Worse Engadget",
-   "score": 26.0,
+   "score": 17.2,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -773,6 +1006,30 @@
      "lang": "en"
     }
    ],
+   "is_new": false
+  },
+  {
+   "id": "263a712577",
+   "title": "GTA VI Promotions at Hard Rock Stadium for Today's Dolphins (Manatees) Game",
+   "title_pt": null,
+   "title_en": "GTA VI Promotions at Hard Rock Stadium for Today's Dolphins (Manatees) Game",
+   "summary": "submitted by /u/PapiZucchini [link] [comments]",
+   "score": 17.2,
+   "coverage": 1,
+   "official": false,
+   "video": false,
+   "community": true,
+   "published": "2026-10-11T20:04:39+00:00",
+   "first_seen": "2026-10-11T20:04:39+00:00",
+   "thumb": "https://preview.redd.it/b4ocr10x9wuh1.jpg?width=140&height=140&crop=1:1,smart&auto=webp&s=821b08918b9ee3eac6deb5539504d11cf2cfb509",
+   "sources": [
+    {
+     "name": "Reddit r/GTA6 (top do dia)",
+     "title": "GTA VI Promotions at Hard Rock Stadium for Today's Dolphins (Manatees) Game",
+     "url": "https://www.reddit.com/r/GTA6/comments/1x3i0vr/gta_vi_promotions_at_hard_rock_stadium_for_todays/",
+     "lang": "en"
+    }
+   ],
    "is_new": true
   },
   {
@@ -781,7 +1038,7 @@
    "title_pt": "GTA 6 no Switch 2? “Isso é assunto para a Take-Two e a Rockstar”, afirma a Nintendo",
    "title_en": "Is GTA 6 Coming To Switch 2? Ask Rockstar, Nintendo Says",
    "summary": "Rockstar's GTA 6 is the biggest game of 2026 and possibly ever, but it's not coming to Switch 2 ... or is it? Nintendo of America's new president, Devon Pritchard, was recently asked if GTA 6 is coming to Switch 2, and she didn't say yes or no. Instead, she said people should ask Rockstar and its ow",
-   "score": 25.1,
+   "score": 16.3,
    "coverage": 6,
    "official": false,
    "video": false,
@@ -835,7 +1092,7 @@
    "title_pt": "A Rockstar não se limitou ao Google Maps para criar GTA 6: percorreu a Flórida com policiais aposentados e até visitou casas noturnas",
    "title_en": null,
    "summary": "A Rockstar não se limitou ao Google Maps para criar GTA 6: percorreu a Flórida com policiais aposentados e até visitou casas noturnas Xataka Brasil",
-   "score": 23.4,
+   "score": 14.6,
    "coverage": 2,
    "official": false,
    "video": false,
@@ -865,7 +1122,7 @@
    "title_pt": null,
    "title_en": "GTA 6 gets a pass for nudity that indies don’t — for one weird reason",
    "summary": "GTA 6 gets a pass for nudity that indies don’t — for one weird reason Polygon.com",
-   "score": 23.2,
+   "score": 14.4,
    "coverage": 1,
    "official": false,
    "video": false,
@@ -879,276 +1136,6 @@
      "title": "GTA 6 gets a pass for nudity that indies don’t — for one weird reason",
      "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5JbWZxZVQ0WmFObTVBNy1zSEpMOTlSanBJbTl5bU0tUHlKOTRWdU9mNUtSeUd2ZncxOENybXZlakQzXzlQTDd5LTh6cjQ3UDVMQTVOdUo1aUVMS1AzSklwM3h1VTFKcWR1X1E?oc=5",
      "lang": "en"
-    }
-   ],
-   "is_new": false
-  },
-  {
-   "id": "2bf8399ca1",
-   "title": "Where to Buy GTA 6 Cheapest: Pre-order Deals Compared",
-   "title_pt": null,
-   "title_en": "Where to Buy GTA 6 Cheapest: Pre-order Deals Compared",
-   "summary": "Where to Buy GTA 6 Cheapest: Pre-order Deals Compared DLCompare.com",
-   "score": 20.6,
-   "coverage": 1,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-11T14:30:00+00:00",
-   "first_seen": "2026-10-11T14:30:00+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google News US",
-     "title": "Where to Buy GTA 6 Cheapest: Pre-order Deals Compared",
-     "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxNaTZPeU5fT1JMSTdBQVZJZTFXOE13TXNPNTZNS2NzRDRBQmFMRHFmbDJEclN5V1Y5QzZhZzYtMjhpaWhFOGpYQkdkMXA1SEN3UXFMTGZwa3g3bkRYWmpsdURta2drQjlDN24tLWtWazVteEdHeUVyUDlpcENxaU5vM0ctOTF1bEprOWJkVElPVk84blNH?oc=5",
-     "lang": "en"
-    }
-   ],
-   "is_new": false
-  },
-  {
-   "id": "3fe79da7b7",
-   "title": "GTA 6: Rob Nelson revela sistema de moral e relacionamento",
-   "title_pt": "GTA 6: Rob Nelson revela sistema de moral e relacionamento",
-   "title_en": null,
-   "summary": "GTA 6: Rob Nelson revela sistema de moral e relacionamento Estadão",
-   "score": 19.5,
-   "coverage": 1,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-11T10:42:04+00:00",
-   "first_seen": "2026-10-11T10:42:04+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google Notícias BR",
-     "title": "GTA 6: Rob Nelson revela sistema de moral e relacionamento",
-     "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxNdDdoU3RyT0xyM3pDZUMxR3QwTUR2UUl0V2UyZEU5Q0ZDRWZzSV9XdUxORmVXTWNtOFhnQlZzcF9qRUJSRUhNLVBiR3F2b1p6eERHWEd6QktnTjdzckVZWlIyQ2lsekRna256STZDY2l2R1R3T083OFlubUlqenJ2X0F2QWhyN2RPNXQ1X3pYTHdmbVYwLUF0UEVlWGdxbVFyQlM2NHJXaDhpTEJ5bW92dVpDVW11OVVuRjFiNE5Xb0lacy1uZ25TaHNsVXZteDh2ZUNxa2Y0MlZ1dUk?oc=5",
-     "lang": "pt"
-    }
-   ],
-   "is_new": false
-  },
-  {
-   "id": "ef50ee32d3",
-   "title": "TTWO Stock Climbs After GTA 6 Preorders Go Live – Retail Fans Debate Discless Physical Edition",
-   "title_pt": null,
-   "title_en": "TTWO Stock Climbs After GTA 6 Preorders Go Live – Retail Fans Debate Discless Physical Edition",
-   "summary": "TTWO Stock Climbs After GTA 6 Preorders Go Live – Retail Fans Debate Discless Physical Edition Stocktwits",
-   "score": 19.3,
-   "coverage": 1,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-11T10:34:54+00:00",
-   "first_seen": "2026-10-11T10:34:54+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google News US",
-     "title": "TTWO Stock Climbs After GTA 6 Preorders Go Live – Retail Fans Debate Discless Physical Edition",
-     "url": "https://news.google.com/rss/articles/CBMi7gFBVV95cUxPcmZOUGZ3dGJMNHNlMUZGTFdQZVNlb1JMelZ6N3QzekNEX2pnWi1BdDZ5YUg4ZGs4Q1NnZzltSjQwaWMtZ1BXazVtZXAwdFRPMGt0SUpiaDdVUERuY1k4YlIwTUpMZHRsWkZmeE1qT3BOUk1RUG1aS0plWHdiUXhGajEtSEpTaDRkUzdPWHhHOHRxd2ZJa3BKQ3JJM1NpMjNTT0pLZkE3QktVUV9BTjFEWnV4S0lfZzZ6TURFOVFwN0paSmtFeDdwdnBBa1k4SDk1MjY0RVRHUWg5aEYxNkI3cjUxNFdURlcxTGo5bGdB?oc=5",
-     "lang": "en"
-    }
-   ],
-   "is_new": true
-  },
-  {
-   "id": "815d82db0d",
-   "title": "GTA VI terá cenas de sexo e nudez: confira outros jogos que também tiveram momentos picantes",
-   "title_pt": "GTA VI terá cenas de sexo e nudez: confira outros jogos que também tiveram momentos picantes",
-   "title_en": null,
-   "summary": "GTA VI terá cenas de sexo e nudez: confira outros jogos que também tiveram momentos picantes Jornal Correio",
-   "score": 15.2,
-   "coverage": 1,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-11T08:00:00+00:00",
-   "first_seen": "2026-10-11T08:00:00+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google Notícias BR",
-     "title": "GTA VI terá cenas de sexo e nudez: confira outros jogos que também tiveram momentos picantes",
-     "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxObHBHclVSZ3NZUkY3a05YT1pOaGtzWlBmbmtMVE1Xb05vV3lEa1J2WVd3STI3dElSNGtLbW9hZE5DRzVmZ0JCQjBtWC1zaGlPdUJmWXJvVFpzOVNnUEF2Q2xleDR2NHk5X0JfdXRDVjI1Mi0zSDU3T0ZuSVEwZlJWVm10dUFVaGpwRkJCZVVvbHVyRXc1a3ZPcmhtdklBU3Q1X01NZnhKWWQ2dUx3aE9NQmN5OUhmZ0NPb1kyb0l2R3ZmN0xjMXlzcVEtLUNlSlJSUXV6dXh3bjA?oc=5",
-     "lang": "pt"
-    }
-   ],
-   "is_new": false
-  },
-  {
-   "id": "cd4572cb73",
-   "title": "GTA 6 Developers Explain How Florida Shapes Leonida | Outlook Respawn",
-   "title_pt": null,
-   "title_en": "GTA 6 Developers Explain How Florida Shapes Leonida | Outlook Respawn",
-   "summary": "GTA 6 Developers Explain How Florida Shapes Leonida | Outlook Respawn Outlook Respawn",
-   "score": 13.6,
-   "coverage": 1,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-11T07:00:00+00:00",
-   "first_seen": "2026-10-11T07:00:00+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google News US",
-     "title": "GTA 6 Developers Explain How Florida Shapes Leonida | Outlook Respawn",
-     "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxOOTBKVXJId01YQ2J4dUdkR3FaSzNFYkFvWkFqRUVLQ1BnZ2pkdVpCU0hmU3RmVTBsTUctQUdyRndwU1REeGx3Q2JrMm9JUi13S01GV0kxdmdpT0dIRkRsaWFxbnhKX1pTVzZVQUgxRm1mMS01VVN0aFJUUDFwQXZ1RlVWLU83M3ZJNnZENmxUMTdWWHVkdXgydFlGdVc2Q0EzbDBjTU1B0gGzAUFVX3lxTE80SHFuOWhjeF9Pd3pMaDN5RXRHVi1ZRmVQQUlTbDI3eFhxME44THYzT1lhcnRsYzg0SnFvRUdOQ0p3LWNKTkZuSWNIb1BmaWpmYl9rZDBfdnpFU3lNZjBqTE9EMmw1R0s2WUFyYUZobFE3RWQ3bnNiNFh3QmZ2cUxrRUhIZXl2eWppR0hqV1UzZkJkZWV4MHFhUlBveDNybTFwWDRYVzZrcUlIRjc5NjgyLTZJ?oc=5",
-     "lang": "en"
-    }
-   ],
-   "is_new": false
-  },
-  {
-   "id": "48a01cee99",
-   "title": "Emulação de PS5 evolui com 'efeito GTA 6' sem data para PC",
-   "title_pt": "Emulação de PS5 evolui com 'efeito GTA 6' sem data para PC",
-   "title_en": null,
-   "summary": "Emulação de PS5 evolui com 'efeito GTA 6' sem data para PC Estadão",
-   "score": 11.1,
-   "coverage": 1,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-10T21:58:24+00:00",
-   "first_seen": "2026-10-10T21:58:24+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google Notícias BR",
-     "title": "Emulação de PS5 evolui com 'efeito GTA 6' sem data para PC",
-     "url": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxQdzFPdF9LMG83LTEwZ2U2cWZ0cENwam03cVNJRVIyNWFRUUVqSGtyNEJnaTk0UzdOZjczY3hLMHQydVJJWndIUXZ1TWhVVkVYTEZsWHo3UEZtQXdua2ppZVkzbmUwTDJrcENGWlAtNlF2OUgxUVpDSWF3WXBLWVJCZy1ReTNuQTNxYkV0TzVXUzE4RkMtVjZ0OXJQSzRpd2c5aUIwZU56b2tKVHlKZUlaS1lCajJ5c2kyLTJDS1J5NDNIZUdDZ3RidWF6QWdCbU1oWTdKcHJ2cGpNUQ?oc=5",
-     "lang": "pt"
-    }
-   ],
-   "is_new": false
-  },
-  {
-   "id": "bd208b7b2e",
-   "title": "Notebook para jogar GTA 6: melhores opções e o que saber",
-   "title_pt": "Notebook para jogar GTA 6: melhores opções e o que saber",
-   "title_en": null,
-   "summary": "Notebook para jogar GTA 6: melhores opções e o que saber Game Overdrive",
-   "score": 11.0,
-   "coverage": 1,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-10T21:55:03+00:00",
-   "first_seen": "2026-10-10T21:55:03+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google Notícias BR",
-     "title": "Notebook para jogar GTA 6: melhores opções e o que saber",
-     "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBxd3ZWNTVnY1hjVzF1Nk1qbzMyOFllemlST3JDQjlmSnhZRHhYdjRpQ3NseVpTLWk0LWpNS3Faek1MYTFoZDd2YnBlUFR5dmxWYVJxT0ZBYnppZDZ4Ump1VlZJbGVkZw?oc=5",
-     "lang": "pt"
-    }
-   ],
-   "is_new": false
-  },
-  {
-   "id": "3697b4932b",
-   "title": "Dezenas de sites falsos de GTA 6 tentam roubar gamers; veja domínios",
-   "title_pt": "Dezenas de sites falsos de GTA 6 tentam roubar gamers; veja domínios",
-   "title_en": null,
-   "summary": "Dezenas de sites falsos de GTA 6 tentam roubar gamers; veja domínios Estadão",
-   "score": 8.6,
-   "coverage": 1,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-11T03:55:30+00:00",
-   "first_seen": "2026-10-11T03:55:30+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google Notícias BR",
-     "title": "Dezenas de sites falsos de GTA 6 tentam roubar gamers; veja domínios",
-     "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxNdUJYZGFZb3EtYW9HX3NCWTVuREpDNDlMMXpBS19KUnNMb2s3VmhCbFphWmszaWVaTWhBRWV5amJYNHh2SnBtcGoyU0ZRM014UTdQbDFub3FDdXpqVGVUTERrLXZNMFhlN05hZGJ3TnZmcU5fdGZuUzlGUlIzRjFtZE9kRUx5MFlFRTM3cnZhS0tKV2JzdFFVZmZ1ejdSY1VraWk3U0w5U2I2eGZRalVfZXFfc2pDbTlYclNmNlREdmRiQmc3U3c?oc=5",
-     "lang": "pt"
-    }
-   ],
-   "is_new": false
-  },
-  {
-   "id": "83465e8248",
-   "title": "GTA VI, Wolverine e mais: selecionamos os jogos de PS5 que estão bombando nas ofertas da Amazon",
-   "title_pt": "GTA VI, Wolverine e mais: selecionamos os jogos PS5 mais aguardados em promoção na Amazon",
-   "title_en": null,
-   "summary": "GTA VI, Wolverine e mais: selecionamos os jogos de PS5 que estão bombando nas ofertas da Amazon Olhar Digital",
-   "score": 0.5,
-   "coverage": 2,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-11T23:24:21+00:00",
-   "first_seen": "2026-10-10T19:06:23+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google Notícias BR",
-     "title": "GTA VI, Wolverine e mais: selecionamos os jogos PS5 mais aguardados em promoção na Amazon",
-     "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxNZ0FiYWEtMEl4V1NtdEt0MlpfUVN3YnJpUHZtdzBjbVNwY01LTVJ6bnNsTWZrb053Y3E5Njc0TlBvem5qdVd2RmIwOHlHN3ZEZFZFWndUT3R6eWRhMVlaMGxJSTU0SHpHTU42a251bFpNZlFzSS0wVHJuWkdQeEZaekxkV0lBVlZSMTlSVmVYYzNVYVZXVjNLa25vSXM1VXlBYWoyYlIxcXVoX0NoZHJ1V1ZfRE1zSVVEN05uYk9fQUJKQ3Y4dkI4MGd6aktZTnNp?oc=5",
-     "lang": "pt"
-    },
-    {
-     "name": "Google Notícias BR",
-     "title": "GTA VI, Wolverine e mais: selecionamos os jogos de PS5 que estão bombando nas ofertas da Amazon",
-     "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxNak05QVJVV3pTY1J5RUVlTU1MaGlGbUlacXkyQ1Y4TnJFcGowRGdQT3ZmcWllbTFKYmFnZ0JHQ2RIUVFwRTVaUGEyTFNJZ3hCbEU5eXh2YTRqckhCZU9aY1lSWDZ2a3l3Tk5Hc0Q1MG5JeTgxNXF0cmJxVlJ2RWN4TXAyZnFIS243NEhjWWwxRVR0bll3R0ZybUVMeUpleDFtYXN0MGF3S0czUzhFY1JTbXQ0Y1FnaDdVNF9Jc01NcmhsdjBOTW55QXBJRGRCdEtuLW9PaHpfeWo?oc=5",
-     "lang": "pt"
-    }
-   ],
-   "is_new": false
-  },
-  {
-   "id": "f393c47c60",
-   "title": "GTA 6: Conheça os aliados bizarros e o passado criminoso de Jason",
-   "title_pt": "GTA 6: Conheça os aliados bizarros e o passado criminoso de Jason",
-   "title_en": null,
-   "summary": "GTA 6: Conheça os aliados bizarros e o passado criminoso de Jason einerd.com",
-   "score": 0.4,
-   "coverage": 1,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-10T22:45:00+00:00",
-   "first_seen": "2026-10-10T22:45:00+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google Notícias BR",
-     "title": "GTA 6: Conheça os aliados bizarros e o passado criminoso de Jason",
-     "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxOZjhsN2p5ajgxMWNJcW9seDBqMHp1RVl3QkxJckRYcUdZeDVnNVRlMUNQQ0hReTlwMXVqdVltb3FLR1dfREdOZkxpZjR0SjZOSnNqa3U2d0c4NjlZNVJqOEd6Ulg0bWdfSkNxYTNJU3dhSnhuMU9iLWctZFJBZEZFcnRn?oc=5",
-     "lang": "pt"
-    }
-   ],
-   "is_new": false
-  },
-  {
-   "id": "bd30fa39ef",
-   "title": "GTA 6: Entenda os detalhes da narrativa do jogo",
-   "title_pt": "GTA 6: Entenda os detalhes da narrativa do jogo",
-   "title_en": null,
-   "summary": "GTA 6: Entenda os detalhes da narrativa do jogo Estadão",
-   "score": -2.8,
-   "coverage": 1,
-   "official": false,
-   "video": false,
-   "community": false,
-   "published": "2026-10-10T20:44:42+00:00",
-   "first_seen": "2026-10-10T20:44:42+00:00",
-   "thumb": null,
-   "sources": [
-    {
-     "name": "Google Notícias BR",
-     "title": "GTA 6: Entenda os detalhes da narrativa do jogo",
-     "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQRmdoQ2ZOeEFvODczWGtUYTlobExoSF90R0lTTEMyWVFHYWlOLWhUcFRjRy1zU3h6SVNEYnh4c2VhSWRKRDhMWnJ3RzVJdFhPRWk4R0V6bmlhYnhRWTdOWVFhWHI2RVROR3huMXBMQWFuUVh5WmhsQ3U3Tk0tdE5rRjdodkJsaklha0JLNXBpMVloaDlyTzc2QmV6TUJ3SmgtYWVnR3N2WjdxdnR6MmpPVEhoWmR2Vk56RzgxTC1lNHQzLXJQSkhXTjVZVzZQZw?oc=5",
-     "lang": "pt"
     }
    ],
    "is_new": false
