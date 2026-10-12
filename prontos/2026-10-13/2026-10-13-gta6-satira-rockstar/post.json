@@ -1,0 +1,22 @@
+{
+  "id": "2026-10-13-gta6-satira-rockstar",
+  "date": "2026-10-13",
+  "tag": "oficial",
+  "source": {
+    "name": "LOVE Magazine",
+    "url": "https://lovemagazine.net/articles/gta-vi-the-american-dream"
+  },
+  "files": {
+    "br": [
+      "01_capa.png",
+      "02_imagem-limpa.png",
+      "03_por-que-tao-exagerado.png",
+      "04_como-nasce-a-piada.png",
+      "05_siga.png",
+      "legenda.txt",
+      "tiktok/post.mp4"
+    ]
+  },
+  "music": true,
+  "publication_video_engine": "v2"
+}

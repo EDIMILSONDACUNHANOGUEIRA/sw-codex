@@ -1,0 +1,49 @@
+id: 2026-10-13-gta6-satira-rockstar
+date: "2026-10-13"
+tag: oficial
+estilo: v2
+video_segundos: 22        # com 20 s o build acusou falta de tempo de leitura (mínimo 20,86 s)
+image: "https://www.rockstargames.com/VI/_next/static/media/Cal_Hampton_01.0xlil231_osh4.jpg"
+focus: [0.62, 0.5]
+zoom: 0.8
+source: { name: "LOVE Magazine", url: "https://lovemagazine.net/articles/gta-vi-the-american-dream" }
+fontes:
+  - { name: "LOVE Magazine", url: "https://lovemagazine.net/articles/gta-vi-the-american-dream" }
+  - { name: "VGC", url: "https://www.videogameschronicle.com/news/gta-6-is-deliberately-avoiding-direct-political-references-says-rockstar/" }
+  - { name: "games.gg", url: "https://games.gg/news/gta-6-satire-more-over-the/" }
+  - { name: "Rolling Stone Brasil", url: "https://rollingstone.com.br/rs-gaming/roteiristas-de-gta-6-explicam-a-satira-do-jogo-se-voce-vai-criar-uma-versao-do-mundo-de-hoje-ela-precisa-ser-mais-insana-que-o-mundo-real/" }
+pt:
+  kicker: SÁTIRA
+  selo: "A Rockstar explicou"
+  headline: "GTA VI tem que ser *mais insano* que o *mundo real*"
+  summary: "Rupert Humphries, vice-presidente sênior de narrativa, explicou à LOVE Magazine como nasce a sátira do jogo."
+  caption: |
+    🤪 A Rockstar explicou por que a sátira de GTA VI é tão exagerada.
+
+    Em entrevista à LOVE Magazine, Rupert Humphries, vice-presidente sênior de narrativa da Rockstar, comparou com Red Dead Redemption 2, que era basicamente a recriação de uma época. Fazer isso com uma história atual é "só fazer o mundo que existe do lado de fora da sua janela", e isso "não é interessante".
+
+    "Se você vai colocar todo esse esforço para criar uma versão do mundo de hoje, ela tem que ser mais exagerada, mais insana, mais na sua cara."
+
+    Segundo ele, o foco não é só segurar um espelho, mas deixar tudo satírico, maior que a vida e mais grotesco. "Senão, era só sair na rua e viver no mundo real!" A ideia é explodir a parte interessante de cada assunto até o ridículo ficar bem claro e, tomara, engraçado também.
+
+    E como o jogo leva anos para ficar pronto, nada de surfar em modinha: se uma tendência bomba por seis meses, é preciso "enxergar o que ela é e não embarcar na onda". Na maioria dos casos, em vez de copiar algo real, o time criou suas próprias versões, enviesadas e exageradas, de coisas como as teorias da conspiração.
+
+    GTA VI chega em 19/11.
+
+    Qual sátira de GTA você nunca esqueceu? 👇
+  hashtags: ["#gta6curiosidades", "#rockstargames", "#vicecity"]
+  slides:
+    - type: list
+      title: "Por que *tão exagerado*?"
+      items:
+        - "Só copiar o mundo de hoje? \"Não é interessante\""
+        - "Tem que ser mais exagerado, mais insano, mais na cara"
+        - "Não é só segurar um espelho para a realidade"
+        - "Tudo satírico, maior que a vida e mais grotesco"
+    - type: list
+      title: "Como nasce *a piada*"
+      items:
+        - "O critério é o que faz o time rir"
+        - "Modinha de seis meses? Nada de embarcar na onda"
+        - "Teoria da conspiração vira versão própria e exagerada"
+        - "Sem ser específico demais sobre pessoas ou eventos"
