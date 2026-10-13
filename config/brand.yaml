@@ -77,7 +77,7 @@ logo:
 # Na rotina de notícias novas: 30–60 s; escolha a duração pelo tempo real de leitura.
 # Posts antigos mantêm sua própria video_segundos. O padrão abaixo é para novos builds.
 video:
-  segundos: 45       # duração exata a 30 fps; conteúdo demais é recusado sem apagar a entrega anterior
+  segundos: 45       # duração pedida a 30 fps; sem fotos de apoio o vídeo encurta, e texto longo alonga o mínimo
   estilo_padrao: v2   # v2 = textos animados + transições + loop (leonida/motion.py) | dinamico | classico
                       # (um post pode trocar com "estilo:" no post.yaml)
 

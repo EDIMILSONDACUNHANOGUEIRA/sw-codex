@@ -335,6 +335,42 @@ def _bounded_extra(minimum: list[float], maximum: list[float], weights: list[flo
     return extra
 
 
+def fit_target(scenes: list[Scene], target: float | None, log=print,
+               *, max_scene_seconds: float | None = None) -> float:
+    """Duração que o conteúdo sustenta, a 30 fps, sem mudar `plan`.
+
+    Pedido curto demais sobe até o mínimo de leitura. Com limite por cena e menos de
+    duas fotos de apoio distintas (nada para retomar), o pedido desce até o máximo
+    que as cenas existentes aguentam. Assim um post sem imagens extras sai mais curto
+    em vez de falhar depois de renderizar as artes.
+    """
+    if not scenes:
+        raise ValueError("vídeo v2 precisa de pelo menos uma cena")
+    asked = 20.0 if target is None else float(target)
+    if not math.isfinite(asked) or asked <= 0:
+        raise ValueError("video_segundos precisa ser positivo e finito")
+    for sc in scenes:
+        _plan_entries(sc)
+    joins = T * (len(scenes) - 1)
+    minimum = [_scene_minimum(sc) for sc in scenes]
+    low = math.ceil((sum(minimum) - joins) * FPS - 1e-6) / FPS
+    fitted = round(asked * FPS) / FPS
+    if max_scene_seconds is not None:
+        limit = float(max_scene_seconds)
+        if not math.isfinite(limit) or limit <= 0:
+            raise ValueError("max_scene_seconds precisa ser positivo e finito")
+        photos = {_photo_key(sc) for sc in scenes if sc.kind == "foto"}
+        if len(photos) < 2:
+            high = math.floor((sum(max(limit, m) for m in minimum) - joins) * FPS + 1e-6) / FPS
+            fitted = min(fitted, high)
+    fitted = max(fitted, low)
+    if abs(fitted - asked) > 1e-7:
+        why = ("faltam fotos de apoio diferentes para preencher sem repetir a mesma imagem"
+               if fitted < asked else "o conteúdo precisa desse tempo para ser lido")
+        log(f"  duração ajustada de {asked:g}s para {fitted:g}s: {why}")
+    return fitted
+
+
 def plan(scenes: list[Scene], target: float | None, seed: str | None, log=print,
          *, max_scene_seconds: float | None = None) -> list[float]:
     """Agenda exata a 30 fps, com leitura preservada; alvo impossível gera ValueError.

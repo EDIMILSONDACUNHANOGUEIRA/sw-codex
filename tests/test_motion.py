@@ -151,6 +151,34 @@ class PlanTests(unittest.TestCase):
                             log=lambda _: None, max_scene_seconds=7)
             beats.assert_not_called()
 
+    def test_fit_target_shortens_posts_without_supporting_photos(self):
+        for scenes in ([scene()], [scene(), scene("list", 4), scene("cta")],
+                       [scene(), photo_scene((190, 90, 20)), photo_scene((190, 90, 20)), scene("cta")]):
+            logs = []
+            fitted = motion.fit_target(scenes, 45, logs.append, max_scene_seconds=7)
+            self.assertLess(fitted, 45)
+            self.assertAlmostEqual(fitted * motion.FPS, round(fitted * motion.FPS), places=6)
+            self.assertIn("faltam fotos", logs[0])
+            with patch.object(motion, "beat_grid", return_value=[]):
+                starts = motion.plan(scenes, fitted, None, log=lambda _: None, max_scene_seconds=7)
+            self.assertAlmostEqual(starts[-1] + scenes[-1].dur, fitted, places=8)
+
+    def test_fit_target_keeps_request_when_photos_can_fill_it(self):
+        scenes = [scene(), photo_scene((190, 90, 20)), photo_scene((30, 80, 210)), scene("cta")]
+        logs = []
+        self.assertEqual(motion.fit_target(scenes, 45, logs.append, max_scene_seconds=7), 45)
+        self.assertEqual(logs, [])
+
+    def test_fit_target_raises_too_short_request_to_reading_minimum(self):
+        scenes = [scene(), scene("list", 10)]
+        logs = []
+        fitted = motion.fit_target(scenes, 5, logs.append)
+        self.assertGreater(fitted, 5)
+        self.assertIn("precisa desse tempo", logs[0])
+        with patch.object(motion, "beat_grid", return_value=[]):
+            starts = motion.plan(scenes, fitted, None, log=lambda _: None)
+        self.assertAlmostEqual(starts[-1] + scenes[-1].dur, fitted, places=8)
+
     def test_long_list_retains_reading_and_reports_duration_exception(self):
         scenes = [scene(), photo_scene((190, 90, 20)), scene("list", 12, notes=2),
                   photo_scene((30, 80, 210)), scene("cta")]

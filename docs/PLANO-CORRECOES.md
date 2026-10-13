@@ -9,7 +9,7 @@ Ao retomar: `git pull`, ler este arquivo, continuar do primeiro item sem ✅, ro
 1. [✅] Radar: classificar história (oficial / confirmada / rumor / vazamento); barrar rumor e vazamento
    no `auto`, `from-story` e `story_to_post`; não fundir oficial com vazamento em `merge_by_topic`;
    "oficial" só com domínio da Rockstar/Take-Two; `_score_item` por palavra inteira; data futura/ausente.
-2. [ ] Vídeo de notícia: padrão de 45 s com cena de no máx. 7 s quebra posts sem fotos extras
+2. [✅] Vídeo de notícia: padrão de 45 s com cena de no máx. 7 s quebra posts sem fotos extras
    (inclusive `contagem`). Ajustar a duração ao conteúdo em vez de falhar, e checar antes de renderizar.
 3. [ ] Cortes: trecho sem fala sai sem legenda (não derruba a exportação); legenda desligada quando o
    reconhecimento de voz não está instalado; idioma automático por padrão.

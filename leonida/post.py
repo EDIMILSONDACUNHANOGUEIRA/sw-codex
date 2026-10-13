@@ -332,6 +332,8 @@ def _render_post(post, base_dir, out, estilo, video, langs, today, log):
             if v2:
                 target = post.get("video_segundos", (brand().get("video") or {}).get("segundos", 20))
                 rhythm = {"max_scene_seconds": 7} if float(target) >= 30 else {}
+                target = motion.fit_target(scenes, target, log, **rhythm)
+                manifest["video_segundos"] = target
                 published_video = motion.build(scenes, folder / "tiktok" / postvideo.OUT_NAME,
                                                seed=post["id"], target=target, log=log, **rhythm)
             else:

@@ -50,6 +50,25 @@ class VisualsBuildTests(unittest.TestCase):
         self.assertTrue((output/'br/02_imagem-apoio.png').is_file())
         self.assertTrue((output/'br/03_imagem-apoio.png').is_file())
 
+    def test_post_without_supporting_photos_gets_a_shorter_video(self):
+        cover=render.Render(Image.new('RGB',(32,48),'red'),[render.Layer('bg',Image.new('RGBA',(32,48),'red'))],{'kind':'cover'})
+        seen={}
+        def encode(scenes,target_file,**kwargs):
+            seen.update(kwargs)
+            target_file.parent.mkdir(exist_ok=True)
+            target_file.write_bytes(b'test export')
+            return target_file
+        data={**self.data,'visuals':[]}
+        with patch.object(post,'OUT_DIR',self.root),patch.object(post,'load',return_value=(data,self.root)), \
+             patch.object(render,'cover',return_value=cover), \
+             patch('leonida.publish.cfg',return_value={'formato':'video'}),patch('leonida.publish.export_jpegs'), \
+             patch.object(motion,'build',side_effect=encode):
+            output=post.build('visual-fixture',video=False,estilo='v2',log=lambda _:None)
+        self.assertLess(seen['target'],45)
+        self.assertEqual(seen['max_scene_seconds'],7)
+        manifest=json.loads((output/'post.json').read_text(encoding='utf-8'))
+        self.assertEqual(manifest['video_segundos'],seen['target'])
+
     def test_malformed_visuals_fail_before_replacing_existing_delivery(self):
         output=self.root/'2026-10-12/visual-fixture'
         output.mkdir(parents=True)

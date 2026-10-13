@@ -86,6 +86,7 @@ def planned(scenes, target, seed, log=print, **options):
     DETAIL = check_layers(scenes, starts, float(target), CURRENT_OUTPUT, art_by_scene)
     DETAIL["unique_art_count"] = len(art_by_scene)
     DETAIL["maximum_scene_seconds"] = max(scene.dur for scene in scenes)
+    DETAIL["target_seconds"] = float(target)   # duração já ajustada ao conteúdo por motion.fit_target
     return starts
 
 
@@ -161,6 +162,9 @@ def main():
         detail["total_build_seconds_including_source_qa"] = time.monotonic() - clock
         detail["id"] = pid
         detail["language"] = args.lang
+        if abs(detail["target_seconds"] - target) > 1e-7:
+            print(f"  duração ajustada: {target:g}s → {detail['target_seconds']:g}s", flush=True)
+        target = detail["target_seconds"]
         folder = out / LANG_FOLDER[args.lang]
         video = folder / "tiktok" / "post.mp4"
         qa = folder / "qa"
