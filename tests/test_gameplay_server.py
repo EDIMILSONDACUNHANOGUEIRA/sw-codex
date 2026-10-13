@@ -36,7 +36,7 @@ class GameplayAPITest(unittest.TestCase):
         self.patch = patch.object(gameplay, "PROJECTS", self.root / "gameplay")
         self.patch.start()
         self.addCleanup(self.patch.stop)
-        self.client = TestClient(server.app)
+        self.client = TestClient(server.app, base_url="http://127.0.0.1")
         self.addCleanup(self.client.close)
 
     def test_analysis_returns_structured_job_with_defaults(self):

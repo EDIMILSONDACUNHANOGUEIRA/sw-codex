@@ -18,3 +18,12 @@ em `prontos/<data>/`. A rotina de pesquisa às 11h e 17h de Cuiabá permanece se
 do editor de cortes. Os arquivos são entregues localmente para publicação manual.
 
 O segundo aplicativo está em [`../gameplay/`](../gameplay/), com porta e saídas próprias.
+
+## Segurança local
+
+Os apps de notícias (8768) e de cortes (8769) só atendem `http://127.0.0.1` ou `http://localhost`.
+Pedidos com outro `Host` (DNS rebinding) ou vindos de outro site (`Origin` diferente) recebem 403,
+então uma página aberta no navegador não consegue enviar arquivos, rodar o radar nem alterar posts.
+Para abrir por outro nome na rede local, defina `LEONIDA_ALLOWED_HOSTS=nome1,nome2`.
+Ids de post e datas só aceitam letras/números/hífen e `AAAA-MM-DD`; a imagem enviada precisa ser
+JPG, PNG ou WebP de até 30 MB; a miniatura local só lê arquivos de `posts/` e `assets/`.

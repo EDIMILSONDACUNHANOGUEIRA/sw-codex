@@ -24,7 +24,7 @@ class GameplayRevisionsTest(unittest.TestCase):
         active = patch.object(cuts, "HOME", self.home)
         active.start()
         self.addCleanup(active.stop)
-        self.client = TestClient(cuts.app)
+        self.client = TestClient(cuts.app, base_url="http://127.0.0.1")
         self.addCleanup(self.client.close)
 
     def revision(self, name, **metadata):

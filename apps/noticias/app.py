@@ -5,10 +5,11 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from leonida import server as legacy
+from leonida import localguard, server as legacy
 
 WEB = Path(__file__).resolve().parent / "web"
 app = FastAPI(title="Leonida Notícias")
+localguard.install(app)   # só o próprio PC: sem CSRF nem DNS rebinding
 
 # Preserva os contratos e o estado de notícias existentes. Não registra APIs de
 # gameplay, cortes manuais ou envio externo nesta interface de entrega local.

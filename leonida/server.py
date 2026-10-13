@@ -19,13 +19,27 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from PIL import Image
 
-from . import config, gallery, media, post, radar, render
-from .config import OUT_DIR, POSTS_DIR
+from . import config, gallery, localguard, media, post, radar, render
+from .config import OUT_DIR, POSTS_DIR, ROOT
 
 WEB = Path(__file__).resolve().parent / "web"
 app = FastAPI(title="Leonida Studio")
+localguard.install(app)
 config.ensure_dirs()
 JOBS: dict[str, dict] = {}
+IMAGE_SUFFIXES = (".jpg", ".jpeg", ".png", ".webp")
+MAX_IMAGE_BYTES = 30 * 1024**2
+
+
+def _pid(pid: str, *, existing: bool = True) -> str:
+    """Valida o id da URL antes de virar caminho; 404 se o post não existe."""
+    try:
+        post.check_id(pid)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from None
+    if existing and not (POSTS_DIR / pid / "post.yaml").is_file():
+        raise HTTPException(404, "post não encontrado")
+    return pid
 
 
 def _job(fn, *args, structured: bool = False, **kw) -> str:
@@ -96,6 +110,7 @@ def list_posts():
 
 @app.get("/api/posts/{pid}")
 def get_post(pid: str):
+    _pid(pid, existing=False)
     try:
         p, _ = post.load(pid)
     except FileNotFoundError:
@@ -105,10 +120,13 @@ def get_post(pid: str):
 
 @app.put("/api/posts/{pid}")
 def put_post(pid: str, data: dict = Body(...)):
-    data["id"] = pid
+    data["id"] = _pid(pid, existing=False)
     if data.pop("_reviewed", False):
         data.pop("needs_review", None)
-    post.save(data)
+    try:
+        post.save(data)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from None
     return {"ok": True, "errors": post.validate(data)}
 
 
@@ -144,7 +162,10 @@ def post_delivery(pid: str):
 
 @app.post("/api/posts/new")
 def new_post(data: dict = Body(...)):
-    f = post.new(data.get("title") or "novo post", data.get("date"))
+    try:
+        f = post.new(str(data.get("title") or "novo post"), data.get("date"))
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from None
     return {"id": f.parent.name}
 
 
@@ -166,7 +187,7 @@ def from_story(sid: str, use_ai: bool = True):
 
 @app.post("/api/posts/{pid}/preview")
 def preview(pid: str, lang: str = "pt"):
-    p, base = post.load(pid)
+    p, base = post.load(_pid(pid))
     if not p.get("image") or not (p.get(lang) or {}).get("headline"):
         raise HTTPException(400, "preencha imagem e manchete")
     date = str(p.get("date") or dt.date.today().isoformat())[:10]
@@ -178,16 +199,34 @@ def preview(pid: str, lang: str = "pt"):
 
 @app.post("/api/posts/{pid}/build")
 def build_post(pid: str, video: bool = True):
-    return {"job": _job(post.build, pid, video=video)}
+    return {"job": _job(post.build, _pid(pid), video=video)}
 
 
 @app.post("/api/posts/{pid}/upload")
 async def upload_image(pid: str, file: UploadFile = File(...)):
-    d = POSTS_DIR / pid
-    d.mkdir(parents=True, exist_ok=True)
-    name = "imagem" + (Path(file.filename or "x.jpg").suffix.lower() or ".jpg")
-    with open(d / name, "wb") as fh:
-        shutil.copyfileobj(file.file, fh)
+    d = POSTS_DIR / _pid(pid)
+    suffix = Path(file.filename or "x.jpg").suffix.lower() or ".jpg"
+    if suffix not in IMAGE_SUFFIXES:
+        raise HTTPException(400, "envie uma imagem JPG, PNG ou WebP")
+    name = "imagem" + suffix
+    tmp = d / f".upload-{uuid.uuid4().hex}{suffix}"
+    size = 0
+    try:
+        with open(tmp, "xb") as fh:
+            while chunk := await file.read(1 << 20):
+                size += len(chunk)
+                if size > MAX_IMAGE_BYTES:
+                    raise HTTPException(413, "imagem acima de 30 MB")
+                fh.write(chunk)
+        try:
+            with Image.open(tmp) as im:
+                im.verify()
+        except Exception:  # noqa: BLE001
+            raise HTTPException(400, "o arquivo não é uma imagem válida") from None
+        tmp.replace(d / name)
+    finally:
+        tmp.unlink(missing_ok=True)
+        await file.close()
     return {"image": name}
 
 
@@ -205,8 +244,11 @@ def contagem(video: bool = True):
 @app.post("/api/posts/{pid}/send")
 def send_post(pid: str):
     from . import notify
-    p, _ = post.load(pid)
-    folder = OUT_DIR / str(p.get("date"))[:10] / pid
+    p, _ = post.load(_pid(pid))
+    try:
+        folder = OUT_DIR / post.check_date(str(p.get("date"))[:10]) / pid
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from None
     if not folder.exists():
         raise HTTPException(400, "gere o post antes de enviar")
     return {"sent": notify.send(folder)}
@@ -218,10 +260,22 @@ def library():
     return media.sync_rockstar_library()
 
 
+def _local_image(ref: str) -> Path:
+    """Miniatura local só de imagens do projeto (posts/ e assets/), nunca de outro caminho."""
+    rel = Path(ref)
+    if rel.is_absolute() or "\\" in ref or ":" in ref or ".." in rel.parts or rel.suffix.lower() not in IMAGE_SUFFIXES:
+        raise ValueError("imagem local fora do projeto")
+    path = (ROOT / rel).resolve()
+    if not any(path.is_relative_to(base.resolve()) for base in (POSTS_DIR, ROOT / "assets")) or not path.is_file():
+        raise ValueError("imagem local fora do projeto")
+    return path
+
+
 @app.get("/api/thumb")
 def thumb(url: str, w: int = 360):
+    w = max(32, min(int(w), 1080))
     try:
-        im = Image.open(media.fetch(url) if url.startswith("http") else media.resolve_image(url))
+        im = Image.open(media.fetch(url) if re.match(r"^https?://", url) else _local_image(url))
         im = im.convert("RGB")
         im.thumbnail((w, w * 2))
     except Exception as exc:  # noqa: BLE001

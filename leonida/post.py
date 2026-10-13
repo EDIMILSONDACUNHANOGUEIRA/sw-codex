@@ -55,8 +55,27 @@ def slugify(text: str, maxlen: int = 60) -> str:
     return text[:maxlen].strip("-") or "post"
 
 
+ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]{0,159}")
+
+
+def check_id(post_id) -> str:
+    """Id vira nome de pasta: só letras, números, - e _ (nada de ../ ou caminho)."""
+    if not isinstance(post_id, str) or not ID_RE.fullmatch(post_id):
+        raise ValueError(f"id de post inválido: {post_id!r}")
+    return post_id
+
+
+def check_date(date) -> str:
+    """Data vira nome de pasta em prontos/: precisa ser AAAA-MM-DD de verdade."""
+    text = date.isoformat() if isinstance(date, dt.date) else date
+    if not isinstance(text, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", text):
+        raise ValueError(f"data inválida: {date!r} (use AAAA-MM-DD)")
+    dt.date.fromisoformat(text)
+    return text
+
+
 def post_dir(post_id: str) -> Path:
-    return POSTS_DIR / post_id
+    return POSTS_DIR / check_id(post_id)
 
 
 def load(post_id_or_path: str | Path) -> tuple[dict, Path]:
@@ -64,6 +83,8 @@ def load(post_id_or_path: str | Path) -> tuple[dict, Path]:
     if p.is_dir():
         p = p / "post.yaml"
     elif not p.exists():
+        if isinstance(post_id_or_path, Path) or len(p.parts) > 1:
+            raise FileNotFoundError(p)          # caminho inexistente; só um id simples vira posts/<id>
         p = post_dir(str(post_id_or_path)) / "post.yaml"
     with open(p, encoding="utf-8") as fh:
         data = yaml.safe_load(fh)
@@ -85,6 +106,8 @@ _Dumper.add_representer(str, _str_repr)
 
 
 def save(post: dict) -> Path:
+    if post.get("date") is not None:
+        check_date(post["date"])
     d = post_dir(post["id"])
     d.mkdir(parents=True, exist_ok=True)
     with open(d / "post.yaml", "w", encoding="utf-8") as fh:
@@ -93,7 +116,7 @@ def save(post: dict) -> Path:
 
 
 def new(title: str, date: str | None = None) -> Path:
-    date = date or dt.date.today().isoformat()
+    date = check_date(date or dt.date.today().isoformat())
     pid = f"{date}-{slugify(title, 48)}"
     d = post_dir(pid)
     d.mkdir(parents=True, exist_ok=True)
@@ -195,9 +218,9 @@ def build(post_id_or_path: str | Path, *, video: bool = True, langs=LANGS,
     errs = validate(post, langs)
     if errs:
         raise ValueError(f"{post['id']}: " + "; ".join(errs))
-    date = str(post.get("date") or dt.date.today().isoformat())[:10]
+    date = check_date(str(post.get("date") or dt.date.today().isoformat())[:10])
     today = today or dt.date.fromisoformat(date)
-    out = OUT_DIR / date / post["id"]
+    out = OUT_DIR / date / check_id(post["id"])
     out.parent.mkdir(parents=True, exist_ok=True)
     # Só substitui a entrega depois do build completo. Erros deixam a pasta anterior intacta.
     with tempfile.TemporaryDirectory(prefix=".build-", dir=out.parent) as temporary:

@@ -13,7 +13,7 @@ Ao retomar: `git pull`, ler este arquivo, continuar do primeiro item sem ✅, ro
    (inclusive `contagem`). Ajustar a duração ao conteúdo em vez de falhar, e checar antes de renderizar.
 3. [✅] Cortes: trecho sem fala sai sem legenda (não derruba a exportação); legenda desligada quando o
    reconhecimento de voz não está instalado; idioma automático por padrão.
-4. [ ] Segurança dos apps locais: só aceitar Host/Origin do próprio app (CSRF / DNS rebinding);
+4. [✅] Segurança dos apps locais: só aceitar Host/Origin do próprio app (CSRF / DNS rebinding);
    validar `pid`/`date`; limite e extensões no upload; `/api/thumb` sem caminho local.
 
 ## Depois

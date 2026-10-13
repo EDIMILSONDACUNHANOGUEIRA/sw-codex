@@ -33,7 +33,7 @@ class SeparateAppsTest(unittest.TestCase):
         for active in self.patches:
             active.start()
             self.addCleanup(active.stop)
-        self.client = TestClient(cuts.app)
+        self.client = TestClient(cuts.app, base_url="http://127.0.0.1")
         self.addCleanup(self.client.close)
 
     def test_route_sets_have_separate_purpose(self):

@@ -14,7 +14,7 @@ from fastapi import Body, FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from leonida import gameplay
+from leonida import gameplay, localguard
 
 ROOT = Path(__file__).resolve().parents[2]
 WEB = Path(__file__).resolve().parent / "web"
@@ -24,6 +24,7 @@ MAX_UPLOAD_BYTES = 20 * 1024**3
 HOME.mkdir(parents=True, exist_ok=True)
 UPLOADS.mkdir(parents=True, exist_ok=True)
 app = FastAPI(title="Leonida Cortes")
+localguard.install(app)   # só o próprio PC: sem CSRF nem DNS rebinding
 JOBS: dict[str, dict] = {}
 
 

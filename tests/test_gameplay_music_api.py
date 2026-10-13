@@ -28,7 +28,7 @@ class MusicAPI(unittest.TestCase):
             setting = patch.object(cuts, name, value)
             setting.start()
             self.addCleanup(setting.stop)
-        self.client = TestClient(cuts.app)
+        self.client = TestClient(cuts.app, base_url="http://127.0.0.1")
         self.addCleanup(self.client.close)
         self.source = self.root / "source.mp4"
         subprocess.run([shutil.which("ffmpeg"),"-v","error","-nostdin","-y",

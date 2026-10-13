@@ -31,7 +31,7 @@ class NewsDeliveryTest(unittest.TestCase):
                        patch.object(post, "POSTS_DIR", self.posts)):
             active.start()
             self.addCleanup(active.stop)
-        self.client = TestClient(news.app)
+        self.client = TestClient(news.app, base_url="http://127.0.0.1")
         self.addCleanup(self.client.close)
         self.write_post()
 
