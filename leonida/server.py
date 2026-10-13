@@ -65,6 +65,32 @@ def _job(fn, *args, structured: bool = False, **kw) -> str:
     return jid
 
 
+def install_error_handlers(target: FastAPI) -> None:
+    """Erros previsíveis viram 4xx com JSON {"detail": ...}, que a tela mostra ao usuário."""
+    import yaml
+
+    async def bad_request(request, exc):
+        return JSONResponse({"detail": str(exc) or "pedido inválido"}, status_code=400)
+
+    async def not_found(request, exc):
+        return JSONResponse({"detail": "arquivo não encontrado"}, status_code=404)
+
+    async def missing_field(request, exc):
+        return JSONResponse({"detail": f"campo obrigatório ausente: {exc}"}, status_code=400)
+
+    async def internal(request, exc):
+        return JSONResponse({"detail": f"erro interno: {exc}"[:500]}, status_code=500)
+
+    for kind in (ValueError, yaml.YAMLError):
+        target.add_exception_handler(kind, bad_request)
+    target.add_exception_handler(FileNotFoundError, not_found)
+    target.add_exception_handler(KeyError, missing_field)
+    target.add_exception_handler(Exception, internal)
+
+
+install_error_handlers(app)
+
+
 @app.get("/")
 def index():
     return FileResponse(WEB / "index.html")
@@ -97,14 +123,18 @@ def ignore_story(sid: str):
 def list_posts():
     out = []
     for f in sorted(POSTS_DIR.glob("*/post.yaml"), reverse=True):
+        # Um post.yaml quebrado aparece marcado na lista, sem derrubar os outros.
         try:
             p, _ = post.load(f)
-        except Exception:
-            continue
-        date = str(p.get("date", ""))[:10]
-        built = (OUT_DIR / date / p["id"] / "post.json").exists()
-        out.append({"id": p["id"], "date": date, "tag": p.get("tag"), "built": built,
-                    "headline": (p.get("pt") or {}).get("headline", ""), "needs_review": p.get("needs_review")})
+            pid = post.check_id(str(p["id"]))
+            date = str(p.get("date", ""))[:10]
+            built = bool(re.fullmatch(r"\d{4}-\d{2}-\d{2}", date)) and (OUT_DIR / date / pid / "post.json").exists()
+            pt = p.get("pt") if isinstance(p.get("pt"), dict) else {}
+            out.append({"id": pid, "date": date, "tag": p.get("tag"), "built": built,
+                        "headline": str(pt.get("headline") or ""), "needs_review": p.get("needs_review")})
+        except Exception as exc:  # noqa: BLE001
+            out.append({"id": f.parent.name, "date": "", "tag": None, "built": False, "headline": "",
+                        "needs_review": True, "error": f"post.yaml inválido: {exc}"[:300]})
     return out
 
 

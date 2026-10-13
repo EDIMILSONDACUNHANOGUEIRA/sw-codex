@@ -71,7 +71,7 @@ async function loadPostList(select) {
   const posts = await api("/api/posts");
   const sel = $("#post-select");
   sel.innerHTML = `<option value="">— escolha um post —</option>` + posts.map((p) =>
-    `<option value="${esc(p.id)}">${p.built ? "✅" : p.needs_review ? "⚠️" : "📝"} ${esc(p.id)}</option>`).join("");
+    `<option value="${esc(p.id)}"${p.error ? ` title="${esc(p.error)}"` : ""}>${p.error ? "❌" : p.built ? "✅" : p.needs_review ? "⚠️" : "📝"} ${esc(p.id)}</option>`).join("");
   const target = select || current?.id;
   if (target) { sel.value = target; await openPost(target); }
 }
@@ -153,7 +153,14 @@ $("#upload").addEventListener("change", async (e) => {
 function followJob(id, logEl, onDone) {
   logEl.classList.remove("hidden"); logEl.textContent = "Trabalhando…";
   const t = setInterval(async () => {
-    const j = await api(`/api/jobs/${id}`);
+    let j;
+    try { j = await api(`/api/jobs/${id}`); }
+    catch (error) {
+      // Servidor reiniciado ou tarefa perdida: para de consultar e libera a tela.
+      clearInterval(t);
+      logEl.textContent += `\n❌ ${error.message || "tarefa perdida"} — gere de novo.`;
+      return;
+    }
     logEl.textContent = j.log.join("\n") + (j.status === "running" ? "\n…" : j.status === "done" ? `\n✅ ${j.result}` : "");
     logEl.scrollTop = logEl.scrollHeight;
     if (j.status !== "running") { clearInterval(t); if (j.status === "done" && onDone) onDone(j); }

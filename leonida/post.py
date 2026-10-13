@@ -88,6 +88,8 @@ def load(post_id_or_path: str | Path) -> tuple[dict, Path]:
         p = post_dir(str(post_id_or_path)) / "post.yaml"
     with open(p, encoding="utf-8") as fh:
         data = yaml.safe_load(fh)
+    if not isinstance(data, dict):
+        raise ValueError(f"{p.parent.name}/post.yaml inválido: o conteúdo precisa ser campos (chave: valor)")
     data.setdefault("id", p.parent.name)
     return data, p.parent
 
