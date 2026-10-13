@@ -26,13 +26,19 @@ UPLOADS.mkdir(parents=True, exist_ok=True)
 app = FastAPI(title="Leonida Cortes")
 localguard.install(app)   # só o próprio PC: sem CSRF nem DNS rebinding
 JOBS: dict[str, dict] = {}
+CANCEL: dict[str, threading.Event] = {}
+gameplay.cleanup_orphans(HOME)   # sobras de trabalhos interrompidos na última execução
 
 
 def _job(fn, *args, **kwargs) -> str:
     identifier = uuid.uuid4().hex[:10]
     JOBS[identifier] = {"id": identifier, "status": "running", "log": [], "result": None}
+    CANCEL[identifier] = threading.Event()
 
     def log(message):
+        # Cada passo do trabalho registra progresso; é aí que o cancelamento é atendido.
+        if CANCEL[identifier].is_set():
+            raise gameplay.JobCancelled("Cancelado pelo usuário")
         JOBS[identifier]["log"].append(str(message))
 
     def run():
@@ -40,9 +46,12 @@ def _job(fn, *args, **kwargs) -> str:
             with gameplay.project_home(HOME):
                 JOBS[identifier]["result"] = fn(*args, log=log, **kwargs)
             JOBS[identifier]["status"] = "done"
+        except gameplay.JobCancelled:
+            JOBS[identifier]["status"] = "cancelled"
+            JOBS[identifier]["log"].append("Cancelado. Nenhum arquivo parcial foi mantido.")
         except Exception as exc:
             JOBS[identifier]["status"] = "error"
-            log(f"ERRO: {exc}")
+            JOBS[identifier]["log"].append(f"ERRO: {exc}")
 
     threading.Thread(target=run, daemon=True).start()
     return identifier
@@ -250,6 +259,16 @@ def job(identifier: str):
     if identifier not in JOBS:
         raise HTTPException(404, "Tarefa não encontrada")
     return JOBS[identifier]
+
+
+@app.post("/api/jobs/{identifier}/cancel")
+def cancel_job(identifier: str):
+    if identifier not in JOBS:
+        raise HTTPException(404, "Tarefa não encontrada")
+    if JOBS[identifier]["status"] == "running":
+        CANCEL[identifier].set()
+        JOBS[identifier]["log"].append("Cancelando… o trabalho para no próximo passo.")
+    return {"status": JOBS[identifier]["status"], "cancelling": CANCEL[identifier].is_set()}
 
 
 def _captions_available() -> bool:

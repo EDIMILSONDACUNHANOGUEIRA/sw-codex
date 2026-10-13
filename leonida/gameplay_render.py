@@ -313,7 +313,8 @@ def _subtitles(base: Path, language: str, out: Path, *, vertical: bool,
                                     font_size=60 if vertical else 44, max_width=866 if vertical else 1640)
 
 
-def _qa(ff: str, video: Path, folder: Path, size: tuple[int, int], expected: float) -> dict:
+def _qa(ff: str, video: Path, folder: Path, size: tuple[int, int], expected: float, *,
+        music: bool = False) -> dict:
     meta = _probe(video)
     streams = meta.get("streams", [])
     v = next((s for s in streams if s.get("codec_type") == "video"), {})
@@ -337,21 +338,29 @@ def _qa(ff: str, video: Path, folder: Path, size: tuple[int, int], expected: flo
                 "-ac", "1", "-ar", "16000", "-f", "s16le", "-"])
     audio = np.frombuffer(raw, dtype="<i2")
     rms = float(np.sqrt(np.mean((audio.astype(np.float32) / 32768) ** 2))) if audio.size else 0.0
+    if music and rms <= 1e-5:
+        raise RuntimeError("QA: o vídeo saiu mudo, mesmo com música escolhida. Confira a faixa de áudio.")
     qa_dir = folder / "qa"
     qa_dir.mkdir()
     cell = (480, 270) if size == LONG_SIZE else (180, 320)
     sheet = Image.new("RGB", (cell[0] * 3, (cell[1] + 32) * 2), "#0B0614")
     draw = ImageDraw.Draw(sheet)
+    brightness = []
     for index in range(6):
         at = min(duration - .05, duration * index / 6)
         frame = qa_dir / f"quadro-{index + 1:02d}.jpg"
         _run([ff, "-v", "error", "-nostdin", "-y", "-ss", str(max(0, at)), "-i", str(video),
               "-frames:v", "1", "-vf", f"scale={cell[0]}:{cell[1]}", "-update", "1", str(frame)])
         with Image.open(frame) as opened:
+            pixels = np.asarray(opened.convert("L"), dtype=np.float32)
+            brightness.append((float(pixels.mean()), float(pixels.std())))
             xy = ((index % 3) * cell[0], (index // 3) * (cell[1] + 32))
             sheet.paste(opened, xy)
         draw.text((xy[0] + 10, xy[1] + cell[1] + 5), f"{at:.1f}s", font=gfx.font("body", 20), fill="white")
     sheet.save(qa_dir / "previa.jpg", quality=90)
+    # Um quadro escuro pode ser fade ou loading; todos escuros e lisos é exportação quebrada.
+    if all(mean < 6 and std < 3 for mean, std in brightness):
+        raise RuntimeError("QA: o vídeo exportado está preto. Confira a fonte e os trechos escolhidos.")
     result = {"duration": round(duration, 3), "width": size[0], "height": size[1],
               "fps": v.get("avg_frame_rate"), "video_codec": v.get("codec_name"),
               "audio_codec": a.get("codec_name"), "decoded_all_streams": True,
@@ -468,7 +477,7 @@ def render(plan: dict, output: Path, *, music: bool = True, subtitles: bool = Fa
                 write_srt(json.loads(ass.with_suffix(".json").read_text(encoding="utf-8"))["segments"], folder / "legendas.srt")
             expected = sum(lengths)
             _finalize(ff, base, folder / "video.mp4", theme, seconds=expected, ass=ass, music_volume=music_volume)
-            qa = _qa(ff, folder / "video.mp4", folder, LONG_SIZE, expected)
+            qa = _qa(ff, folder / "video.mp4", folder, LONG_SIZE, expected, music=bool(theme) and music_volume > 0)
             if qa["duration"] > float(plan.get("max_long_seconds", 660)) + .05:
                 raise RuntimeError("QA: o vídeo longo ultrapassou o limite do plano.")
             cover_moment = max(long_moments, key=lambda m: float(m.get("score", 0)))
@@ -482,12 +491,17 @@ def render(plan: dict, output: Path, *, music: bool = True, subtitles: bool = Fa
                                "qa": qa, "cover_source_time": round(peak, 3), "moments": len(long_moments),
                                **({"subtitles":str(output / "longo/legendas.srt")} if ass else {}),
                                **({"no_speech": True} if subtitles and not ass else {})}
+        used_titles: dict[str, int] = {}
         for index, moment in enumerate(plan.get("shorts") or []):
             log(f"  [gameplay] short {index + 1}/{len(plan['shorts'])}")
             name = f"short-{index + 1:02d}"
             folder = staging / name
             folder.mkdir()
             short_title = str(moment.get("title") or title)
+            # Dois shorts com o mesmo título confundem a publicação: o repetido ganha número.
+            used_titles[short_title] = used_titles.get(short_title, 0) + 1
+            if used_titles[short_title] > 1:
+                short_title = f"{short_title} #{used_titles[short_title]}"
             overlay = _overlay(SHORT_SIZE, short_title, credit, language, captioned=subtitles)
             ov_path = work / f"overlay-{name}.png"
             overlay.save(ov_path)
@@ -503,7 +517,8 @@ def render(plan: dict, output: Path, *, music: bool = True, subtitles: bool = Fa
                 write_srt(json.loads(ass.with_suffix(".json").read_text(encoding="utf-8"))["segments"], folder / "legendas.srt")
             _finalize(ff, base, folder / "video.mp4", theme, seconds=float(moment["end"]) - float(moment["start"]),
                       ass=ass, music_volume=music_volume)
-            qa = _qa(ff, folder / "video.mp4", folder, SHORT_SIZE, float(moment["end"]) - float(moment["start"]))
+            qa = _qa(ff, folder / "video.mp4", folder, SHORT_SIZE, float(moment["end"]) - float(moment["start"]),
+                     music=bool(theme) and music_volume > 0)
             peak = min(float(moment["end"]) - .1, max(float(moment["start"]), float(moment.get("peak", moment["start"]))))
             real = work / f"quadro-{name}.png"
             _extract_frame(ff, source, peak, real)
@@ -519,8 +534,9 @@ def render(plan: dict, output: Path, *, music: bool = True, subtitles: bool = Fa
         (staging / "manifest.json").write_text(json.dumps(results, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         # Only scratch data created in this invocation is removed, before the atomic promotion.
         _remove_scratch(work, staging, ".work")
-        staging.rename(output)
+        # O registro vem antes da promoção: um cancelamento aqui ainda descarta tudo.
         log(f"  [gameplay] exportação e decodificação concluídas: {output}")
+        staging.rename(output)
         return results
     except Exception:
         # Keep existing exports untouched; never leave a failed export under its final name.

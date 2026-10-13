@@ -100,10 +100,20 @@ async function selectedGameplayMusic() {
   }
   return {music_mode:mode, music_volume:volume / 100, music_source: mode === "custom" ? gameplayMusicSource : null};
 }
+let gameplayJob = null;
+$("#gameplay-cancel").addEventListener("click", async () => {
+  if (!gameplayJob) return;
+  $("#gameplay-cancel").disabled = true;
+  try { await api(`/api/jobs/${encodeURIComponent(gameplayJob)}/cancel`, { method: "POST" }); }
+  catch (error) { toast("Erro: " + error.message); $("#gameplay-cancel").disabled = false; }
+});
 async function followGameplayJob(id, onDone) {
   const log = $("#gameplay-log");
   log.classList.remove("hidden");
   log.textContent = "Trabalhando…";
+  gameplayJob = id;
+  $("#gameplay-cancel").disabled = false;
+  $("#gameplay-cancel").classList.remove("hidden");
   try {
     let completed = false;
     while (!completed) {
@@ -111,6 +121,7 @@ async function followGameplayJob(id, onDone) {
       log.textContent = (job.log || []).join("\n") + (job.status === "running" ? "\n…" : job.status === "done" ? "\nConcluído." : "");
       log.scrollTop = log.scrollHeight;
       if (job.status === "error") throw new Error("A tarefa falhou. Confira o detalhe no registro acima.");
+      if (job.status === "cancelled") throw new Error("Tarefa cancelada.");
       if (job.status === "done") {
         let result = job.result;
         if (typeof result === "string") { try { result = JSON.parse(result); } catch (_) { throw new Error("A tarefa terminou sem retornar os dados do projeto."); } }
@@ -122,7 +133,11 @@ async function followGameplayJob(id, onDone) {
         await new Promise((resolve) => setTimeout(resolve, 1500));
       }
     }
-  } finally { setGameplayBusy(false); }
+  } finally {
+    gameplayJob = null;
+    $("#gameplay-cancel").classList.add("hidden");
+    setGameplayBusy(false);
+  }
 }
 function gameplayMomentRows(items, kind) {
   if (!items?.length) return `<p class="hint">Nenhum momento sugerido para este formato.</p>`;

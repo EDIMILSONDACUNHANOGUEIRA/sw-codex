@@ -90,8 +90,10 @@ def _resolve(source: str, credit: str, log) -> tuple[Path, str, str, str]:
 def _motion(path: Path, duration: float, interval: float, log) -> np.ndarray:
     """Compara quadros pequenos; guarda apenas um valor por amostra."""
     width, height = 96, 54
-    command = ["ffmpeg", "-v", "error", "-nostdin", "-threads", "2", "-i", str(path),
-               "-an", "-vf", f"fps=1/{interval:.8f},scale={width}:{height}",
+    # noref pula só quadros que nenhum outro usa (B não referenciados): decodifica bem
+    # menos em gameplays longas sem criar buracos na amostragem de 1 quadro a cada 2 s+.
+    command = ["ffmpeg", "-v", "error", "-nostdin", "-threads", "2", "-skip_frame", "noref", "-i", str(path),
+               "-an", "-vf", f"fps=1/{interval:.8f},scale={width}:{height}:flags=fast_bilinear",
                "-pix_fmt", "gray", "-f", "rawvideo", "pipe:1"]
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
     previous = None
@@ -256,13 +258,16 @@ def select_moments(times: np.ndarray, scores: np.ndarray, duration: float, *,
         start, end = _window(float(times[index]), context, duration)
         candidate = {"id": "", "start": start, "end": end,
                      "peak": round(min(float(times[index]), duration), 3),
-                     "title": "Momento para revisar" if lang == "pt" else "Moment to review",
+                     "title": "",
                      "reason": ("sinais de movimento e/ou energia sonora; revisar contexto" if scores[index] > .15 else
                                 "sinais baixos; amostra de contexto para revisão"),
                      "score": round(float(scores[index]), 5), "manual": False}
         if any(_overlap(candidate, previous) for previous in candidates):
             continue
         candidate["id"] = f"auto-{len(candidates) + 1:02}"
+        # Título único por corte (número + tempo da fonte); o editor troca na revisão.
+        candidate["title"] = (f"Momento {len(candidates) + 1:02} · {_stamp(candidate['peak'])}" if lang == "pt"
+                              else f"Moment {len(candidates) + 1:02} · {_stamp(candidate['peak'])}")
         candidates.append(candidate)
         if len(candidates) >= target + len(markers or []):
             break

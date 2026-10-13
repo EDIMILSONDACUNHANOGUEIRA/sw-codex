@@ -10,6 +10,8 @@ import json
 import math
 import os
 import re
+import shutil
+import time
 import unicodedata
 import uuid
 from pathlib import Path
@@ -108,6 +110,40 @@ def url_for(path: str | Path) -> str:
     return "/prontos/" + quote(relative.as_posix(), safe="/")
 
 
+class JobCancelled(Exception):
+    """Pedido de cancelamento atendido no próximo passo do trabalho."""
+
+
+PROJECT_ID_RE = re.compile(r"\d{4}-\d{2}-\d{2}-[a-z0-9-]+-[0-9a-f]{8}")
+
+
+def cleanup_orphans(root: Path | None = None, *, older_than: float = 3600, log=print) -> int:
+    """Remove sobras de trabalhos interrompidos (app fechado, queda de energia).
+
+    Só apaga o que o próprio app cria: pastas de projeto sem project.json (análise que
+    não terminou) e pastas .staging de exportação, com mais de uma hora sem mudança.
+    """
+    root = Path(root or project_root())
+    if not root.is_dir():
+        return 0
+    limit = time.time() - older_than
+    removed = 0
+    leftovers = [d for d in root.iterdir() if d.is_dir() and PROJECT_ID_RE.fullmatch(d.name)
+                 and not (d / "project.json").exists()]
+    leftovers += [d for d in root.glob("*/exports/.export-*.staging-*") if d.is_dir()]
+    for folder in leftovers:
+        try:
+            if folder.is_symlink() or folder.stat().st_mtime > limit:
+                continue
+            shutil.rmtree(folder)
+            removed += 1
+        except OSError:
+            continue
+    if removed:
+        log(f"Limpeza: {removed} pasta(s) de trabalhos interrompidos removida(s).")
+    return removed
+
+
 def analyze(source: str, *, max_long=660, short_count=3, short_seconds=45,
             title="Melhores momentos de GTA", credit="", lang="pt", markers=None, log=print) -> dict:
     from .gameplay_analysis import analyze as inspect
@@ -119,10 +155,15 @@ def analyze(source: str, *, max_long=660, short_count=3, short_seconds=45,
     project_id = f"{dt.date.today().isoformat()}-{slug}-{uuid.uuid4().hex[:8]}"
     output = project_root() / project_id
     output.mkdir(parents=True, exist_ok=False)
-    plan = inspect(source, output, markers=markers, log=log, **settings)
-    validate_plan(plan)
-    _write_new(output / "project.json", {"project_id": project_id, "title": plan["title"],
-               "created": dt.datetime.now().isoformat(timespec="seconds")})
+    try:
+        plan = inspect(source, output, markers=markers, log=log, **settings)
+        validate_plan(plan)
+        _write_new(output / "project.json", {"project_id": project_id, "title": plan["title"],
+                   "created": dt.datetime.now().isoformat(timespec="seconds")})
+    except BaseException:
+        # Análise com erro ou cancelada não deixa projeto pela metade na lista.
+        shutil.rmtree(output, ignore_errors=True)
+        raise
     return {"project_id": project_id, "plan": plan, "plan_url": url_for(output / "plan.json"),
             "storyboard_url": url_for(output / "storyboard.jpg")}
 
