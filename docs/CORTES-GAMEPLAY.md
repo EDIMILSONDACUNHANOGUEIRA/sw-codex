@@ -21,8 +21,11 @@ determinam o tempo de processamento e o espaço necessário.
 3. Clique **Analisar**. O app mostra os timestamps propostos e um storyboard de quadros reais.
 4. Confira a gameplay fonte nos timestamps. Ajuste início, fim e título e selecione os momentos.
    Preserve o começo e o desfecho da ação; não escreva um título que o trecho não demonstra.
-5. Mantenha **Legendar a voz do criador** ativado. Confira o idioma da fala e, se tiver um SRT
-   revisado, cole-o na opção **Usar legendas revisadas do criador**. Os tempos são da fonte original.
+5. **Legendar a voz do criador** vem marcado quando o reconhecimento de voz está instalado
+   (`requirements-speech.txt`); sem ele fica desmarcado. O idioma da fala é detectado
+   automaticamente; escolha Português ou Inglês só se a detecção errar. Se tiver um SRT revisado,
+   cole-o em **Usar legendas revisadas do criador** (funciona mesmo sem o reconhecimento).
+   Os tempos são da fonte original. Trecho sem fala sai sem legenda, sem interromper a exportação.
 6. Clique **Gerar vídeos e capas**. Baixe o MP4 horizontal, os verticais, as capas, o SRT da fala
    e o texto de publicação. Revise a fala legendada e o vídeo antes de publicar.
 
@@ -68,9 +71,9 @@ Opções: `--minutos 11`, `--shorts 3`, `--segundos 45`, `--lang en` **somente q
 `--legendas` para transcrever a fala com o reconhecimento local configurado. A fala da fonte permanece no idioma original; mudar o idioma
 das artes não faz dublagem automática.
 
-No CLI legado, `--legendas` é necessário para ativar as legendas. `--idioma-fala pt|auto|en`
-seleciona o idioma do reconhecimento, e `--srt-fala arquivo.srt` usa o texto revisado em vez do
-modelo. No app, as legendas estão ativadas por padrão.
+No CLI legado, `--legendas` é necessário para ativar as legendas. `--idioma-fala auto|pt|en`
+(padrão `auto`) seleciona o idioma do reconhecimento, e `--srt-fala arquivo.srt` usa o texto revisado em vez do
+modelo. No app, as legendas vêm ativadas quando o reconhecimento de voz está instalado.
 
 Para escolher a música pelo CLI, use `--musica tema|nenhuma|outra` e `--volume-musica 10`
 (0–100%). **Outra** exige `--arquivo-musica caminho`; esse argumento só é válido com

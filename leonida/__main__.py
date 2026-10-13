@@ -373,7 +373,7 @@ def main(argv=None):
     r.add_argument("--plano", help="JSON revisado, mantendo a fonte do projeto original")
     r.add_argument("--gerar", action="store_true", help="analisa e gera direto; revise os resultados antes de publicar")
     r.add_argument("--legendas", action="store_true", help="legendas de fala (faster-whisper opcional)")
-    r.add_argument("--idioma-fala", choices=["pt", "auto", "en"], default="pt", help="idioma falado no áudio, independente de --lang")
+    r.add_argument("--idioma-fala", choices=["pt", "auto", "en"], default="auto", help="idioma falado no áudio (auto detecta), independente de --lang")
     r.add_argument("--srt-fala", help="SRT revisado da voz com tempos do vídeo original; exige --legendas")
     r.add_argument("--sem-musica", action="store_true", help="exportar somente com o áudio original")
     r.add_argument("--musica", choices=["tema", "nenhuma", "outra"], help="tema GTA VI, somente áudio original ou faixa escolhida")

@@ -218,7 +218,7 @@ def render(data: dict = Body(...)):
         for field in ("music", "subtitles"):
             if field in data and not isinstance(data[field], bool):
                 raise ValueError(f"{field}: use verdadeiro ou falso")
-        language = data.get("speech_language", "pt")
+        language = data.get("speech_language", "auto")
         if language not in ("pt", "en", "auto"):
             raise ValueError("Idioma da fala: pt, en ou auto")
         creator_srt = data.get("creator_srt")
@@ -232,10 +232,14 @@ def render(data: dict = Body(...)):
         if not 0 <= volume <= 1:
             raise ValueError("Volume da música deve ficar entre 0 e 1")
         music_path = str(_music_source(data.get("music_source"))) if mode == "custom" else None
+        subtitles = data.get("subtitles")
+        if subtitles is None:
+            # Sem pedido explícito, legenda só quando o reconhecimento de voz está instalado.
+            subtitles = bool(creator_srt) or _captions_available()
     except (ValueError, FileNotFoundError) as exc:
         raise HTTPException(400, str(exc)) from None
     return {"job": _job(gameplay.render_project, data["project_id"], plan,
-                        music=data.get("music", True), subtitles=data.get("subtitles", True),
+                        music=data.get("music", True), subtitles=subtitles,
                         speech_language=language, creator_srt=creator_srt, music_mode=mode,
                         music_path=music_path, music_volume=volume)}
 
@@ -247,14 +251,18 @@ def job(identifier: str):
     return JOBS[identifier]
 
 
+def _captions_available() -> bool:
+    try:
+        from leonida import speech_captions
+        return bool(speech_captions.available())
+    except (ImportError, AttributeError):
+        return False
+
+
 @app.get("/api/status")
 def status():
     from leonida import music
-    try:
-        from leonida import speech_captions
-        captions = bool(speech_captions.available())
-    except (ImportError, AttributeError):
-        captions = False
+    captions = _captions_available()
     return {"product": "Leonida Cortes", "brand": "Leonida Wire", "ffmpeg": bool(shutil.which("ffmpeg")),
             "music": bool(music.theme_path()), "captions": captions, "delivery": "local"}
 

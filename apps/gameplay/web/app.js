@@ -14,6 +14,9 @@ async function loadStatus() {
   const status = await api("/api/status");
   const mark = (value) => value ? "🟢" : "⚪";
   $("#sys").innerHTML = `<span>${mark(status.ffmpeg)} Exportação de vídeo</span><span>${mark(status.music)} Música tema</span><span>${mark(status.captions)} Legendas por áudio</span>`;
+  // Legenda automática só vem marcada quando o reconhecimento de voz está instalado.
+  $("#gameplay-subtitles").checked = Boolean(status.captions);
+  $("#gameplay-captions-missing").classList.toggle("hidden", Boolean(status.captions));
 }
 
 let gameplayProject = null;
@@ -261,7 +264,8 @@ $("#gameplay-render").addEventListener("click", async () => {
     const selectedMusic = await selectedGameplayMusic();
     const response = await api("/api/gameplay/render", { method: "POST", body: JSON.stringify({
       project_id: gameplayProject, plan, ...selectedMusic,
-      subtitles: $("#gameplay-subtitles").checked,
+      // Um SRT colado já é pedido de legenda, mesmo sem reconhecimento de voz instalado.
+      subtitles: $("#gameplay-subtitles").checked || Boolean($("#gameplay-creator-srt").value.trim()),
       speech_language: $("#gameplay-speech-language").value,
       creator_srt: $("#gameplay-creator-srt").value.trim(),
     }) });

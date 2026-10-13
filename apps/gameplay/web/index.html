@@ -75,8 +75,9 @@
       <h3>TikTok e YouTube Shorts · 9:16</h3>
       <div id="gameplay-shorts" class="gameplay-moments"></div>
       <fieldset class="speech-panel"><legend>Legendas da voz no vídeo</legend>
-        <div class="row"><label class="check"><input id="gameplay-subtitles" type="checkbox" checked> Legendar a voz do criador</label>
-          <label>Idioma da fala <select id="gameplay-speech-language"><option value="pt" selected>Português (fala do criador)</option><option value="auto">Detectar automaticamente</option><option value="en">Inglês</option></select></label></div>
+        <div class="row"><label class="check"><input id="gameplay-subtitles" type="checkbox"> Legendar a voz do criador</label>
+          <label>Idioma da fala <select id="gameplay-speech-language"><option value="auto" selected>Detectar automaticamente</option><option value="pt">Português</option><option value="en">Inglês</option></select></label></div>
+        <p id="gameplay-captions-missing" class="hint hidden">O reconhecimento de voz não está instalado neste PC (requirements-speech.txt). Sem ele, a legenda automática fica desligada; você ainda pode colar um SRT revisado abaixo.</p>
         <p class="hint">A legenda usa o áudio original, incluindo o comentário de quem está jogando. Quando há falas do jogo ao mesmo tempo, confira a transcrição antes de publicar.</p>
         <details><summary>Usar legendas revisadas do criador</summary>
           <label>SRT do áudio original (opcional)<textarea id="gameplay-creator-srt" class="mono" rows="6" placeholder="1&#10;00:00:10,000 --> 00:00:12,000&#10;Fala revisada do criador"></textarea></label>

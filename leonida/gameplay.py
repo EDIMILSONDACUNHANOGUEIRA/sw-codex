@@ -183,7 +183,7 @@ def validate_plan(plan: dict, *, original: dict | None = None) -> dict:
 
 
 def render_project(project_id: str, plan: dict | None = None, *, music=True, subtitles=False,
-                   speech_language="pt", creator_srt=None, music_mode=None, music_path=None,
+                   speech_language="auto", creator_srt=None, music_mode=None, music_path=None,
                    music_volume=.10, log=print) -> dict:
     from .gameplay_render import render
 

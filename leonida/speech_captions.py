@@ -219,7 +219,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     return out
 
 
-def transcribe(source: Path, output: Path, language="pt", model="small", *,
+def transcribe(source: Path, output: Path, language="auto", model="small", *,
                audio_stream: int = 0, log=print) -> dict:
     """Reconhece áudio da origem; nunca envia mídia para serviços de transcrição."""
     if language not in ("pt", "en", "auto", None):
@@ -275,8 +275,10 @@ def transcribe(source: Path, output: Path, language="pt", model="small", *,
                 speaker_separation=False,
                 mixed_language_warning="Falas do criador e do jogo na mesma faixa exigem revisão; o ASR não identifica os locutores nem separa seus áudios.")
     data["segments"] = normalize_cues(data["segments"])
-    if not data["segments"]:
-        raise RuntimeError("A transcrição não encontrou fala. Revise a faixa de áudio selecionada ou forneça legendas manuais.")
+    # Trecho só com jogo/música é normal num corte: sai sem legenda, sem derrubar a exportação.
+    data["no_speech"] = not data["segments"]
+    if data["no_speech"]:
+        log("  [fala] nenhuma fala reconhecida neste trecho; ele sai sem legenda")
     output.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     write_srt(data, output.with_suffix(".srt"))
     return data

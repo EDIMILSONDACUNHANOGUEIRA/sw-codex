@@ -294,7 +294,8 @@ def _parse_creator_srt(value: str) -> list[dict]:
 
 
 def _subtitles(base: Path, language: str, out: Path, *, vertical: bool,
-               source_cues=None, moments=None, log=print) -> Path:
+               source_cues=None, moments=None, log=print) -> Path | None:
+    """ASS da voz; None quando o trecho não tem fala (o vídeo sai sem legenda)."""
     from . import speech_captions
     if source_cues is not None:
         cues = speech_captions.remap_cues(source_cues, moments, frame_rate=FPS)
@@ -304,7 +305,8 @@ def _subtitles(base: Path, language: str, out: Path, *, vertical: bool,
         result = speech_captions.transcribe(base, out.with_suffix(".json"), language=language, log=log)
         cues = result["segments"]
     if not cues:
-        raise RuntimeError("Não foi encontrada fala nos trechos selecionados. Revise o áudio ou o SRT.")
+        log("  [fala] trecho sem fala: exportado sem legenda")
+        return None
     size = SHORT_SIZE if vertical else LONG_SIZE
     return speech_captions.write_ass(cues, out, size=size, y=1360 if vertical else 948,
                                     x=497 if vertical else 960,
@@ -371,7 +373,7 @@ def _caption(plan: dict, title: str, moment: dict | None = None) -> str:
 
 
 def render(plan: dict, output: Path, *, music: bool = True, subtitles: bool = False,
-           speech_language: str = "pt", creator_srt: str | None = None,
+           speech_language: str = "auto", creator_srt: str | None = None,
            music_mode: str | None = None, music_path: str | Path | None = None,
            music_volume: float = .10, log=print) -> dict:
     """Exporta em uma pasta nova, com validação e promoção atômica ao terminar.
@@ -478,7 +480,8 @@ def render(plan: dict, output: Path, *, music: bool = True, subtitles: bool = Fa
             results["long"] = {"video": str(output / "longo/video.mp4"), "cover": str(output / "longo/capa.jpg"),
                                "caption": str(output / "longo/legenda.txt"), "preview": str(output / "longo/qa/previa.jpg"),
                                "qa": qa, "cover_source_time": round(peak, 3), "moments": len(long_moments),
-                               **({"subtitles":str(output / "longo/legendas.srt")} if subtitles else {})}
+                               **({"subtitles":str(output / "longo/legendas.srt")} if ass else {}),
+                               **({"no_speech": True} if subtitles and not ass else {})}
         for index, moment in enumerate(plan.get("shorts") or []):
             log(f"  [gameplay] short {index + 1}/{len(plan['shorts'])}")
             name = f"short-{index + 1:02d}"
@@ -510,7 +513,8 @@ def render(plan: dict, output: Path, *, music: bool = True, subtitles: bool = Fa
                                       "video": str(output / name / "video.mp4"), "cover": str(output / name / "capa.jpg"),
                                       "caption": str(output / name / "legenda.txt"), "preview": str(output / name / "qa/previa.jpg"),
                                       "qa": qa, "cover_source_time": round(peak, 3),
-                                      **({"subtitles":str(output / name / "legendas.srt")} if subtitles else {})})
+                                      **({"subtitles":str(output / name / "legendas.srt")} if ass else {}),
+                                      **({"no_speech": True} if subtitles and not ass else {})})
         (staging / "plano.json").write_text(json.dumps(plan, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (staging / "manifest.json").write_text(json.dumps(results, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         # Only scratch data created in this invocation is removed, before the atomic promotion.

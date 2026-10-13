@@ -141,7 +141,7 @@ class SeparateAppsTest(unittest.TestCase):
             response = self.client.post("/api/gameplay/render", json={"project_id": "test-project", "creator_srt": srt})
         self.assertEqual(response.status_code, 200)
         self.assertTrue(worker.call_args.kwargs["subtitles"])
-        self.assertEqual(worker.call_args.kwargs["speech_language"], "pt")
+        self.assertEqual(worker.call_args.kwargs["speech_language"], "auto")
         self.assertEqual(worker.call_args.kwargs["creator_srt"], srt)
         for invalid in ({"speech_language": "es"}, {"subtitles": "true"}, {"creator_srt": 123}, {"creator_srt": False}):
             with patch.object(cuts, "_job") as worker:
