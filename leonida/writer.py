@@ -28,7 +28,7 @@ STYLE_GUIDE = """Você é o redator do perfil de notícias de GTA VI "{brand}" n
 
 Regras de conteúdo (obrigatórias):
 - Só use fatos que estão na matéria/fontes fornecidas. Nunca invente datas, preços, nomes ou números.
-- Se for vazamento/rumor, deixe claro que não é oficial ("segundo o leaker", "ainda não confirmado").
+- O perfil só publica notícia OFICIAL ou confirmada por veículos confiáveis. Nunca escreva sobre vazamento, leaker ou rumor.
 - Nada de conteúdo explícito/sexual mesmo que a fonte mencione; TikTok derruba. Fale "cenas polêmicas" no máximo.
 - Sempre credite a fonte principal na legenda.
 - Hoje é {today}. Faltam {days} dias para o lançamento (19/11/2026, PS5 e Xbox Series X|S).
@@ -40,7 +40,7 @@ Formato da arte (campos):
 - caption: legenda do TikTok. Gancho na 1ª linha, 2-4 linhas curtas com os fatos, uma pergunta para gerar comentários, emojis com moderação (máx. 3). Sem hashtags dentro da caption.
 - hashtags: 3 a 5 hashtags específicas da notícia (as genéricas #gta6 #gtavi já são adicionadas automaticamente).
 - facts: 3 ou 4 tópicos curtos ("o que sabemos") para um slide extra do carrossel. Opcional (lista vazia se não fizer sentido).
-- tag: oficial | urgente | vazamento | rumor | viral | analise.
+- tag: oficial | urgente | viral | analise (use "oficial" só quando a fonte for a Rockstar/Take-Two).
 - image_hint: se a imagem da matéria não servir, qual grupo de screenshots oficiais combina: Jason_Duval, Lucia_Caminos, Jason_and_Lucia, Vice_City, Leonida_Keys, Grassrivers, Port_Gellhorn, Ambrosia, Mount_Kalaga_National_Park.
 """
 
@@ -60,7 +60,7 @@ LOC_SCHEMA = {
 SCHEMA = {
     "type": "object",
     "properties": {
-        "tag": {"type": "string", "enum": ["oficial", "urgente", "vazamento", "rumor", "viral", "analise"]},
+        "tag": {"type": "string", "enum": ["oficial", "urgente", "viral", "analise"]},
         "image_hint": {"type": "string"},
         "pt": LOC_SCHEMA,
         "en": LOC_SCHEMA,
@@ -187,9 +187,7 @@ def draft_template(story: dict) -> dict:
     else:
         summ = _short_text(story.get("summary") or "", 115)
         summ_en = summ
-    leaked = bool(re.search(r"\b(?:leak\w*|vaza\w*|vazou)\b", text))
-    rumored = bool(re.search(r"\b(?:rumo(?:r|res)\w*|unconfirmed|não confirmado|nao confirmado)\b", text))
-    tag = "vazamento" if leaked else "rumor" if (rumored or explicit) else "analise"
+    tag = "oficial" if story.get("official") else "analise"
     return {
         "tag": tag,
         "image_hint": image_hint(story),
@@ -273,7 +271,23 @@ def _available_post_id(base: str) -> str:
     return candidate
 
 
+class BlockedStory(ValueError):
+    """Vazamento/rumor: o perfil só publica notícia oficial ou confirmada."""
+
+
+def check_publishable(story: dict) -> None:
+    from .radar import BLOCKED_KINDS, classify_text
+    kind = story.get("kind")
+    if kind is None:      # radar antigo, sem classificação: classifica pelo texto das fontes
+        text = " ".join([story.get("title", ""), story.get("summary", "")]
+                        + [s.get("title", "") for s in story.get("sources", [])])
+        kind = classify_text(text)
+    if kind in BLOCKED_KINDS:
+        raise BlockedStory(f"história marcada como {kind}: o perfil só publica notícia oficial ou confirmada")
+
+
 def story_to_post(story: dict, use_llm: bool | None = None) -> dict:
+    check_publishable(story)
     if use_llm is None:
         use_llm = bool(os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN"))
     draft = draft_with_claude(story) if use_llm else draft_template(story)
@@ -295,6 +309,8 @@ def story_to_post(story: dict, use_llm: bool | None = None) -> dict:
     }
     if draft.get("needs_review"):
         post["needs_review"] = True
+    if post["tag"] == "oficial" and not story.get("official"):
+        post["tag"] = "analise"           # "oficial" só quando a fonte é a própria Rockstar/Take-Two
     for lang in ("pt", "en"):
         loc = draft[lang]
         entry = {k: loc[k] for k in ("kicker", "headline", "summary", "caption", "hashtags")}

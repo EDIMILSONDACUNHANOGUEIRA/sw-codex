@@ -139,3 +139,6 @@ legend { padding: 0 6px; font-weight: 800; color: var(--cyan); }
 .product-tag { color: var(--gold); font-weight: 800; font-size: 12px; letter-spacing: 2px; }
 .switch-app { border: 1px solid var(--line2); border-radius: 10px; padding: 10px 12px; text-decoration: none; font-weight: 700; }
 .product-note { color: var(--muted); font-size: 12px; margin: 0; }
+
+.pill.block { background: #4a1020; color: #ff9db0; }
+.pill.conf { background: #12324a; color: #8fd8ff; }

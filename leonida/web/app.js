@@ -41,7 +41,7 @@ function renderRadar(data) {
       <div class="score">${Math.round(s.score)}<small>#${i + 1}</small></div>
       <div><div>${pills}</div><h3>${esc(s.title)}</h3>${s.title_pt && s.title_pt !== s.title ? `<div class="pt">🇧🇷 ${esc(s.title_pt)}</div>` : ""}
         <div class="src">${s.coverage} matérias · ${srcs}</div></div>
-      <div class="go"><button class="primary" data-draft="${s.id}">Criar post</button><button data-ignore="${s.id}">Ignorar</button></div>
+      <div class="go">${s.blocked ? `<button disabled title="O perfil só publica notícia oficial ou confirmada">Bloqueada (${esc(s.kind)})</button>` : `<button class="primary" data-draft="${s.id}">Criar post</button>`}<button data-ignore="${s.id}">Ignorar</button></div>
     </article>`;
   }).join("");
   $$("[data-draft]").forEach((b) => b.addEventListener("click", () => draftFromStory(b.dataset.draft, b)));

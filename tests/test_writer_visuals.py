@@ -127,14 +127,15 @@ class WriterVisualTests(unittest.TestCase):
         result = writer.draft_template(story("Latest leaked GTA 6 video shows Lucia fully naked"))
         self.assertEqual(result["pt"]["headline"], "Relato não confirmado sobre GTA VI")
         self.assertEqual(result["en"]["headline"], "Unconfirmed GTA VI report")
-        self.assertEqual(result["tag"], "vazamento")
+        self.assertEqual(result["tag"], "analise")      # vazamento nunca é tag de post (regra do dono)
         for lang in ("pt", "en"):
             self.assertNotIn("naked", str(result[lang]).lower())
         self.assertEqual(result["image_hint"], "Lucia_Caminos")
 
-    def test_portuguese_leaked_and_rumor_labels_require_review(self):
-        self.assertEqual(writer.draft_template(story("Novo vídeo vazado de GTA VI"))["tag"], "vazamento")
-        self.assertEqual(writer.draft_template(story("Rumores sobre GTA VI"))["tag"], "rumor")
+    def test_portuguese_leaks_and_rumors_are_blocked(self):
+        for title in ("Novo vídeo vazado de GTA VI", "Rumores sobre GTA VI"):
+            with self.assertRaises(writer.BlockedStory):
+                writer.story_to_post(story(title), use_llm=False)
 
     def test_new_draft_preserves_full_image_and_has_three_extra_scenes(self):
         items = [screen("Lucia_Caminos", n) for n in range(1, 5)]

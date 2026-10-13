@@ -90,7 +90,7 @@ def cmd_auto(a):
     data = radar.scan(max_age_hours=a.hours)
     seen = radar.load_seen()
     fresh = [s for s in data["stories"] if not radar.is_seen(s, seen) and s["score"] >= a.min_score
-             and not s.get("community")]
+             and not s.get("community") and not s.get("blocked")]   # vazamento/rumor nunca vira post
     print(f"📡 {len(fresh)} histórias novas acima de {a.min_score}")
     if a.check:
         # modo leve (CI): só informa se há trabalho, sem renderizar nada

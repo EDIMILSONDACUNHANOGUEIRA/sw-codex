@@ -6,7 +6,7 @@ Ao retomar: `git pull`, ler este arquivo, continuar do primeiro item sem ✅, ro
 
 ## Graves
 
-1. [ ] Radar: classificar história (oficial / confirmada / rumor / vazamento); barrar rumor e vazamento
+1. [✅] Radar: classificar história (oficial / confirmada / rumor / vazamento); barrar rumor e vazamento
    no `auto`, `from-story` e `story_to_post`; não fundir oficial com vazamento em `merge_by_topic`;
    "oficial" só com domínio da Rockstar/Take-Two; `_score_item` por palavra inteira; data futura/ausente.
 2. [ ] Vídeo de notícia: padrão de 45 s com cena de no máx. 7 s quebra posts sem fotos extras

@@ -42,8 +42,8 @@ Use este texto no chat do projeto e peça para agendar às 11h e 17h no fuso Ame
 > legendas e fontes locais. Registre os IDs e temas entregues em state/entregas.json;
 > entregue não significa publicado. Não publique em redes, não envie notificações
 > externas, não faça deploy nem push automático de vídeos ou dados pessoais.
-> Relatos não oficiais exigem atribuição e indicação clara; não usar imagens vazadas
-> explícitas nem apresentar rumor como confirmação. Sem novidade relevante verificada,
+> Só notícia oficial ou confirmada vira post: vazamento e rumor ficam fora (o radar marca
+> e o redator bloqueia). Nunca usar imagens vazadas. Sem novidade relevante verificada,
 > fique quieto e não gere conteúdo repetido. Avise quando houver vídeo pronto, falha
 > ou ação necessária. Preserve os trabalhos existentes e não instale modelos pesados.
 

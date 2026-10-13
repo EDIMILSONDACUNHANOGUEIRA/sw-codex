@@ -7,7 +7,10 @@ import datetime as dt
 import hashlib
 import html
 import json
+import os
 import re
+import tempfile
+import threading
 import time
 import unicodedata
 
@@ -28,10 +31,34 @@ def _now() -> float:
     return time.time()
 
 
-def _clean_title(title: str) -> str:
+def _clean_title(title: str, outlet: str | None = None) -> str:
+    """Tira tags HTML e, nos agregadores, o sufixo " - Veículo" que o Google News acrescenta.
+    Só remove o sufixo quando ele é o nome do veículo: "GTA 6 - Trailer 3" fica inteiro."""
     title = html.unescape(re.sub(r"<[^>]+>", "", title or "")).strip()
-    # Google News: "Título - Veículo"
-    return re.sub(r"\s+[-–|]\s+[^-–|]{2,40}$", "", title).strip()
+    if outlet:
+        suffix = re.compile(r"\s+[-–|]\s+" + re.escape(outlet.strip()) + r"\s*$", re.I)
+        title = suffix.sub("", title)
+    return title.strip()
+
+
+# Classificação editorial. O dono só publica notícia OFICIAL ou confirmada: vazamento e rumor
+# aparecem no radar com selo, mas nunca viram post (writer, auto e app bloqueiam).
+LEAK_RE = re.compile(r"\b(?:leak\w*|leaker\w*|cyberle+k\w*|vaza\w*|vazou|datamin\w*|insiders?(?!\s*gaming)|"
+                     r"hack(?:er|ers|ed)?|stolen|roubad\w*)\b", re.I)
+RUMOR_RE = re.compile(r"\b(?:rumou?r\w*|boato\w*|unconfirmed|n[aã]o confirmad\w*|reportedly|allegedly|"
+                      r"supostamente|teoria|theory|speculat\w*|especula\w*|alegadamente)\b", re.I)
+BLOCKED_KINDS = ("vazamento", "rumor")
+OFFICIAL_HOSTS = ("rockstargames.com", "take2games.com", "youtube.com/channel/UCULwHhkI31JHAKe57LZdzcA")
+OTHER_GTA_RE = re.compile(r"\b(?:gta\s*(?:v|5|online|iv|4|san andreas|vice city stories)|grand theft auto\s*(?:v|online|iv))\b", re.I)
+GTA6_RE = re.compile(r"\b(?:gta\s*(?:vi|6)|grand theft auto\s*(?:vi|6))\b", re.I)
+
+
+def classify_text(text: str) -> str:
+    if LEAK_RE.search(text or ""):
+        return "vazamento"
+    if RUMOR_RE.search(text or ""):
+        return "rumor"
+    return "noticia"
 
 
 def _norm(text: str) -> str:
@@ -69,48 +96,86 @@ def _match(text: str, must: list[str]) -> bool:
     return any((" " + _norm(k) + " ") in t or _norm(k).replace(" ", "") in t.replace(" ", "") for k in must)
 
 
+def _has_phrase(norm_text: str, phrase: str) -> bool:
+    """Palavra/frase inteira ("oficial" não casa com "não oficial"... nem "deal" com "ideal")."""
+    k = _norm(phrase).strip()
+    return bool(k) and f" {k} " in f" {norm_text} "
+
+
+NEGATED_OFFICIAL = re.compile(r"\b(?:unofficial|nao oficial|not official|sem confirmacao)\b")
+
+
 def _score_item(text: str, kw: dict) -> int:
-    t = _norm(text)
+    t = re.sub(r"\s+", " ", _norm(text)).strip()
     s = 0
     for k, v in (kw.get("boost") or {}).items():
-        if _norm(str(k)) in t:
+        if _has_phrase(t, str(k)):
+            if _norm(str(k)).strip() in ("official", "oficial") and NEGATED_OFFICIAL.search(t):
+                continue
             s += int(v)
     for k, v in (kw.get("penalty") or {}).items():
-        if _norm(str(k)) in t:
+        if _has_phrase(t, str(k)):
             s += int(v)
     return s
 
 
 def _fetch_feed(src: dict) -> list[dict]:
-    try:
-        r = requests.get(src["url"], headers={"User-Agent": USER_AGENT}, timeout=25)
-        r.raise_for_status()
-        d = feedparser.parse(r.content)
-    except Exception as exc:  # noqa: BLE001
-        return [{"_error": f"{src['name']}: {exc}"}]
+    d, last_exc = None, None
+    for attempt in range(3):              # feeds do YouTube/Reddit falham de forma intermitente
+        try:
+            r = requests.get(src["url"], headers={"User-Agent": USER_AGENT}, timeout=25)
+            r.raise_for_status()
+            d = feedparser.parse(r.content)
+            break
+        except Exception as exc:  # noqa: BLE001
+            last_exc = exc
+            time.sleep(1.5 * (attempt + 1))
+    if d is None:
+        return [{"_error": f"{src['name']}: {last_exc}"}]
     items = []
+    now = _now()
+    aggregator = bool(src.get("aggregator"))
     for e in d.entries[:60]:
         ts = e.get("published_parsed") or e.get("updated_parsed")
-        published = calendar.timegm(ts) if ts else _now()
+        if not ts:
+            continue                      # sem data: subiria como "agora" a cada busca
+        published = calendar.timegm(ts)
+        if published > now + 3600:
+            continue                      # data no futuro (feed quebrado) iria para o topo
+        outlet = None
+        if aggregator:
+            srcinfo = e.get("source") or {}
+            outlet = (srcinfo.get("title") if hasattr(srcinfo, "get") else None) or None
+        title = _clean_title(e.get("title", ""), outlet)
         summary = html.unescape(re.sub(r"<[^>]+>", " ", e.get("summary", "") or ""))
         summary = re.sub(r"\s+", " ", summary).strip()[:500]
+        if outlet:
+            summary = re.sub(r"\s*" + re.escape(outlet) + r"\s*$", "", summary).strip()
+            if _norm(summary).strip() == _norm(title).strip():
+                summary = ""
+        link = e.get("link", "")
+        # "oficial" só para a própria Rockstar/Take-Two e falando de GTA VI (o Google indexa páginas
+        # velhas do site da Rockstar — login, GTA V, loja — com data de rastreamento recente)
+        official = bool(src.get("official")) and (not aggregator or bool(GTA6_RE.search(title)))
         thumb = None
         for key in ("media_thumbnail", "media_content"):
             if e.get(key):
                 thumb = e[key][0].get("url")
                 break
         items.append({
-            "title": _clean_title(e.get("title", "")),
-            "url": e.get("link", ""),
+            "title": title,
+            "url": link,
             "summary": summary,
             "published": published,
-            "source": src["name"],
+            "source": outlet or src["name"],
+            "feed": src["name"],
+            "kind": classify_text(f"{title} {summary}"),
             "lang": src.get("lang", "en"),
             "weight": float(src.get("weight", 1.0)),
-            "official": bool(src.get("official")),
+            "official": official,
             "community": bool(src.get("community")),
-            "aggregator": bool(src.get("aggregator")),
-            "video": bool(src.get("video")) or "youtube.com" in e.get("link", ""),
+            "aggregator": aggregator,
+            "video": bool(src.get("video")) or "youtube.com" in link,
             "thumb": thumb,
         })
     return items
@@ -133,6 +198,8 @@ def fetch_all(max_age_hours: float = 72) -> tuple[list[dict], list[str]]:
                 if not _match(text, must):
                     continue
                 it["kw_score"] = _score_item(text, kw)
+                if not GTA6_RE.search(it["title"]) and OTHER_GTA_RE.search(it["title"]):
+                    it["kw_score"] -= 40      # GTA V / GTA Online / jogos antigos não são o foco
                 items.append(it)
     return items, errors
 
@@ -143,8 +210,11 @@ def cluster(items: list[dict], threshold: float = 0.3) -> list[dict]:
     clusters: list[dict] = []
     for it in items:
         toks = _tokens(it["title"])
+        risky = it.get("kind") in BLOCKED_KINDS
         best, best_sim = None, 0.0
         for c in clusters:
+            if c["risky"] != risky:
+                continue                  # nunca mistura vazamento/rumor com notícia limpa
             inter = len(toks & c["tokens"])
             union = len(toks | c["tokens"]) or 1
             sim = max(inter / union, inter / (min(len(toks), len(c["tokens"])) or 1) * 0.75)
@@ -154,30 +224,51 @@ def cluster(items: list[dict], threshold: float = 0.3) -> list[dict]:
             best["items"].append(it)
             best["tokens"] |= toks
         else:
-            clusters.append({"tokens": set(toks), "items": [it]})
+            clusters.append({"tokens": set(toks), "items": [it], "risky": risky})
     return clusters
 
 
-TOPICS = ["leak", "radio", "podcast", "screenshot", "trailer", "delay", "price", "preorder", "australia"]
+TOPICS = ["radio", "podcast", "screenshot", "trailer", "delay", "price", "preorder", "australia"]
 
 
 def merge_by_topic(clusters: list[dict]) -> list[dict]:
-    """Segunda passada: junta grupos cujo tema dominante é o mesmo (ex.: todos os 'leak')."""
-    merged: dict[str, dict] = {}
-    out = []
+    """Segunda passada: junta grupos do MESMO tema que também falam da mesma coisa (pelo menos 2
+    palavras em comum além do tema e da mesma classe). Antes juntava todo "leak" numa história só —
+    73 matérias diferentes viravam uma, e um rumor fundido com algo oficial ganhava selo OFICIAL."""
+    out: list[dict] = []
     for c in clusters:
         counts = {t: sum(1 for i in c["items"] if t in _tokens(i["title"])) for t in TOPICS}
         top = max(counts, key=counts.get)
         if counts[top] == 0 or counts[top] < len(c["items"]) / 2:
             out.append(c)
             continue
-        if top in merged:
-            merged[top]["items"].extend(c["items"])
-            merged[top]["tokens"] |= c["tokens"]
+        target = None
+        for o in out:
+            if o.get("topic") != top or o.get("risky") != c.get("risky"):
+                continue
+            if len((o["tokens"] & c["tokens"]) - {top}) >= 2:
+                target = o
+                break
+        if target:
+            target["items"].extend(c["items"])
+            target["tokens"] |= c["tokens"]
         else:
-            merged[top] = c
+            c["topic"] = top
             out.append(c)
     return out
+
+
+def story_kind(items: list[dict]) -> str:
+    """vazamento | rumor | oficial | confirmada (2+ veículos diferentes) | noticia."""
+    kinds = {i.get("kind", "noticia") for i in items}
+    if "vazamento" in kinds:
+        return "vazamento"
+    if "rumor" in kinds:
+        return "rumor"
+    if any(i["official"] for i in items):
+        return "oficial"
+    outlets = {i["source"] for i in items if not i.get("community")}
+    return "confirmada" if len(outlets) >= 2 else "noticia"
 
 
 def _story(c: dict) -> dict:
@@ -190,9 +281,11 @@ def _story(c: dict) -> dict:
     coverage = len(outlets) + sum(1 for i in its if i["aggregator"]) * 0.5
     newest = max(i["published"] for i in its)
     oldest = min(i["published"] for i in its)
-    hours = (_now() - oldest) / 3600
+    hours = max(0.0, (_now() - oldest) / 3600)
+    kind = story_kind(its)
+    official = kind == "oficial"
     score = (max(i["kw_score"] for i in its) + 12 * min(coverage, 12)
-             + 25 * max(i["weight"] for i in its) + (30 if any(i["official"] for i in its) else 0)
+             + 25 * max(i["weight"] for i in its) + (30 if official else 0)
              - 1.6 * hours)
     sid = hashlib.sha1(_norm(lead["title"]).encode()).hexdigest()[:10]
     return {
@@ -203,7 +296,9 @@ def _story(c: dict) -> dict:
         "summary": lead["summary"][:300],
         "score": round(score, 1),
         "coverage": len(its),
-        "official": any(i["official"] for i in its),
+        "kind": kind,
+        "blocked": kind in BLOCKED_KINDS,
+        "official": official,
         "video": any(i["video"] for i in its),
         "community": all(i["community"] for i in its),
         "published": dt.datetime.fromtimestamp(newest, dt.timezone.utc).isoformat(),
@@ -222,22 +317,49 @@ def scan(max_age_hours: float = 72, limit: int = 40) -> dict:
         s["is_new"] = not is_seen(s, seen)
     data = {"generated_at": dt.datetime.now(dt.timezone.utc).isoformat(), "count": len(stories),
             "errors": errors, "stories": stories}
-    STATE_DIR.mkdir(parents=True, exist_ok=True)
-    RADAR_FILE.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    _write_json(RADAR_FILE, data)
     write_markdown(data)
     return data
 
 
+def _write_text_atomic(path, text: str) -> None:
+    """Grava num temporário e troca de uma vez: quem lê nunca pega o arquivo pela metade."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(prefix=f".{path.name}.", dir=str(path.parent))
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            fh.write(text)
+        os.replace(tmp, path)
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
+
+
+def _write_json(path, data) -> None:
+    _write_text_atomic(path, json.dumps(data, ensure_ascii=False, indent=1))
+
+
+def _read_json(path, default):
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return default
+    except (OSError, ValueError):
+        return default                    # arquivo corrompido/vazio não derruba o radar
+    return data if isinstance(data, type(default)) else default
+
+
 def load_radar() -> dict:
-    if RADAR_FILE.exists():
-        return json.loads(RADAR_FILE.read_text(encoding="utf-8"))
-    return {"stories": []}
+    data = _read_json(RADAR_FILE, {"stories": []})
+    data.setdefault("stories", [])
+    return data
 
 
 def load_seen() -> dict:
-    if SEEN_FILE.exists():
-        return json.loads(SEEN_FILE.read_text(encoding="utf-8"))
-    return {}
+    return _read_json(SEEN_FILE, {})
 
 
 def _story_tokens(story: dict) -> set[str]:
@@ -250,6 +372,14 @@ def _story_tokens(story: dict) -> set[str]:
 def mark_seen(story_ids, status: str = "seen") -> None:
     """Marca histórias como vistas. Guarda as palavras-chave para reconhecer a mesma história
     mesmo que o título principal mude na próxima busca."""
+    with _SEEN_LOCK:
+        _mark_seen_locked(story_ids, status)
+
+
+_SEEN_LOCK = threading.Lock()
+
+
+def _mark_seen_locked(story_ids, status: str) -> None:
     seen = load_seen()
     by_id = {s["id"]: s for s in load_radar().get("stories", [])}
     for sid in story_ids:
@@ -257,9 +387,9 @@ def mark_seen(story_ids, status: str = "seen") -> None:
         if sid in by_id:
             entry["title"] = by_id[sid]["title"]
             entry["tokens"] = sorted(_story_tokens(by_id[sid]))
+            entry["kind"] = by_id[sid].get("kind")
         seen[sid] = entry
-    STATE_DIR.mkdir(parents=True, exist_ok=True)
-    SEEN_FILE.write_text(json.dumps(seen, ensure_ascii=False, indent=1), encoding="utf-8")
+    _write_json(SEEN_FILE, seen)
 
 
 def is_seen(story: dict, seen: dict | None = None, max_age_hours: float = 72) -> bool:
@@ -277,6 +407,8 @@ def is_seen(story: dict, seen: dict | None = None, max_age_hours: float = 72) ->
             age = 0
         if age > max_age_hours:
             continue
+        if entry.get("kind") and (entry["kind"] in BLOCKED_KINDS) != (story.get("kind") in BLOCKED_KINDS):
+            continue                      # um vazamento visto não silencia a confirmação oficial
         other = set(entry["tokens"])
         shared = len(toks & other)
         if shared >= 4 and shared / (min(len(toks), len(other)) or 1) >= 0.5:
@@ -294,7 +426,8 @@ def write_markdown(data: dict) -> None:
         if s.get("title_pt") and s["title_pt"] != s["title"]:
             t += f"<br>🇧🇷 {s['title_pt'].replace('|', '/')}"
         link = s["sources"][0]["url"]
-        flags = ("⭐ " if s["official"] else "") + ("🎬 " if s["video"] else "")
+        flags = ("⭐ " if s["official"] else "") + ("🎬 " if s["video"] else "") + \
+            ({"vazamento": "🚫 VAZAMENTO ", "rumor": "🚫 RUMOR "}.get(s.get("kind"), ""))
         lines.append(f"| {i} | {s['score']:.0f} | {flags}[{t}]({link}) | {s['coverage']} | "
                      f"{'🆕' if s.get('is_new') else ''} |")
-    (OUT_DIR / "RADAR.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    _write_text_atomic(OUT_DIR / "RADAR.md", "\n".join(lines) + "\n")

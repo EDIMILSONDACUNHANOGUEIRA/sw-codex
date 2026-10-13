@@ -156,6 +156,8 @@ def from_story(sid: str, use_ai: bool = True):
         raise HTTPException(404, "história não está no radar")
     try:
         p = writer.story_to_post(story, use_llm=None if use_ai else False)
+    except writer.BlockedStory as exc:
+        raise HTTPException(422, str(exc))
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(500, f"falha ao redigir: {exc}")
     radar.mark_seen([sid], "drafted")

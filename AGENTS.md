@@ -155,7 +155,7 @@ e informe a pendência se a voz não puder ser legendada. Veja a instalação em
 ```yaml
 id: 2026-10-08-gta6-radios-reveladas
 date: "2026-10-08"
-tag: oficial            # oficial | urgente | vazamento | rumor | viral | contagem | analise
+tag: oficial            # oficial | urgente | viral | contagem | analise (vazamento/rumor não viram post)
 image: "https://www.rockstargames.com/VI/_next/static/media/Lucia_Caminos_06....jpg"
 # layout: card          # use 'card' para cenários/prints sem personagem em destaque
 # zoom: 0.85            # recua o enquadramento (o recuo automático costuma acertar)
@@ -200,7 +200,7 @@ pt:
 ## Regras editoriais (obrigatórias)
 
 - **Só fatos verificados nas fontes.** Nunca invente data, preço, nome, número ou "fontes dizem".
-- Vazamento/rumor: tag `vazamento`/`rumor` e deixar claro que **não é oficial**.
+- Vazamento/rumor: **não vira post**. O radar marca com selo e o redator, o `auto` e o app bloqueiam.
 - **Nada explícito** (nudez, sexo, violência gráfica) — mesmo que a matéria cite. O TikTok derruba.
   Não use imagens vazadas; use screenshots oficiais.
 - Sempre credite a fonte (`source`). A legenda ganha "Fonte: X" automaticamente.

@@ -34,14 +34,16 @@ function renderRadar(data) {
   const list = $("#radar-list");
   if (!data.stories?.length) { list.innerHTML = `<p class="hint">Nada ainda — clique em "Atualizar radar".</p>`; return; }
   list.innerHTML = data.stories.map((s, i) => {
-    const pills = (s.official ? `<span class="pill off">OFICIAL</span>` : "") + (s.video ? `<span class="pill vid">VÍDEO</span>` : "") +
+    const kindPill = { vazamento: `<span class="pill block">VAZAMENTO · não publica</span>`, rumor: `<span class="pill block">RUMOR · não publica</span>`,
+      confirmada: `<span class="pill conf">CONFIRMADA</span>` }[s.kind] || "";
+    const pills = (s.official ? `<span class="pill off">OFICIAL</span>` : "") + kindPill + (s.video ? `<span class="pill vid">VÍDEO</span>` : "") +
       (s.is_new && !s.status ? `<span class="pill new">NOVO</span>` : "") + (s.status ? `<span class="pill st">${esc(s.status)}</span>` : "");
     const srcs = s.sources.slice(0, 4).map((x) => `<a href="${esc(x.url)}" target="_blank">${esc(x.name)}</a>`).join(" · ");
     return `<article class="story ${s.is_new && !s.status ? "new" : ""}">
       <div class="score">${Math.round(s.score)}<small>#${i + 1}</small></div>
       <div><div>${pills}</div><h3>${esc(s.title)}</h3>${s.title_pt && s.title_pt !== s.title ? `<div class="pt">🇧🇷 ${esc(s.title_pt)}</div>` : ""}
         <div class="src">${s.coverage} matérias · ${srcs}</div></div>
-      <div class="go"><button class="primary" data-draft="${s.id}">Criar post</button><button data-ignore="${s.id}">Ignorar</button></div>
+      <div class="go">${s.blocked ? `<button disabled title="O perfil só publica notícia oficial ou confirmada">Bloqueada</button>` : `<button class="primary" data-draft="${s.id}">Criar post</button>`}<button data-ignore="${s.id}">Ignorar</button></div>
     </article>`;
   }).join("");
   $$("[data-draft]").forEach((b) => b.addEventListener("click", () => draftFromStory(b.dataset.draft, b)));

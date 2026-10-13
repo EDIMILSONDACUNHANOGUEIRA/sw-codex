@@ -185,7 +185,7 @@ sources:
     weight: 0.9
     community: true
   - name: YouTube Rockstar Games
-    url: "https://www.youtube.com/feeds/videos.xml?user=RockstarGames"
+    url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCULwHhkI31JHAKe57LZdzcA"
     lang: en
     weight: 1.6
     official: true
