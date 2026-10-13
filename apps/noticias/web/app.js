@@ -69,6 +69,7 @@ $("#btn-count").addEventListener("click", async () => { const r = await api("/ap
 let current = null;
 let selectedVisuals = [];
 let coverPreviewObject = null;
+let deliveryRequest = 0;
 async function loadPostList(select) {
   const posts = await api("/api/posts");
   const sel = $("#post-select");
@@ -86,6 +87,7 @@ $("#btn-new").addEventListener("click", async () => {
 
 function setField(name, v) { const el = $(`[name="${name}"]`, $("#post-form")); if (!el) return; if (el.type === "checkbox") el.checked = v !== false; else el.value = v ?? ""; }
 async function openPost(id) {
+  hideDelivery();
   current = await api(`/api/posts/${encodeURIComponent(id)}`);
   $("#editor").classList.remove("hidden");
   const p = current;
@@ -100,7 +102,47 @@ async function openPost(id) {
   }
   selectedVisuals = (Array.isArray(p.visuals) ? p.visuals : []).map((v) => typeof v === "string" ? { image: v } : { ...v }).filter((v) => typeof v.image === "string" && v.image.trim());
   clearCoverPreview(); drawSelectedCover(); drawSelectedVisuals();
+  await loadDelivery(p.id);
   if (p.needs_review) toast("⚠️ Rascunho sem IA: revise manchete, resumo e legenda");
+}
+
+function hideDelivery() {
+  deliveryRequest += 1;
+  const container = $("#delivery-videos");
+  $$("video", container).forEach((video) => video.pause());
+  container.replaceChildren();
+  $("#delivery-panel").classList.add("hidden");
+}
+function deliveryUrl(value) {
+  if (typeof value !== "string" || !value.trim()) return "";
+  try {
+    const url = new URL(value, window.location.origin);
+    if (!["http:", "https:"].includes(url.protocol) || url.origin !== window.location.origin || url.username || url.password || !url.pathname.startsWith("/prontos/")) return "";
+    return url.href;
+  } catch (_) { return ""; }
+}
+async function loadDelivery(id) {
+  const request = ++deliveryRequest;
+  try {
+    const response = await fetch(`/api/posts/${encodeURIComponent(id)}/delivery`, { cache: "no-store" });
+    if (!response.ok) return; // A draft or a pending export has no completed video yet.
+    const delivery = await response.json();
+    if (request !== deliveryRequest || current?.id !== id || delivery.id !== id) return;
+    const videos = (Array.isArray(delivery.videos) ? delivery.videos : []).flatMap((item) => {
+      if (!item || !["pt", "en"].includes(item.lang)) return [];
+      const video = deliveryUrl(item.video_url);
+      if (!video) return [];
+      return [{ lang: item.lang, video, cover: deliveryUrl(item.cover_url), caption: deliveryUrl(item.caption_url) }];
+    });
+    if (!videos.length) return;
+    $("#delivery-videos").innerHTML = videos.map((item) => {
+      const language = item.lang === "pt" ? "Português" : "English";
+      return `<article class="delivery-video"><h3>${language}</h3><video controls playsinline preload="metadata"${item.cover ? ` poster="${esc(item.cover)}"` : ""} aria-label="Vídeo completo — ${language}"><source src="${esc(item.video)}" type="video/mp4">Seu navegador não reproduz este vídeo. Use Abrir vídeo completo.</video><div class="actions"><a class="btn primary" href="${esc(item.video)}" target="_blank" rel="noopener">Abrir vídeo completo ↗</a><a class="btn" href="${esc(item.video)}" download="video-completo-${item.lang}.mp4">Baixar MP4</a>${item.caption ? `<a class="btn" href="${esc(item.caption)}" target="_blank" rel="noopener">Legenda da publicação</a>` : ""}</div></article>`;
+    }).join("");
+    $("#delivery-panel").classList.remove("hidden");
+  } catch (_) {
+    // Keep the editor usable if the delivery lookup is temporarily unavailable.
+  }
 }
 function collect() {
   const f = $("#post-form"); const g = (n) => $(`[name="${n}"]`, f);
@@ -139,8 +181,12 @@ $("#btn-prev-en").addEventListener("click", (e) => preview("en", e.target));
 $("#btn-build").addEventListener("click", async (e) => {
   try {
     const s = await save(); if (s.errors?.length) return;
-    const r = await api(`/api/posts/${encodeURIComponent(current.id)}/build?video=${$("#with-video").checked}`, { method: "POST" });
-    followJob(r.job, $("#job-log"), () => { toast("Post pronto! Veja em Prontos"); loadPostList(current.id); });
+    const id = current.id;
+    const r = await api(`/api/posts/${encodeURIComponent(id)}/build?video=${$("#with-video").checked}`, { method: "POST" });
+    followJob(r.job, $("#job-log"), () => {
+      toast("Post pronto! Confira os arquivos no editor e em Prontos");
+      loadPostList(current?.id || id).catch((error) => toast("Erro: " + error.message));
+    });
   } catch (err) { toast("Erro: " + err.message); }
 });
 $("#upload").addEventListener("change", async (e) => {

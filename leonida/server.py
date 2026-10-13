@@ -6,6 +6,8 @@ from __future__ import annotations
 
 import datetime as dt
 import io
+import json
+import re
 import shutil
 import threading
 import traceback
@@ -108,6 +110,36 @@ def put_post(pid: str, data: dict = Body(...)):
         data.pop("needs_review", None)
     post.save(data)
     return {"ok": True, "errors": post.validate(data)}
+
+
+@app.get("/api/posts/{pid}/delivery")
+def post_delivery(pid: str):
+    if not re.fullmatch(r"[A-Za-z0-9_-]+", pid):
+        raise HTTPException(400, "id de post inválido")
+    base = (POSTS_DIR / pid).resolve()
+    if not base.is_relative_to(POSTS_DIR.resolve()):
+        raise HTTPException(400, "id de post inválido")
+    try:
+        p, _ = post.load(base / "post.yaml")
+    except FileNotFoundError:
+        raise HTTPException(404, "post não encontrado")
+    date = str(p.get("date", ""))[:10]
+    try:
+        dt.date.fromisoformat(date)
+    except ValueError:
+        raise HTTPException(400, "data do post inválida")
+    folder = (OUT_DIR / date / pid).resolve()
+    if not folder.is_relative_to(OUT_DIR.resolve()):
+        raise HTTPException(400, "pasta de entrega inválida")
+    try:
+        manifest = json.loads((folder / "post.json").read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return {"id": pid, "videos": []}
+    except (ValueError, OSError):
+        raise HTTPException(409, "entrega indisponível; gere o post novamente")
+    if not isinstance(manifest, dict):
+        raise HTTPException(409, "entrega indisponível; gere o post novamente")
+    return {"id": pid, "videos": gallery.delivery(folder, manifest, OUT_DIR)}
 
 
 @app.post("/api/posts/new")

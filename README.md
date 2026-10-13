@@ -17,6 +17,10 @@ Dois aplicativos usam o mesmo repositório, com telas e saídas separadas:
 | **Leonida Notícias** | `scripts/abrir-noticias.bat` | <http://127.0.0.1:8768/> | Rascunhos em `posts/`, histórico em `state/`, entregas em `prontos/<data>/` |
 | **Leonida Cortes** | `scripts/abrir-gameplay.bat` | <http://127.0.0.1:8769/> | Fontes em `apps/gameplay/uploads/`, projetos e exports em `apps/gameplay/prontos/` |
 
+No Notícias, depois da exportação, o editor mostra **Vídeo completo pronto**, com reprodução,
+**Abrir vídeo completo** e **Baixar MP4**. A aba **Prontos** também destaca o vídeo final
+`br/tiktok/post.mp4` acima das imagens separadas da capa e das cenas.
+
 O editor de cortes aceita link ou arquivo do computador e legenda a fala do criador pelo áudio,
 inclusive fora da câmera. As legendas de voz ficam ativadas por padrão; revise a transcrição ou
 forneça um SRT corrigido. Os projetos antigos e os vídeos já entregues permanecem nos caminhos
