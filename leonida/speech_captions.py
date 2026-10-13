@@ -143,8 +143,24 @@ def _time(seconds: float, *, ass=False) -> str:
     return f"{hours:02}:{minutes:02}:{secs:02},{milliseconds:03}"
 
 
+MIN_CUE_SECONDS = 0.8    # tempo mínimo para ler um bloco curto ("Ah!", "Corre!")
+
+
+def tidy_timing(rows: list[dict], minimum: float = MIN_CUE_SECONDS) -> list[dict]:
+    """Sem sobreposição e com duração mínima, sem invadir a fala seguinte.
+
+    Um bloco curto se estende até `minimum` usando o silêncio depois dele; se a próxima
+    fala começa antes, ele termina exatamente quando ela começa (nunca duas na tela).
+    """
+    rows = sorted((dict(row) for row in rows), key=lambda row: (row["start"], row["end"]))
+    for index, row in enumerate(rows):
+        following = rows[index + 1]["start"] if index + 1 < len(rows) else math.inf
+        row["end"] = min(max(row["end"], row["start"] + minimum), following)
+    return [row for row in rows if row["end"] - row["start"] > 1e-3]
+
+
 def write_srt(cues: list | dict, out: Path) -> Path:
-    clean = normalize_cues(cues)
+    clean = tidy_timing(normalize_cues(cues))
     text = "\n\n".join(f'{i}\n{_time(c["start"])} --> {_time(c["end"])}\n{c["text"]}'
                        for i, c in enumerate(clean, 1))
     out = Path(out)
@@ -154,21 +170,39 @@ def write_srt(cues: list | dict, out: Path) -> Path:
 
 
 def _subtitle_chunks(cue: dict, font, max_width: int) -> list[dict]:
-    """No máximo duas linhas; distribui blocos sem mudar as palavras da fala."""
+    """No máximo duas linhas; distribui blocos sem mudar as palavras da fala.
+
+    Com tempos por palavra (words[]) que batem com o texto, cada bloco aparece quando
+    a primeira palavra dele é dita; sem eles (texto editado, SRT), o tempo é proporcional.
+    """
     words = cue["text"].split()
     if any(font.getlength(word) > max_width for word in words):
         raise ValueError("Uma palavra da legenda não cabe na área segura; revise o SRT ou reduza a fonte.")
-    lines, line = [], ""
+    lines, line, sizes, count = [], "", [], 0
     for word in words:
         candidate = f"{line} {word}".strip()
         if line and font.getlength(candidate) > max_width:
             lines.append(line)
-            line = word
+            sizes.append(count)
+            line, count = word, 1
         else:
-            line = candidate
+            line, count = candidate, count + 1
     if line:
         lines.append(line)
+        sizes.append(count)
     groups = [lines[index:index + 2] for index in range(0, len(lines), 2)]
+    group_sizes = [sum(sizes[index:index + 2]) for index in range(0, len(sizes), 2)]
+    timed = cue.get("words") or []
+    spoken = [w["word"].strip() for w in timed if isinstance(w, dict) and isinstance(w.get("word"), str)]
+    if len(spoken) == len(words) and [w.split() for w in spoken] == [[w] for w in words]:
+        result, first = [], 0
+        for index, (group, size) in enumerate(zip(groups, group_sizes)):
+            left = cue["start"] if index == 0 else float(timed[first]["start"])
+            last = first + size
+            right = cue["end"] if index == len(groups) - 1 else float(timed[last]["start"])
+            result.append({**cue, "start": left, "end": max(right, left + 1e-3), "lines": group})
+            first = last
+        return result
     total = sum(len(" ".join(group)) for group in groups)
     left = cue["start"]
     result = []
@@ -207,12 +241,12 @@ Style: Speech,Inter,{font_size},&H00FFFFFF,&H0057C8FF,&H0014060B,&H78000000,-1,0
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
     lines = []
-    for cue in clean:
-        for chunk in _subtitle_chunks(cue, font, max_width):
-            # Never let editable speech text execute ASS override tags.
-            text = r"\N".join(line.replace("\\", "＼").replace("{", "(").replace("}", ")") for line in chunk["lines"])
-            position = r"{\an8\pos(" + f"{x},{int(y)}" + ")}"
-            lines.append(f'Dialogue: 0,{_time(chunk["start"], ass=True)},{_time(chunk["end"], ass=True)},Speech,,0,0,0,,{position}{text}')
+    chunks = tidy_timing([chunk for cue in clean for chunk in _subtitle_chunks(cue, font, max_width)])
+    for chunk in chunks:
+        # Never let editable speech text execute ASS override tags.
+        text = r"\N".join(line.replace("\\", "＼").replace("{", "(").replace("}", ")") for line in chunk["lines"])
+        position = r"{\an8\pos(" + f"{x},{int(y)}" + ")}"
+        lines.append(f'Dialogue: 0,{_time(chunk["start"], ass=True)},{_time(chunk["end"], ass=True)},Speech,,0,0,0,,{position}{text}')
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(header + "\n".join(lines) + "\n", encoding="utf-8")

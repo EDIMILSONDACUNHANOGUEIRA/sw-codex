@@ -19,6 +19,7 @@ from . import gfx
 from .config import brand
 
 FPS = 30
+MAX_MUSIC_UNDER_VOICE = .35   # trilha nunca passa disso quando a fonte tem voz/som
 LONG_SIZE = (1920, 1080)
 SHORT_SIZE = (1080, 1920)
 SHORT_WINDOW = (0, 620, 1080, 608)
@@ -287,6 +288,8 @@ def _parse_creator_srt(value: str) -> list[dict]:
         first, last = lines[0].split("-->", 1)
         start, end = stamp(first), stamp(last)
         text = " ".join(line.strip() for line in lines[1:]).strip()
+        # Marcação de SRT/ASS (<i>, <font ...>, {\an8}) não aparece escrita no vídeo.
+        text = " ".join(re.sub(r"\{\\[^}]*\}", " ", re.sub(r"</?[A-Za-z][^>]*>", " ", text)).split())
         if not text or not 0 <= start < end:
             raise ValueError("Intervalo ou texto inválido no SRT revisado")
         cues.append({"start":start, "end":end, "text":text})
@@ -408,6 +411,7 @@ def render(plan: dict, output: Path, *, music: bool = True, subtitles: bool = Fa
         raise ValueError("Volume da música: informe um número entre 0 e 1") from None
     if not math.isfinite(music_volume) or not 0 <= music_volume <= 1:
         raise ValueError("Volume da música: informe um número entre 0 e 1")
+    requested_volume = music_volume
     theme = None
     if mode == "custom":
         if not music_path or not Path(music_path).is_file():
@@ -441,9 +445,13 @@ def render(plan: dict, output: Path, *, music: bool = True, subtitles: bool = Fa
     credit = plan["source"].get("credit") or plan["source"].get("title") or "Arquivo enviado"
     title = str(plan.get("title") or plan["source"].get("title") or "Melhores momentos da gameplay")
     has_audio = any(s.get("codec_type") == "audio" for s in meta.get("streams", []))
+    if theme is not None and has_audio and music_volume > MAX_MUSIC_UNDER_VOICE:
+        # Acima disso a trilha cobre a voz mesmo com a compressão pela fala.
+        music_volume = MAX_MUSIC_UNDER_VOICE
+        log(f"  [gameplay] música limitada a {MAX_MUSIC_UNDER_VOICE:.0%} para não cobrir a voz")
     results: dict = {"output": str(output), "long": None, "shorts": [], "plan": str(output / "plano.json"),
                      "manifest": str(output / "manifest.json"), "music": bool(theme), "subtitles": subtitles,
-                     "music_mode":mode, "music_volume":music_volume,
+                     "music_mode":mode, "music_volume":music_volume, "music_volume_requested":requested_volume,
                      "speech_language": speech_language, "caption_source":"original_audio" if source_cues is None else "user_srt",
                      "published": False, "visual_review": False}
     try:

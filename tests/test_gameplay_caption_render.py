@@ -143,7 +143,7 @@ class RealCaptionExport(unittest.TestCase):
                 self.assertTrue((folder / name).is_file(), name)
             self.assertEqual(Path(result["long"]["subtitles"]), folder / "legendas.srt")
             text = (folder / "legendas.srt").read_text(encoding="utf-8")
-            self.assertIn("00:00:01,133 --> 00:00:01,833", text)
+            self.assertIn("00:00:01,133 --> 00:00:01,933", text)   # 0,7 s sobe para o mínimo de 0,8 s
             self.assertIn("Minha voz está legendada", text)
             self.assertNotIn("Trecho removido", text)
             data = json.loads((folder / "legendas.json").read_text(encoding="utf-8"))
