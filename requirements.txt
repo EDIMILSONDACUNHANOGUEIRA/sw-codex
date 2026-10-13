@@ -1,6 +1,7 @@
 # Núcleo
 pillow>=10.0
 numpy>=1.26
+scipy>=1.11              # máscaras e bordas da arte (leonida/gfx.py, edit.py)
 pyyaml>=6.0
 requests>=2.31
 feedparser>=6.0
@@ -8,6 +9,7 @@ feedparser>=6.0
 fastapi>=0.110
 uvicorn>=0.29
 python-multipart>=0.0.9
+httpx>=0.27              # cliente de teste do FastAPI (pytest tests)
 # Cortes de vídeo (download de YouTube/X/Reddit/TikTok)
 yt-dlp[default]>=2025.11.12   # inclui o yt-dlp-ejs (necessário para o YouTube)
 # Recorte do personagem (efeito "manchete atrás do personagem") — baixa ~170 MB de modelo na 1ª vez
