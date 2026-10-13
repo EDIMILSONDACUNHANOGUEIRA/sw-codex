@@ -24,6 +24,6 @@ Ao retomar: `git pull`, ler este arquivo, continuar do primeiro item sem ✅, ro
    música limitada abaixo da voz.
 7. [✅] Radar: fonte real do Google News, YouTube por `channel_id`, gravação atômica do estado,
    `_clean_title` sem cortar conteúdo, testes do radar.
-8. [ ] Música: validar duração/volume da faixa, ignorar `*.tmp.*`.
+8. [✅] Música: validar duração/volume da faixa, ignorar `*.tmp.*`.
 9. [ ] Servidor: `post.yaml` ruim não derruba a lista; job perdido não trava a tela; erros 4xx/JSON.
 10. [ ] Instalação Windows: `scipy`/`httpx` no requirements, .bat espera o servidor subir.
